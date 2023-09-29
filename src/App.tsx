@@ -1,35 +1,30 @@
-import { useState } from 'react'
+import { CssBaseline, CssVarsProvider } from '@mui/joy'
+import { Route, Routes } from 'react-router-dom'
 
-import './App.css'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { Layout } from './components/Layout'
+import GuestNavigationBar from './components/Navigation/GuestNavigationBar'
+import Dashboard from './pages/Dashboard'
+import Problems from './pages/Problems'
+import theme from './utils/theme/themeOverride'
 
-const App = () => {
-  const [count, setCount] = useState(0)
-
+const App: React.FC = () => {
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="App">
+      <CssVarsProvider theme={theme}>
+        <CssBaseline />
+        <Layout.Root>
+          <Layout.Header>
+            <GuestNavigationBar />
+          </Layout.Header>
+          <Layout.Main>
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="problems" element={<Problems />} />
+            </Routes>
+          </Layout.Main>
+        </Layout.Root>
+      </CssVarsProvider>
+    </div>
   )
 }
 
