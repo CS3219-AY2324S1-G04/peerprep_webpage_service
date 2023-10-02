@@ -3,20 +3,20 @@ interface Page {
   title: string
 }
 
-const Paths = {
-  Dashboard: '/dashboard',
-  Problems: '/problems',
-  Rankings: '/rankings',
-  Profile: '/profile',
-  Login: '/login',
-  SignUp: '/signup',
+enum Paths {
+  Dashboard = '/dashboard',
+  Problems = '/problems',
+  Rankings = '/rankings',
+  Profile = '/profile',
+  Login = '/login',
+  SignUp = '/signup',
 }
 
-const ProblemsPage = {
+const ProblemsPage: Page = {
   url: Paths.Problems,
   title: 'Problems',
 }
-const RankingsPage = {
+const RankingsPage: Page = {
   url: Paths.Rankings,
   title: 'Rankings',
 }

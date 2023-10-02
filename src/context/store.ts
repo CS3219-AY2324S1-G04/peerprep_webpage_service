@@ -1,9 +1,9 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { Middleware, configureStore } from '@reduxjs/toolkit'
 import { createLogger } from 'redux-logger'
 
 import questionBankReducer from '../features/questionBank/slice'
 
-const middleware = []
+const middleware: Middleware[] = []
 
 middleware.push(createLogger())
 

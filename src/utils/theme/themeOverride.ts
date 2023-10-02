@@ -1,9 +1,9 @@
 /* eslint-disable */
-import { extendTheme } from '@mui/joy/styles';
+import { extendTheme } from '@mui/joy/styles'
 
 declare module '@mui/joy/styles' {
   interface TypographySystemOverrides {
-    logo: true;
+    logo: true
   }
 }
 
@@ -18,7 +18,7 @@ const indigo = {
   700: '#3538CD',
   800: '#2D31A6',
   900: '#2D3282',
-};
+}
 
 const theme = extendTheme({
   typography: {
@@ -63,6 +63,6 @@ const theme = extendTheme({
       },
     },
   },
-});
+})
 
-export default theme;
+export default theme
