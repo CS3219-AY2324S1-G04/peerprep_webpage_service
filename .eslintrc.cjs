@@ -70,6 +70,7 @@ module.exports = {
         tabWidth: 2,
         ignoreUrls: true,
         ignoreStrings: true,
+        ignoreTemplateLiterals: true,
         ignoreRegExpLiterals: true,
       },
     ],

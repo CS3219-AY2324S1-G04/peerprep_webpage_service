@@ -17,18 +17,16 @@ export default function validatePassword(password: string): string | undefined {
     return `Password cannot exceed ${maxPasswordLength} characters.`
   }
 
-  if (!password.match(`^[${validCharacters}]+$`)) {
-    // eslint-disable-next-line max-len
+  if (!new RegExp(`^[${validCharacters}]+$`).test(password)) {
     return `Password can only contain ${specialCharacters} or alphanumeric characters.`
   }
 
   if (
-    !password.match(`[${lowerCaseAlphabets}]`) ||
-    !password.match(`[${upperCaseAlphabets}]`) ||
-    !password.match(`[${numerics}]`) ||
-    !password.match(`[${specialCharacters}]`)
+    !RegExp(`[${lowerCaseAlphabets}]`).test(password) ||
+    !RegExp(`[${upperCaseAlphabets}]`).test(password) ||
+    !RegExp(`[${numerics}]`).test(password) ||
+    !RegExp(`[${specialCharacters}]`).test(password)
   ) {
-    // eslint-disable-next-line max-len
     return `Password must contain at least one uppercase alphabet, one lowercase alphabet, one numeric character, and one of the following: ${specialCharacters}`
   }
 }
