@@ -34,9 +34,9 @@ export const submitForm = createAsyncThunk<
     if (e instanceof AxiosError && e.response?.status === 400) {
       return thunkApi.rejectWithValue(e.response?.data ?? {})
     }
-  }
 
-  return undefined
+    return thunkApi.rejectWithValue({})
+  }
 })
 
 const signUpFormSlice = createSlice({
@@ -71,7 +71,10 @@ const signUpFormSlice = createSlice({
       state.submissionStatus = SubmissionStatus.succeeded
     })
     builder.addCase(submitForm.rejected, (state, action) => {
-      if (action.payload === undefined) {
+      if (
+        action.payload === undefined ||
+        Object.keys(action.payload).length === 0
+      ) {
         state.submissionStatus = SubmissionStatus.failedErrorUnknown
         return
       }
