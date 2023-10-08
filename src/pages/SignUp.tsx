@@ -1,7 +1,7 @@
 import { Sheet } from '@mui/joy'
 import { Box } from '@mui/material'
 
-import SignUpForm from '../features/signUpFormInfo/components/Form'
+import SignUpForm from '../features/signUpForm/components/Form'
 
 const SignUp: React.FC = () => {
   return (
