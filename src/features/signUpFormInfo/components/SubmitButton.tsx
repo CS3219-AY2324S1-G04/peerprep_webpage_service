@@ -3,7 +3,11 @@ import { AxiosError, CanceledError } from 'axios'
 import { useEffect } from 'react'
 
 import * as userService from '../../../services/userService'
-import { FieldInfo, ServerParamErrorInfo, SubmissionStatus } from '../types'
+import {
+  FieldInfo,
+  ServerParamErrorInfo,
+  SubmissionStatus,
+} from '../../userForm/types'
 
 let abortController: AbortController
 

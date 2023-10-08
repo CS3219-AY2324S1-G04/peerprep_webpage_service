@@ -1,12 +1,12 @@
 import { Box } from '@mui/joy'
 import { useState } from 'react'
 
-import { FieldInfo, SubmissionStatus } from '../types'
-import ConfirmPasswordField from './ConfirmPasswordField'
-import EmailField from './EmailField'
-import PasswordField from './PasswordField'
+import ConfirmPasswordField from '../../userForm/components/ConfirmPasswordField'
+import EmailField from '../../userForm/components/EmailField'
+import PasswordField from '../../userForm/components/PasswordField'
+import UsernameField from '../../userForm/components/UsernameField'
+import { FieldInfo, SubmissionStatus } from '../../userForm/types'
 import SubmitButton from './SubmitButton'
-import UsernameField from './UsernameField'
 
 const FormBody: React.FC<{
   submissionStatus: SubmissionStatus
@@ -42,8 +42,8 @@ const FormBody: React.FC<{
         setFieldInfo={setPasswordFieldInfo}
       />
       <ConfirmPasswordField
-        confirmPasswordFieldInfo={confirmPasswordFieldInfo}
-        setConfirmPasswordFieldInfo={setConfirmPasswordFieldInfo}
+        fieldInfo={confirmPasswordFieldInfo}
+        setFieldInfo={setConfirmPasswordFieldInfo}
         passwordFieldInfo={passwordFieldInfo}
       />
 

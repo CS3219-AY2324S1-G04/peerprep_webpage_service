@@ -1,32 +1,17 @@
-import { Box, Divider } from '@mui/joy'
-import { useState } from 'react'
-
-import { SubmissionStatus } from '../types'
+import BaseForm from '../../userForm/components/Form'
 import FormBody from './FormBody'
 import FormFooter from './FormFooter'
 import FormHeader from './FormHeader'
 import SuccessMessage from './SuccessMessage'
 
 const Form: React.FC = () => {
-  const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
-    SubmissionStatus.yetToSubmit,
-  )
-
-  return submissionStatus === SubmissionStatus.succeeded ? (
-    <SuccessMessage />
-  ) : (
-    <>
-      <FormHeader />
-      <Box height="32px" />
-      <FormBody
-        submissionStatus={submissionStatus}
-        setSubmissionStatus={setSubmissionStatus}
-      />
-      <Box height="24px" />
-      <Divider />
-      <Box height="24px" />
-      <FormFooter />
-    </>
+  return (
+    <BaseForm
+      FormHeader={FormHeader}
+      FormBody={FormBody}
+      FormFooter={FormFooter}
+      SuccessMessage={SuccessMessage}
+    />
   )
 }
 
