@@ -7,6 +7,7 @@ export async function createUser(
   username: string,
   email: string,
   password: string,
+  controller?: AbortController,
 ): Promise<AxiosResponse> {
   return await axios.post(`${baseUrl}/users`, undefined, {
     params: {
@@ -14,5 +15,6 @@ export async function createUser(
       email: email,
       password: password,
     },
+    signal: controller?.signal,
   })
 }
