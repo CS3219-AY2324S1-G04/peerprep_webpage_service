@@ -5,14 +5,15 @@ import Field from './Field'
 const UsernameField: React.FC<{
   fieldInfo: FieldInfo
   setFieldInfo: React.Dispatch<React.SetStateAction<FieldInfo>>
-}> = ({ fieldInfo, setFieldInfo }) => {
+  validate?: boolean
+}> = ({ fieldInfo, setFieldInfo, validate = true }) => {
   return (
     <Field
       fieldName="Username"
       fieldInfo={fieldInfo}
       setFieldInfo={setFieldInfo}
       placeholder="Enter your username"
-      validate={validateUsername}
+      validate={validate ? validateUsername : undefined}
     />
   )
 }

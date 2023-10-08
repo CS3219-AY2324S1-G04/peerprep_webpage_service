@@ -18,3 +18,17 @@ export async function createUser(
     signal: controller?.signal,
   })
 }
+
+export async function createSession(
+  username: string,
+  password: string,
+  controller?: AbortController,
+): Promise<AxiosResponse> {
+  return await axios.post(`${baseUrl}/sessions`, undefined, {
+    params: {
+      username: username,
+      password: password,
+    },
+    signal: controller?.signal,
+  })
+}

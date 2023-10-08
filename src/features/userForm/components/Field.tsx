@@ -8,14 +8,14 @@ const Field: React.FC<{
   fieldInfo: FieldInfo
   setFieldInfo: React.Dispatch<React.SetStateAction<FieldInfo>>
   placeholder: string
-  validate: (value: string) => string | undefined
+  validate?: (value: string) => string | undefined
   inputType?: string
 }> = ({
   fieldName,
   fieldInfo,
   setFieldInfo,
   placeholder,
-  validate,
+  validate = () => undefined,
   inputType = 'text',
 }) => {
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
