@@ -1,5 +1,5 @@
 interface Page {
-  url: string
+  url: Paths
   title: string
 }
 
