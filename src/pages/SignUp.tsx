@@ -1,6 +1,5 @@
 import { Sheet } from '@mui/joy'
 import { Box } from '@mui/material'
-import React from 'react'
 
 import SignUpForm from '../features/signUpFormInfo/components/Form'
 

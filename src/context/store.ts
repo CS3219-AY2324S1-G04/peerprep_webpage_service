@@ -2,7 +2,6 @@ import { Middleware, configureStore } from '@reduxjs/toolkit'
 import { createLogger } from 'redux-logger'
 
 import questionBankReducer from '../features/questionBank/slice'
-import signUpFormInfoReducer from '../features/signUpFormInfo/slice'
 
 const extraMiddlewares: Middleware[] = []
 extraMiddlewares.push(createLogger())
@@ -10,7 +9,6 @@ extraMiddlewares.push(createLogger())
 export const store = configureStore({
   reducer: {
     questionBank: questionBankReducer,
-    signUpFormInfo: signUpFormInfoReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(extraMiddlewares),

@@ -1,39 +1,20 @@
-import { FormControl, FormHelperText, FormLabel, Input } from '@mui/joy'
-import { ChangeEvent } from 'react'
-
-import { useAppDispatch } from '../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../hooks/useAppSelector'
-import { selectPasswordFieldInfo } from '../selectors'
-import { setPassword } from '../slice'
+import { FieldInfo } from '../types'
 import validatePassword from '../utils/passwordValidator'
+import Field from './Field'
 
-const PasswordField: React.FC = () => {
-  const passwordFieldInfo = useAppSelector(selectPasswordFieldInfo)
-  const dispatch = useAppDispatch()
-
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const newValue: string = event.target.value
-    const newErrorMessage: string | undefined = validatePassword(newValue)
-
-    dispatch(setPassword({ value: newValue, errorMessage: newErrorMessage }))
-  }
-
+const PasswordField: React.FC<{
+  fieldInfo: FieldInfo
+  setFieldInfo: React.Dispatch<React.SetStateAction<FieldInfo>>
+}> = ({ fieldInfo, setFieldInfo }) => {
   return (
-    <FormControl error={passwordFieldInfo.errorMessage !== undefined}>
-      <FormLabel>Password</FormLabel>
-      <Input
-        variant="outlined"
-        placeholder="Enter your password"
-        type="password"
-        value={passwordFieldInfo.value}
-        onChange={handleChange}
-      />
-      {passwordFieldInfo.errorMessage === undefined ? (
-        <></>
-      ) : (
-        <FormHelperText>{passwordFieldInfo.errorMessage}</FormHelperText>
-      )}
-    </FormControl>
+    <Field
+      fieldName="Password"
+      fieldInfo={fieldInfo}
+      setFieldInfo={setFieldInfo}
+      placeholder="Enter your password"
+      validate={validatePassword}
+      inputType="password"
+    />
   )
 }
 

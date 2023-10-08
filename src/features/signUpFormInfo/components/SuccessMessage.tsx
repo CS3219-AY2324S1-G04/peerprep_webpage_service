@@ -1,20 +1,9 @@
 import { Box, Link, Typography } from '@mui/joy'
-import { useEffect } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 
-import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import Paths from '../../../utils/constants/navigation'
-import { resetForm } from '../slice'
 
 const SuccessMessage: React.FC = () => {
-  const dispatch = useAppDispatch()
-
-  useEffect(() => {
-    return () => {
-      dispatch(resetForm())
-    }
-  })
-
   return (
     <Box
       sx={{

@@ -1,62 +1,42 @@
-import { FormControl, FormHelperText, FormLabel, Input } from '@mui/joy'
-import { ChangeEvent, useEffect } from 'react'
+import { useEffect } from 'react'
 
-import { useAppDispatch } from '../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../hooks/useAppSelector'
-import {
-  selectConfirmPasswordFieldInfo,
-  selectPasswordFieldInfo,
-} from '../selectors'
-import { setConfirmPassword } from '../slice'
+import { FieldInfo } from '../types'
+import Field from './Field'
 
-const ConfirmPasswordField: React.FC = () => {
-  const passwordFieldInfo = useAppSelector(selectPasswordFieldInfo)
-  const confirmPasswordFieldInfo = useAppSelector(
-    selectConfirmPasswordFieldInfo,
-  )
-  const dispatch = useAppDispatch()
-
-  useEffect(() => {
-    if (
-      passwordFieldInfo.value !== confirmPasswordFieldInfo.value &&
-      confirmPasswordFieldInfo.errorMessage === undefined
-    ) {
-      dispatch(
-        setConfirmPassword({
-          value: confirmPasswordFieldInfo.value,
-          errorMessage: 'Password does not match.',
-        }),
-      )
+const ConfirmPasswordField: React.FC<{
+  confirmPasswordFieldInfo: FieldInfo
+  setConfirmPasswordFieldInfo: React.Dispatch<React.SetStateAction<FieldInfo>>
+  passwordFieldInfo: FieldInfo
+}> = ({
+  confirmPasswordFieldInfo,
+  setConfirmPasswordFieldInfo,
+  passwordFieldInfo,
+}) => {
+  function validate(confirmPassword: string) {
+    if (confirmPassword !== passwordFieldInfo.value) {
+      return 'Password does not match.'
+    } else {
+      return undefined
     }
-
-    if (
-      passwordFieldInfo.value === confirmPasswordFieldInfo.value &&
-      confirmPasswordFieldInfo.errorMessage !== undefined
-    ) {
-      dispatch(setConfirmPassword({ value: confirmPasswordFieldInfo.value }))
-    }
-  }, [dispatch, confirmPasswordFieldInfo, passwordFieldInfo])
-
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    dispatch(setConfirmPassword({ value: event.target.value }))
   }
 
+  useEffect(() => {
+    setConfirmPasswordFieldInfo({
+      value: confirmPasswordFieldInfo.value,
+      errorMessage: validate(confirmPasswordFieldInfo.value),
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [passwordFieldInfo])
+
   return (
-    <FormControl error={confirmPasswordFieldInfo.errorMessage !== undefined}>
-      <FormLabel>Confirm Password</FormLabel>
-      <Input
-        variant="outlined"
-        placeholder="Enter your password again"
-        type="password"
-        value={confirmPasswordFieldInfo.value}
-        onChange={handleChange}
-      />
-      {confirmPasswordFieldInfo.errorMessage === undefined ? (
-        <></>
-      ) : (
-        <FormHelperText>{confirmPasswordFieldInfo.errorMessage}</FormHelperText>
-      )}
-    </FormControl>
+    <Field
+      fieldName="Confirm Password"
+      fieldInfo={confirmPasswordFieldInfo}
+      setFieldInfo={setConfirmPasswordFieldInfo}
+      placeholder="Enter your password again"
+      validate={validate}
+      inputType="password"
+    />
   )
 }
 
