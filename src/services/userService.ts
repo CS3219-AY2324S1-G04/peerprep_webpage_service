@@ -50,8 +50,8 @@ export enum UserRole {
 }
 
 export interface UserProfile {
-  readonly id: number
-  readonly role: UserRole
+  readonly userId: number
+  readonly userRole: UserRole
   readonly username: string
   readonly email: string
 }

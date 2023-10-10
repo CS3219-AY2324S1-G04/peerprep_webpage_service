@@ -4,9 +4,10 @@ export const selectIsLoggedIn = (state: RootState) => state.userInfo.isLoggedIn
 
 export const selectProfile = (state: RootState) => state.userInfo.profile
 
-export const selectId = (state: RootState) => state.userInfo.profile?.id
+export const selectUserId = (state: RootState) => state.userInfo.profile?.userId
 
-export const selectRole = (state: RootState) => state.userInfo.profile?.role
+export const selectUserRole = (state: RootState) =>
+  state.userInfo.profile?.userRole
 
 export const selectUsername = (state: RootState) =>
   state.userInfo.profile?.username
