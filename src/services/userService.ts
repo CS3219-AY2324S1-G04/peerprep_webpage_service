@@ -32,3 +32,5 @@ export async function createSession(
     signal: controller?.signal,
   })
 }
+
+export default { createUser, createSession }

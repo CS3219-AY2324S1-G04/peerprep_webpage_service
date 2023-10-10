@@ -1,9 +1,9 @@
 import { Box, Link, Typography } from '@mui/joy'
 import { Link as RouterLink } from 'react-router-dom'
 
-import Paths from '../../../utils/constants/navigation'
+import Paths from '../../utils/constants/navigation'
 
-const SuccessMessage: React.FC<{
+const FormSuccessMessage: React.FC<{
   title: string
   linkLeadingMessage: string
   linkMessage: string
@@ -37,4 +37,4 @@ const SuccessMessage: React.FC<{
   )
 }
 
-export default SuccessMessage
+export default FormSuccessMessage

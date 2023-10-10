@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 
-import { FieldInfo } from '../types'
-import Field from './Field'
+import FormField, { FieldInfo } from '../Form/FormField'
 
 const ConfirmPasswordField: React.FC<{
   fieldInfo: FieldInfo
@@ -9,11 +8,9 @@ const ConfirmPasswordField: React.FC<{
   passwordFieldInfo: FieldInfo
 }> = ({ fieldInfo, setFieldInfo, passwordFieldInfo }) => {
   function validate(confirmPassword: string) {
-    if (confirmPassword !== passwordFieldInfo.value) {
-      return 'Password does not match.'
-    } else {
-      return undefined
-    }
+    return confirmPassword !== passwordFieldInfo.value
+      ? 'Password does not match.'
+      : undefined
   }
 
   useEffect(() => {
@@ -25,10 +22,10 @@ const ConfirmPasswordField: React.FC<{
   }, [passwordFieldInfo])
 
   return (
-    <Field
-      fieldName="Confirm Password"
-      fieldInfo={fieldInfo}
-      setFieldInfo={setFieldInfo}
+    <FormField
+      label="Confirm Password"
+      info={fieldInfo}
+      setInfo={setFieldInfo}
       placeholder="Enter your password again"
       validate={validate}
       inputType="password"

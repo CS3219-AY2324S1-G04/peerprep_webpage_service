@@ -1,8 +1,6 @@
 import { Box, Divider } from '@mui/joy'
 import { useState } from 'react'
 
-import { SubmissionStatus } from '../types'
-
 const Form: React.FC<{
   FormHeader: React.FC
   FormBody: React.FC<{
@@ -33,6 +31,15 @@ const Form: React.FC<{
       <FormFooter />
     </>
   )
+}
+
+// TODO: Rework this using Redux Saga
+export enum SubmissionStatus {
+  yetToSubmit,
+  submitting,
+  succeeded,
+  failedErrorUnknown,
+  failedErrorKnown,
 }
 
 export default Form

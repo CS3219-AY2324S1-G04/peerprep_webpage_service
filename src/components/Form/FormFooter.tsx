@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/joy'
 import { Link as RouterLink } from 'react-router-dom'
 
-import Paths from '../../../utils/constants/navigation'
+import Paths from '../../utils/constants/navigation'
 
 const FormFooter: React.FC<{
   leadingMessage: string

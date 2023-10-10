@@ -1,19 +1,17 @@
 import { FormControl, FormHelperText, FormLabel, Input } from '@mui/joy'
 import { ChangeEvent } from 'react'
 
-import { FieldInfo } from '../types'
-
-const Field: React.FC<{
-  fieldName: string
-  fieldInfo: FieldInfo
-  setFieldInfo: React.Dispatch<React.SetStateAction<FieldInfo>>
+const FormField: React.FC<{
+  label: string
+  info: FieldInfo
+  setInfo: React.Dispatch<React.SetStateAction<FieldInfo>>
   placeholder: string
   validate?: (value: string) => string | undefined
   inputType?: string
 }> = ({
-  fieldName,
-  fieldInfo,
-  setFieldInfo,
+  label,
+  info,
+  setInfo,
   placeholder,
   validate = () => undefined,
   inputType = 'text',
@@ -22,26 +20,31 @@ const Field: React.FC<{
     const newValue: string = event.target.value
     const newErrorMessage: string | undefined = validate(newValue)
 
-    setFieldInfo({ value: newValue, errorMessage: newErrorMessage })
+    setInfo({ value: newValue, errorMessage: newErrorMessage })
   }
 
   return (
-    <FormControl error={fieldInfo.errorMessage !== undefined}>
-      <FormLabel>{fieldName}</FormLabel>
+    <FormControl error={info.errorMessage !== undefined}>
+      <FormLabel>{label}</FormLabel>
       <Input
         variant="outlined"
         placeholder={placeholder}
         type={inputType}
-        value={fieldInfo.value}
+        value={info.value}
         onChange={handleChange}
       />
-      {fieldInfo.errorMessage === undefined ? (
+      {info.errorMessage === undefined ? (
         <></>
       ) : (
-        <FormHelperText>{fieldInfo.errorMessage}</FormHelperText>
+        <FormHelperText>{info.errorMessage}</FormHelperText>
       )}
     </FormControl>
   )
 }
 
-export default Field
+export interface FieldInfo {
+  value: string
+  errorMessage?: string
+}
+
+export default FormField
