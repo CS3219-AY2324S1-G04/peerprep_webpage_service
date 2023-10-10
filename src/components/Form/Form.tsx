@@ -1,37 +1,44 @@
 import { Box, Divider } from '@mui/joy'
-import { useState } from 'react'
+import React, { PropsWithChildren } from 'react'
 
-const Form: React.FC<{
-  FormHeader: React.FC
-  FormBody: React.FC<{
-    submissionStatus: SubmissionStatus
-    setSubmissionStatus: React.Dispatch<React.SetStateAction<SubmissionStatus>>
-  }>
-  FormFooter: React.FC
-  SuccessMessage: React.FC
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-}> = ({ FormHeader, FormBody, FormFooter, SuccessMessage }) => {
-  const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
-    SubmissionStatus.yetToSubmit,
-  )
+const Form: React.FC<
+  PropsWithChildren<{ hasHeader?: boolean; hasFooter?: boolean }>
+> = ({ children, hasHeader = true, hasFooter = true }) => {
+  const childrenComponents = React.Children.toArray(children)
 
-  return submissionStatus === SubmissionStatus.succeeded ? (
-    <SuccessMessage />
-  ) : (
+  const formHeader = hasHeader ? childrenComponents.shift() : undefined
+  const formFooter = hasFooter ? childrenComponents.pop() : undefined
+
+  return (
     <>
-      <FormHeader />
-      <Box height="32px" />
-      <FormBody
-        submissionStatus={submissionStatus}
-        setSubmissionStatus={setSubmissionStatus}
-      />
-      <Box height="24px" />
-      <Divider />
-      <Box height="24px" />
-      <FormFooter />
+      {hasHeader ? (
+        <>
+          {formHeader}
+          <Box height="32px" />
+        </>
+      ) : null}
+      <Box sx={styles.formBodyContainer}>{childrenComponents}</Box>
+      {hasHeader ? (
+        <>
+          <Box height="24px" />
+          <Divider />
+          <Box height="24px" />
+          {formFooter}
+        </>
+      ) : null}
     </>
   )
 }
+
+const styles = {
+  formBodyContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    gap: '24px',
+    width: '100%',
+  },
+} as const
 
 // TODO: Rework this using Redux Saga
 export enum SubmissionStatus {

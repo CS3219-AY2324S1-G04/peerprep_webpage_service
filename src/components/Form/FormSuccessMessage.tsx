@@ -10,31 +10,35 @@ const FormSuccessMessage: React.FC<{
   linkPath: Paths
 }> = ({ title, linkLeadingMessage, linkMessage, linkPath }) => {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '8px',
-      }}
-    >
-      <Box component="img" src="/logo.png" sx={{ width: '50px' }} />
-      <Typography sx={{ fontWeight: 'bold', fontSize: '30px' }}>
-        {title}
-      </Typography>
-      <Typography level="body-md" color="neutral" sx={{ textAlign: 'center' }}>
+    <Box sx={styles.container}>
+      <Box component="img" src="/logo.png" sx={styles.logo} />
+      <Typography sx={styles.title}>{title}</Typography>
+      <Typography level="body-md" color="neutral" sx={styles.messageBody}>
         {linkLeadingMessage} <span />
         <Link
           component={RouterLink}
           to={linkPath}
           color="primary"
-          sx={{ fontWeight: 'bold', textDecoration: 'none' }}
+          sx={styles.link}
         >
           {linkMessage}
         </Link>
       </Typography>
     </Box>
   )
+}
+
+const styles = {
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '8px',
+  },
+  logo: { width: '50px' },
+  title: { fontWeight: 'bold', fontSize: '30px' },
+  messageBody: { textAlign: 'center' },
+  link: { fontWeight: 'bold', textDecoration: 'none' },
 }
 
 export default FormSuccessMessage

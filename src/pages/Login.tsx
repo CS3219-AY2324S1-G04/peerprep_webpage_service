@@ -6,7 +6,6 @@ import Form, { SubmissionStatus } from '../components/Form/Form'
 import { FieldInfo } from '../components/Form/FormField'
 import FormFooter from '../components/Form/FormFooter'
 import FormHeader from '../components/Form/FormHeader'
-import FormSuccessMessage from '../components/Form/FormSuccessMessage'
 import PasswordField from '../components/UserForm/PasswordField'
 import UsernameField from '../components/UserForm/UsernameField'
 import userService from '../services/userService'
@@ -21,6 +20,38 @@ const Login: React.FC = () => {
   const [passwordFieldInfo, setPasswordFieldInfo] = useState<FieldInfo>({
     value: '',
   })
+
+  const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
+    SubmissionStatus.yetToSubmit,
+  )
+
+  // TODO: Rework this using Redux Saga
+  async function submit() {
+    abortController?.abort()
+    abortController = new AbortController()
+
+    setSubmissionStatus(SubmissionStatus.submitting)
+
+    try {
+      await userService.createSession(
+        usernameFieldInfo.value,
+        passwordFieldInfo.value,
+        abortController,
+      )
+
+      setSubmissionStatus(SubmissionStatus.succeeded)
+    } catch (e) {
+      if (e instanceof CanceledError) {
+        return
+      }
+
+      if (e instanceof AxiosError && e.response?.status === 401) {
+        setSubmissionStatus(SubmissionStatus.failedErrorKnown)
+      } else {
+        setSubmissionStatus(SubmissionStatus.failedErrorUnknown)
+      }
+    }
+  }
 
   function getErrorMessage(
     submissionStatus: SubmissionStatus,
@@ -38,121 +69,6 @@ const Login: React.FC = () => {
     }
   }
 
-  return (
-    <Box sx={styles.overallContainer}>
-      <Sheet variant="soft" sx={styles.sheet}>
-        <Box sx={styles.formContainer}>
-          <Form
-            FormHeader={() => (
-              <FormHeader
-                title="Log in to your account"
-                body={['Welcome back! Please enter your details.']}
-              />
-            )}
-            FormBody={({ submissionStatus, setSubmissionStatus }) => (
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'stretch',
-                  gap: '24px',
-                  width: '100%',
-                }}
-              >
-                <UsernameField
-                  fieldInfo={usernameFieldInfo}
-                  setFieldInfo={setUsernameFieldInfo}
-                  shouldValidate={false}
-                />
-                <PasswordField
-                  fieldInfo={passwordFieldInfo}
-                  setFieldInfo={setPasswordFieldInfo}
-                  shouldValidate={false}
-                />
-
-                <SubmitButton
-                  usernameFieldInfo={usernameFieldInfo}
-                  passwordFieldInfo={passwordFieldInfo}
-                  submissionStatus={submissionStatus}
-                  setSubmissionStatus={setSubmissionStatus}
-                />
-
-                {getErrorMessage(submissionStatus) === undefined ? null : (
-                  <Typography textAlign="center" color="danger">
-                    {getErrorMessage(submissionStatus)}
-                  </Typography>
-                )}
-              </Box>
-            )}
-            FormFooter={() => (
-              <FormFooter
-                leadingMessage="Don't have an account?"
-                linkMessage="Sign up"
-                linkPath={Paths.SignUp}
-              />
-            )}
-            SuccessMessage={() => (
-              <FormSuccessMessage
-                title="Login Successful!"
-                linkLeadingMessage="Proceed to"
-                linkMessage="Dashboard"
-                linkPath={Paths.Dashboard}
-              />
-            )}
-          />
-        </Box>
-      </Sheet>
-    </Box>
-  )
-}
-
-// TODO: Rework this using Redux Saga
-const SubmitButton: React.FC<{
-  usernameFieldInfo: FieldInfo
-  passwordFieldInfo: FieldInfo
-  submissionStatus: SubmissionStatus
-  setSubmissionStatus: React.Dispatch<React.SetStateAction<SubmissionStatus>>
-}> = ({
-  usernameFieldInfo,
-  passwordFieldInfo,
-  submissionStatus,
-  setSubmissionStatus,
-}) => {
-  async function handleClick() {
-    abortController?.abort()
-    abortController = new AbortController()
-
-    setSubmissionStatus(SubmissionStatus.submitting)
-
-    try {
-      await userService.createSession(
-        usernameFieldInfo.value,
-        passwordFieldInfo.value,
-        abortController,
-      )
-
-      setSubmissionStatus(SubmissionStatus.succeeded)
-    } catch (e) {
-      if (isErrorCauseByAbort(e)) {
-        return
-      }
-
-      if (isErrorCauseByMismatchedCredentials(e)) {
-        setSubmissionStatus(SubmissionStatus.failedErrorKnown)
-      } else {
-        setSubmissionStatus(SubmissionStatus.failedErrorUnknown)
-      }
-    }
-  }
-
-  function isErrorCauseByAbort(e: unknown): boolean {
-    return e instanceof CanceledError
-  }
-
-  function isErrorCauseByMismatchedCredentials(e: unknown): boolean {
-    return e instanceof AxiosError && e.response?.status === 401
-  }
-
   useEffect(() => {
     return () => {
       abortController?.abort()
@@ -160,18 +76,52 @@ const SubmitButton: React.FC<{
   }, [])
 
   return (
-    <Button
-      disabled={
-        usernameFieldInfo.value.length === 0 ||
-        passwordFieldInfo.value.length === 0 ||
-        usernameFieldInfo.errorMessage !== undefined ||
-        passwordFieldInfo.errorMessage !== undefined
-      }
-      loading={submissionStatus == SubmissionStatus.submitting}
-      onClick={handleClick}
-    >
-      Sign in
-    </Button>
+    <Box sx={styles.overallContainer}>
+      <Sheet variant="soft" sx={styles.sheet}>
+        <Box sx={styles.formContainer}>
+          <Form>
+            <FormHeader
+              title="Log in to your account"
+              message={['Welcome back! Please enter your details.']}
+            />
+            <UsernameField
+              fieldInfo={usernameFieldInfo}
+              setFieldInfo={setUsernameFieldInfo}
+              shouldValidate={false}
+            />
+            <PasswordField
+              fieldInfo={passwordFieldInfo}
+              setFieldInfo={setPasswordFieldInfo}
+              shouldValidate={false}
+            />
+
+            <Button
+              disabled={
+                usernameFieldInfo.value.length === 0 ||
+                passwordFieldInfo.value.length === 0 ||
+                usernameFieldInfo.errorMessage !== undefined ||
+                passwordFieldInfo.errorMessage !== undefined
+              }
+              loading={submissionStatus == SubmissionStatus.submitting}
+              onClick={submit}
+            >
+              Sign in
+            </Button>
+
+            {getErrorMessage(submissionStatus) === undefined ? null : (
+              <Typography textAlign="center" color="danger">
+                {getErrorMessage(submissionStatus)}
+              </Typography>
+            )}
+            <FormFooter
+              leadingMessage="Don't have an account?"
+              linkMessage="Sign up"
+              linkPath={Paths.SignUp}
+            />
+          </Form>
+        </Box>
+      </Sheet>
+    </Box>
   )
 }
 
@@ -197,13 +147,6 @@ const styles = {
     alignItems: 'center',
     minWidth: '365px',
     maxWidth: '365px',
-  },
-  formBodyContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'stretch',
-    gap: '24px',
-    width: '100%',
   },
 } as const
 

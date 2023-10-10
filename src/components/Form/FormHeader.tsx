@@ -1,24 +1,15 @@
 import { Box, Typography } from '@mui/joy'
 
-const FormHeader: React.FC<{ title: string; body: string[] }> = ({
+const FormHeader: React.FC<{ title: string; message: string[] }> = ({
   title,
-  body,
+  message,
 }) => {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '8px',
-      }}
-    >
-      <Box component="img" src="/logo.png" sx={{ width: '50px' }} />
-      <Typography sx={{ fontWeight: 'bold', fontSize: '30px' }}>
-        {title}
-      </Typography>
-      <Typography level="body-md" color="neutral" sx={{ textAlign: 'center' }}>
-        {body
+    <Box sx={styles.container}>
+      <Box component="img" src="/logo.png" sx={styles.logo} />
+      <Typography sx={styles.title}>{title}</Typography>
+      <Typography level="body-md" color="neutral" sx={styles.messageBody}>
+        {message
           .map((item) => <>{item}</>)
           .reduce((prev, curr) => (
             <>
@@ -30,6 +21,18 @@ const FormHeader: React.FC<{ title: string; body: string[] }> = ({
       </Typography>
     </Box>
   )
+}
+
+const styles = {
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '8px',
+  },
+  logo: { width: '50px' },
+  title: { fontWeight: 'bold', fontSize: '30px' },
+  messageBody: { textAlign: 'center' },
 }
 
 export default FormHeader

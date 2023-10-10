@@ -9,25 +9,28 @@ const FormFooter: React.FC<{
   linkPath: Paths
 }> = ({ leadingMessage, linkMessage, linkPath }) => {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        gap: '4px',
-      }}
-    >
+    <Box sx={styles.container}>
       <Typography>{leadingMessage}</Typography>
       <Typography
         component={RouterLink}
         to={linkPath}
         color="primary"
-        sx={{ fontWeight: 'bold', textDecoration: 'none' }}
+        sx={styles.link}
       >
         {linkMessage}
       </Typography>
     </Box>
   )
+}
+
+const styles = {
+  container: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: '4px',
+  },
+  link: { fontWeight: 'bold', textDecoration: 'none' },
 }
 
 export default FormFooter
