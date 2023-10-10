@@ -1,6 +1,7 @@
 import { Box, Button, Sheet, Typography } from '@mui/joy'
 import { AxiosError, CanceledError } from 'axios'
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import Form, { SubmissionStatus } from '../components/Form/Form'
 import { FieldInfo } from '../components/Form/FormField'
@@ -8,12 +9,17 @@ import FormFooter from '../components/Form/FormFooter'
 import FormHeader from '../components/Form/FormHeader'
 import PasswordField from '../components/UserForm/PasswordField'
 import UsernameField from '../components/UserForm/UsernameField'
-import userService from '../services/userService'
+import { updateUserInfo } from '../features/userInfo/slice'
+import { useAppDispatch } from '../hooks/useAppDispatch'
+import userService, { UserProfile } from '../services/userService'
 import Paths from '../utils/constants/navigation'
 
 let abortController: AbortController
 
 const Login: React.FC = () => {
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+
   const [usernameFieldInfo, setUsernameFieldInfo] = useState<FieldInfo>({
     value: '',
   })
@@ -32,6 +38,7 @@ const Login: React.FC = () => {
 
     setSubmissionStatus(SubmissionStatus.submitting)
 
+    let userProfile: UserProfile
     try {
       await userService.createSession(
         usernameFieldInfo.value,
@@ -39,18 +46,22 @@ const Login: React.FC = () => {
         abortController,
       )
 
-      setSubmissionStatus(SubmissionStatus.succeeded)
+      userProfile = await userService.getUserProfile(abortController)
     } catch (e) {
       if (e instanceof CanceledError) {
-        return
-      }
-
-      if (e instanceof AxiosError && e.response?.status === 401) {
+        setSubmissionStatus(SubmissionStatus.yetToSubmit)
+      } else if (e instanceof AxiosError && e.response?.status === 401) {
         setSubmissionStatus(SubmissionStatus.failedErrorKnown)
       } else {
         setSubmissionStatus(SubmissionStatus.failedErrorUnknown)
       }
+
+      return
     }
+
+    setSubmissionStatus(SubmissionStatus.succeeded)
+    dispatch(updateUserInfo(userProfile))
+    navigate(Paths.Dashboard)
   }
 
   function getErrorMessage(

@@ -1,8 +1,8 @@
 import { Middleware, configureStore } from '@reduxjs/toolkit'
 import { createLogger } from 'redux-logger'
 
-import loginStatusReducer from '../features/loginStatus/slice'
 import questionBankReducer from '../features/questionBank/slice'
+import userInfoReducer from '../features/userInfo/slice'
 
 const extraMiddlewares: Middleware[] = []
 extraMiddlewares.push(createLogger())
@@ -10,7 +10,7 @@ extraMiddlewares.push(createLogger())
 export const store = configureStore({
   reducer: {
     questionBank: questionBankReducer,
-    loginStatus: loginStatusReducer,
+    userInfo: userInfoReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(extraMiddlewares),
