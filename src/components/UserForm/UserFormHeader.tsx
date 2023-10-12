@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/joy'
 
-const FormHeader: React.FC<{ title: string; message: string[] }> = ({
+const UserFormHeader: React.FC<{ title: string; message: string[] }> = ({
   title,
   message,
 }) => {
@@ -35,4 +35,4 @@ const styles = {
   messageBody: { textAlign: 'center' },
 }
 
-export default FormHeader
+export default UserFormHeader

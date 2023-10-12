@@ -3,7 +3,7 @@ import { Link as RouterLink } from 'react-router-dom'
 
 import Paths from '../../utils/constants/navigation'
 
-const FormFooter: React.FC<{
+const UserFormFooter: React.FC<{
   leadingMessage: string
   linkMessage: string
   linkPath: Paths
@@ -33,4 +33,4 @@ const styles = {
   link: { fontWeight: 'bold', textDecoration: 'none' },
 }
 
-export default FormFooter
+export default UserFormFooter
