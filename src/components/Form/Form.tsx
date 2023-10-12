@@ -18,7 +18,7 @@ const Form: React.FC<
         </>
       ) : null}
       <Box sx={styles.formBodyContainer}>{childrenComponents}</Box>
-      {hasHeader ? (
+      {hasFooter ? (
         <>
           <Box height="24px" />
           <Divider />
