@@ -29,7 +29,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    minWidth: '365px',
+    minWidth: { xs: '0px', sm: '365px' },
     maxWidth: '365px',
   },
   formBodyContainer: {

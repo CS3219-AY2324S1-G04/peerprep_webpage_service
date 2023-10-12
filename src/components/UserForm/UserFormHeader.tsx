@@ -31,7 +31,7 @@ const styles = {
     gap: '8px',
   },
   logo: { width: '50px' },
-  title: { fontWeight: 'bold', fontSize: '30px' },
+  title: { fontWeight: 'bold', fontSize: '30px', textAlign: 'center' },
   messageBody: { textAlign: 'center' },
 }
 
