@@ -29,14 +29,14 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    minWidth: { xs: '0px', sm: '365px' },
-    maxWidth: '365px',
+    minWidth: { xs: 0, sm: '22.813rem' },
+    maxWidth: '22.813rem',
   },
   formBodyContainer: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'stretch',
-    gap: '24px',
+    gap: '1.5rem',
     width: '100%',
   },
 } as const

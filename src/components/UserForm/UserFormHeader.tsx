@@ -28,10 +28,10 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: '8px',
+    gap: '0.5rem',
   },
-  logo: { width: '50px' },
-  title: { fontWeight: 'bold', fontSize: '30px', textAlign: 'center' },
+  logo: { width: '3.125rem' },
+  title: { fontWeight: 'bold', fontSize: '1.875rem', textAlign: 'center' },
   messageBody: { textAlign: 'center' },
 }
 

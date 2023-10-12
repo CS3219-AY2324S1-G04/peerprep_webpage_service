@@ -16,19 +16,19 @@ const styles = {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-    padding: '50px 0px',
+    padding: '3.125rem 0rem',
   },
   sheet: (theme: Theme) => {
     return {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'stretch',
-      padding: { xs: '0px', sm: '48px 72px' },
+      padding: { xs: '0rem', sm: '3rem 4.5rem' },
       backgroundColor: {
         xs: 'rgba(0,0,0,0)',
         sm: theme.palette.neutral.softBg,
       },
-      boxShadow: { xs: '0px', sm: 'sm' },
+      boxShadow: { xs: '0rem', sm: 'sm' },
       borderRadius: 'md',
     }
   },
