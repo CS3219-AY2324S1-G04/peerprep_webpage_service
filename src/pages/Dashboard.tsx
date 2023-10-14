@@ -1,31 +1,27 @@
 import { PersonRounded } from '@mui/icons-material'
-import {
-  AspectRatio,
-  Box,
-  Button,
-  Card,
-  Modal,
-  ModalDialog,
-  ModalOverflow,
-  Sheet,
-  Skeleton,
-  Typography,
-} from '@mui/joy'
-import { useState } from 'react'
+import { AspectRatio, Box, Card, Sheet, Skeleton, Typography } from '@mui/joy'
 
-import { FieldInfo } from '../components/Form/FormField'
-import EmailField from '../components/UserForm/EmailField'
-import UsernameField from '../components/UserForm/UsernameField'
+import AccountSettingsModal from '../features/accountSettingsEditor/AccountSettingsModal'
 import { selectProfile } from '../features/userInfo/selector'
 import { useAppSelector } from '../hooks/useAppSelector'
 import { UserProfile, UserRole } from '../services/userService'
 
-// TODO: Add cards for other metrics
 const Dashboard: React.FC = () => {
   return (
     <Box sx={generalStyles.overallContainer}>
-      <Box sx={generalStyles.rowContainer}>
+      <Box sx={generalStyles.gridContainer}>
         <ProfileCard />
+
+        {/* TODO: Replace placeholders. */}
+        <Card variant="soft" sx={placeholderCard2Styles.card}>
+          Metric 2
+        </Card>
+        <Card variant="soft" sx={placeholderCard3Styles.card}>
+          Metric 3
+        </Card>
+        <Card variant="soft" sx={placeholderCard3Styles.card}>
+          Metric 4
+        </Card>
       </Box>
     </Box>
   )
@@ -36,7 +32,7 @@ const ProfileCard: React.FC = () => {
 
   return (
     <Card variant="soft" sx={profileCardStyles.card}>
-      <Box sx={profileCardStyles.infoContainer}>
+      <Box sx={profileCardStyles.profileContainer}>
         <AspectRatio
           variant="outlined"
           ratio="1"
@@ -44,7 +40,7 @@ const ProfileCard: React.FC = () => {
         >
           <PersonRounded />
         </AspectRatio>
-        <Box sx={profileCardStyles.profileTextInfoContainer}>
+        <Box sx={profileCardStyles.profileInfo}>
           <Typography noWrap={true} sx={profileCardStyles.username}>
             {profile?.username === undefined ? (
               <Skeleton>Username</Skeleton>
@@ -60,8 +56,6 @@ const ProfileCard: React.FC = () => {
               profile!.email
             )}
           </Typography>
-
-          <Box height="4px" />
 
           {profile?.userRole === undefined ? (
             <Typography>
@@ -87,72 +81,24 @@ const ProfileCard: React.FC = () => {
           )}
         </Box>
       </Box>
-
-      <EditProfileModal />
+      <AccountSettingsModal />
     </Card>
-  )
-}
-
-const EditProfileModal: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false)
-
-  const [emailFieldInfo, setEmailFieldInfo] = useState<FieldInfo>({ value: '' })
-  const [usernameFieldInfo, setUsernameFieldInfo] = useState<FieldInfo>({
-    value: '',
-  })
-
-  return (
-    <>
-      <Button onClick={() => setIsOpen(true)}>Edit Profile</Button>
-      <Modal
-        open={isOpen}
-        onClose={() => setIsOpen(false)}
-        disableScrollLock={true}
-      >
-        <ModalOverflow>
-          <ModalDialog
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '24px',
-              width: '400px',
-            }}
-          >
-            <Typography
-              textAlign="center"
-              sx={{ fontWeight: 'bold', fontSize: '24px' }}
-            >
-              Edit Profile
-            </Typography>
-            <EmailField
-              fieldInfo={emailFieldInfo}
-              setFieldInfo={setEmailFieldInfo}
-            />
-            <UsernameField
-              fieldInfo={usernameFieldInfo}
-              setFieldInfo={setUsernameFieldInfo}
-            />
-            <Button>Save Changes</Button>
-          </ModalDialog>
-        </ModalOverflow>
-      </Modal>
-    </>
   )
 }
 
 const generalStyles = {
   overallContainer: {
     display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'stretch',
-    gap: '16px',
-  },
-  rowContainer: {
-    display: 'flex',
     flexDirection: 'row',
-    alignItems: 'stretch',
     justifyContent: 'center',
-    gap: '16px',
+    gap: '1rem',
+  },
+  gridContainer: {
+    display: 'grid',
+    gridTemplateColumns: { sm: '1fr', md: '1fr 2fr' },
+    width: '100%',
+    maxWidth: '72rem',
+    gap: '1rem',
   },
 }
 
@@ -160,32 +106,29 @@ const profileCardStyles = {
   card: {
     display: 'flex',
     flexDirection: 'column',
+    gap: '1rem',
     boxShadow: 'sm',
-    gap: '16px',
   },
-  infoContainer: {
+  profileContainer: {
     display: 'flex',
     flexDirection: 'row',
-    gap: '16px',
-    minWidth: '300px',
-    maxWidth: '300px',
+    gap: '1rem',
   },
   profilePicture: {
-    minWidth: '100px',
-    maxWidth: '100px',
+    width: '6.25rem',
     borderRadius: 'md',
   },
-  profileTextInfoContainer: {
-    flexGrow: 1,
+  profileInfo: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
+    flexGrow: '1',
   },
   username: {
-    fontWeight: 'bold',
-    fontSize: '1.2em',
     width: '0px',
     minWidth: '100%',
+    fontWeight: 'bold',
+    fontSize: '1.2em',
   },
   email: {
     width: '0px',
@@ -193,8 +136,17 @@ const profileCardStyles = {
   },
   userRole: {
     padding: '0px 4px',
+    marginTop: '0.25rem',
     borderRadius: 'sm',
   },
+}
+
+const placeholderCard2Styles = {
+  card: { boxShadow: 'sm' },
+}
+
+const placeholderCard3Styles = {
+  card: { gridColumn: '1 / -1', boxShadow: 'sm' },
 }
 
 export default Dashboard
