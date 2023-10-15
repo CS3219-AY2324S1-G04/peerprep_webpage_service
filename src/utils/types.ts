@@ -8,7 +8,19 @@ export interface ServiceResponse {
   data: any // eslint-disable-line
   message: string
 }
+export interface Action<T> {
+  payload: T
+  type: string
+}
+
+export interface SimpleMap<V = string> {
+  [index: string]: V
+}
 
 export const CommonSagaActions = {
   APP_INIT: '@common/APP_INIT',
+}
+
+export const LoadingKeys = {
+  FETCHING_SELECTED_QUESTION: '@loading/FETCHING_SELECTED_QUESTION',
 }

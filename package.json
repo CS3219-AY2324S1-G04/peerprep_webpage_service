@@ -17,6 +17,7 @@
     "@mui/icons-material": "^5.14.11",
     "@mui/joy": "^5.0.0-beta.8",
     "@reduxjs/toolkit": "^1.9.6",
+    "@uiw/react-md-editor": "^3.24.0",
     "axios": "^1.5.1",
     "jest-environment-jsdom": "^29.7.0",
     "lodash": "^4.17.21",

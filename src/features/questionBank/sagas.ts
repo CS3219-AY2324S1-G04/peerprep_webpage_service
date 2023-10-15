@@ -1,9 +1,16 @@
 import axios, { AxiosResponse } from 'axios'
-import { all, fork, put, takeLatest } from 'redux-saga/effects'
+import { all, fork, put, select, takeLatest } from 'redux-saga/effects'
 
-import { CommonSagaActions, ServiceResponse } from '../../utils/types'
-import { setCategories, setQuestionsList } from './slice'
-import { QuestionBankSagaActions } from './types'
+import {
+  Action,
+  CommonSagaActions,
+  LoadingKeys,
+  ServiceResponse,
+} from '../../utils/types'
+import { addLoadingTask, removeLoadingTask } from '../common/slice'
+import { getFullQuestionMap } from './selectors'
+import { addCachedFullQuestion, setCategories, setQuestionsList } from './slice'
+import { Question, QuestionBankSagaActions } from './types'
 
 function* getAllQuestions() {
   try {
@@ -29,6 +36,30 @@ function* getAllCategories() {
   }
 }
 
+function* getSelectedQuestion(action: Action<string>) {
+  yield put(addLoadingTask(LoadingKeys.FETCHING_SELECTED_QUESTION))
+  try {
+    const cachedFullQuestionMap = getFullQuestionMap(yield select())
+    const cachedQns = cachedFullQuestionMap[action.payload]
+    if (cachedQns) {
+      return
+    }
+
+    const response: AxiosResponse<ServiceResponse> = yield axios.get(
+      `http://localhost:9001/question-service/questions/${action.payload}`,
+    )
+    const responseQns: Question | null = response.data.data
+    if (responseQns) {
+      yield put(addCachedFullQuestion(responseQns))
+    }
+  } catch (error) {
+    // TODO: Handle errors properly (e.g. via toast)
+    console.error(error)
+  } finally {
+    yield put(removeLoadingTask(LoadingKeys.FETCHING_SELECTED_QUESTION))
+  }
+}
+
 export function* watchGetAllQuestions() {
   yield takeLatest(
     [CommonSagaActions.APP_INIT, QuestionBankSagaActions.GET_ALL_QUESTIONS],
@@ -43,6 +74,17 @@ export function* watchGetAllCategories() {
   )
 }
 
+export function* watchGetSelectedQuestion() {
+  yield takeLatest(
+    QuestionBankSagaActions.SET_SELECTED_QUESTION,
+    getSelectedQuestion,
+  )
+}
+
 export const questionBankSaga = function* () {
-  yield all([fork(watchGetAllQuestions), fork(watchGetAllCategories)])
+  yield all([
+    fork(watchGetAllQuestions),
+    fork(watchGetAllCategories),
+    fork(watchGetSelectedQuestion),
+  ])
 }

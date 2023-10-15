@@ -16,11 +16,17 @@ import { useState } from 'react'
 import Chip from '../../../components/Chip'
 import ChipDelete from '../../../components/ChipDelete'
 import { CommonTable as Table } from '../../../components/Table/Table'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { SortDirection } from '../../../utils/types'
+import { getComplexityColor } from '../../../utils/uiHelpers'
 import { getCategories, getQuestionsList } from '../selectors'
-import { Question, QuestionComplexity } from '../types'
+import { setSelectedQuestionId } from '../slice'
+import { MinimalQuestion, QuestionComplexity } from '../types'
 
+interface ProblemsTableProps {
+  onQuestionClick: () => void
+}
 interface Filter {
   columnFilterKey: string
   value: string
@@ -28,13 +34,15 @@ interface Filter {
 
 // TODO: Add status column when necessary services are ready
 // Status column should only be added for logged in users
-export default function ProblemsTable() {
+export default function ProblemsTable(props: ProblemsTableProps) {
+  const { onQuestionClick } = props
   const theme = useTheme()
+  const dispatch = useAppDispatch()
   const [filters, setFilters] = useState<Filter[]>([])
 
   const questionsList = useAppSelector(getQuestionsList)
   const allCategories = useAppSelector(getCategories)
-  const { items, sorting, paging, filtering } = Table.useTable<Question>(
+  const { items, sorting, paging, filtering } = Table.useTable<MinimalQuestion>(
     questionsList,
     {
       sortKey: 'title',
@@ -143,7 +151,10 @@ export default function ProblemsTable() {
               sx={styles.categoriesMenu}
             >
               {allCategories.map((category) => (
-                <MenuItem onClick={() => onClickCategoryFilter(category)}>
+                <MenuItem
+                  key={category}
+                  onClick={() => onClickCategoryFilter(category)}
+                >
                   {category}
                 </MenuItem>
               ))}
@@ -207,7 +218,7 @@ export default function ProblemsTable() {
         </Table.Header>
         <Table.Body>
           {items.length > 0 &&
-            items.map((item: Question) => (
+            items.map((item: MinimalQuestion) => (
               <Table.Row key={item._id}>
                 <Table.Cell>
                   <Typography
@@ -218,6 +229,10 @@ export default function ProblemsTable() {
                         color: theme.vars.palette.primary[600],
                         cursor: 'pointer',
                       },
+                    }}
+                    onClick={() => {
+                      dispatch(setSelectedQuestionId(item._id))
+                      onQuestionClick()
                     }}
                   >
                     {item.title}
@@ -241,7 +256,14 @@ export default function ProblemsTable() {
                     )}
                   </Box>
                 </Table.Cell>
-                <Table.Cell>{item.complexity}</Table.Cell>
+                <Table.Cell>
+                  <Typography
+                    fontWeight="bold"
+                    color={getComplexityColor(item.complexity)}
+                  >
+                    {item.complexity}
+                  </Typography>
+                </Table.Cell>
                 <Table.Cell>0.00%</Table.Cell>
               </Table.Row>
             ))}
