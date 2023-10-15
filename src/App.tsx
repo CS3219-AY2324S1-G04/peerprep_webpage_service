@@ -20,15 +20,14 @@ import theme from './utils/theme/themeOverride'
 import { CommonSagaActions } from './utils/types'
 
 const App: React.FC = () => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
+  const isLoggedIn: boolean = useAppSelector(selectIsLoggedIn)
+
   useEffect(() => {
     dispatch({ type: CommonSagaActions.APP_INIT })
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // TODO: Rework this using Redux Saga
-  const dispatch = useAppDispatch()
-  const isLoggedIn: boolean = useAppSelector(selectIsLoggedIn)
-
   useEffect(() => {
     if (isLoggedIn) {
       getUserProfile().then((profile) => dispatch(updateUserInfo(profile)))

@@ -8,13 +8,12 @@ import userInfoReducer from '../features/userInfo/slice'
 import rootSaga from '../features/rootSaga'
 
 const extraMiddlewares: Middleware[] = []
-extraMiddlewares.push(createLogger())
 
 const logger = createLogger()
 const sagaMiddleware = createSagaMiddleware()
 
-middleware.push(logger)
-middleware.push(sagaMiddleware)
+extraMiddlewares.push(logger)
+extraMiddlewares.push(sagaMiddleware)
 
 export const store = configureStore({
   reducer: {
