@@ -1,21 +1,26 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
-import { QuestionBankState } from './types'
+import { Question, QuestionBankState } from './types'
 
 const initialState: QuestionBankState = {
   questionsList: [],
+  categories: [],
 }
 
 const questionBankSlice = createSlice({
   name: 'questionBank',
   initialState,
   reducers: {
-    setQuestionsList: (state, action) => {
-      state.questionsList = action.payload
+    setQuestionsList: (state: QuestionBankState, { payload: questionsList }: PayloadAction<Question[]>) => {
+      state.questionsList = questionsList
     },
+    setCategories: (state: QuestionBankState, { payload: categories }: PayloadAction<string[]>) => {
+      state.categories = categories
+    }
   },
 })
 
-export const { setQuestionsList } = questionBankSlice.actions
+
+export const { setQuestionsList, setCategories } = questionBankSlice.actions
 
 export default questionBankSlice.reducer

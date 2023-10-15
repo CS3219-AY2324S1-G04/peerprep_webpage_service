@@ -7,10 +7,18 @@ import Dashboard from './pages/Dashboard'
 import Problems from './pages/Problems'
 import Paths from './utils/constants/navigation'
 import theme from './utils/theme/themeOverride'
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { CommonSagaActions } from './utils/types'
 
 const App: React.FC = () => {
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch({ type: CommonSagaActions.APP_INIT })
+  }, [])
+
   return (
-    <div className="App">
+    <div className="App" style={{ height: '100%' }}>
       <CssVarsProvider theme={theme}>
         <CssBaseline />
         <Layout.Root>

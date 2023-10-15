@@ -1,4 +1,5 @@
 import { RootState } from '../../context/store'
 
-export const selectQuestionList = (state: RootState) =>
-  state.questionBank.questionsList
+export const getQuestionsList = (state: RootState) => state.questionBank.questionsList
+
+export const getCategories = (state: RootState) => state.questionBank.categories
