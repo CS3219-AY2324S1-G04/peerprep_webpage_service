@@ -1,4 +1,5 @@
 import { Table } from '@mui/joy'
+
 import { TableBody, TableCell, TableRow } from './TableBody'
 import { TableColumnHead, TableHead } from './TableHead'
 import { TablePagination } from './TablePagination'
@@ -41,6 +42,5 @@ const styles = {
     '--TableRow-hoverBackground': 'var(--joy-palette-background-level1)',
     '--TableCell-paddingY': '4px',
     '--TableCell-paddingX': '8px',
-  }
+  },
 } as const
-

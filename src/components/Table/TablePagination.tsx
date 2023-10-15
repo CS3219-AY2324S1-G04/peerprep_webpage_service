@@ -1,10 +1,11 @@
+// icons
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import Box from '@mui/joy/Box'
 import Button from '@mui/joy/Button'
 import IconButton, { iconButtonClasses } from '@mui/joy/IconButton'
 import * as React from 'react'
-// icons
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
+
 import { getPaginationItems } from '../../utils/pagination'
 
 interface TablePaginationProps {
@@ -14,7 +15,9 @@ interface TablePaginationProps {
   onPageChange: (newPage: number) => void
 }
 
-export const TablePagination: React.FC<TablePaginationProps> = (props: TablePaginationProps) => {
+export const TablePagination: React.FC<TablePaginationProps> = (
+  props: TablePaginationProps,
+) => {
   const { currentPage, lastPage, maxLength, onPageChange } = props
   const pageNumbers = getPaginationItems(currentPage, lastPage, maxLength)
 
@@ -30,8 +33,9 @@ export const TablePagination: React.FC<TablePaginationProps> = (props: TablePagi
           md: 'flex',
         },
         '.activePage': {
-          backgroundColor: (theme) => theme.vars.palette.neutral.outlinedActiveBg
-        }
+          backgroundColor: (theme) =>
+            theme.vars.palette.neutral.outlinedActiveBg,
+        },
       }}
     >
       <Button
@@ -45,9 +49,11 @@ export const TablePagination: React.FC<TablePaginationProps> = (props: TablePagi
         Previous
       </Button>
 
-      <Box sx={{ 
-        flex: 1,
-      }} />
+      <Box
+        sx={{
+          flex: 1,
+        }}
+      />
       {pageNumbers.map((pageNum, idx) => (
         <IconButton
           className={currentPage === pageNum ? 'activePage' : ''}

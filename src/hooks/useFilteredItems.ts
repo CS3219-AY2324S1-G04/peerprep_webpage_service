@@ -1,15 +1,22 @@
-import { useState, useMemo } from "react"
-import { matchSorter } from "match-sorter"
-import { useDebouncedValue } from "./useDebounce"
+import { matchSorter } from 'match-sorter'
+import { useMemo, useState } from 'react'
 
-export function useFilteredItems(allItems: any, searchProperties: string[], columnProperties: string[]) {
-  const [filterText, setFilterText] = useState<string>("") // to filter by search term
-  const [filterColumns, setFilterColumns] = useState<Map<string, string[]>>(new Map([])) // to filter by column values
+import { useDebouncedValue } from './useDebounce'
+
+export function useFilteredItems<T>(
+  allItems: T[],
+  searchProperties: string[],
+  columnProperties: string[],
+) {
+  const [filterText, setFilterText] = useState<string>('') // to filter by search term
+  const [filterColumns, setFilterColumns] = useState<Map<string, string[]>>(
+    new Map([]),
+  ) // to filter by column values
 
   const debouncedFilterText = useDebouncedValue(filterText, 250)
-  const propertiesKey = (searchProperties || []).join(",")
+  const propertiesKey = (searchProperties || []).join(',')
   const filteredItems = useMemo(() => {
-    let filtered: string[] = allItems
+    let filtered = allItems
     if (allItems && allItems.length) {
       if (!searchProperties.length && !columnProperties.length) {
         return allItems
@@ -18,7 +25,7 @@ export function useFilteredItems(allItems: any, searchProperties: string[], colu
       if (searchProperties.length > 0) {
         filtered = matchSorter(allItems, debouncedFilterText, {
           keys: searchProperties,
-          threshold: matchSorter.rankings.CONTAINS
+          threshold: matchSorter.rankings.CONTAINS,
         })
       }
 
@@ -26,10 +33,14 @@ export function useFilteredItems(allItems: any, searchProperties: string[], colu
         columnProperties.forEach((property) => {
           const terms = filterColumns.get(property) ?? []
 
-          filtered = terms.reduceRight((results, term) => matchSorter(results, term, { 
-            keys: [property],
-            threshold: matchSorter.rankings.EQUAL
-          }), filtered)
+          filtered = terms.reduceRight(
+            (results, term) =>
+              matchSorter(results, term, {
+                keys: [property],
+                threshold: matchSorter.rankings.EQUAL,
+              }),
+            filtered,
+          )
         })
       }
 
@@ -37,6 +48,7 @@ export function useFilteredItems(allItems: any, searchProperties: string[], colu
     }
 
     return []
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allItems, debouncedFilterText, propertiesKey, filterColumns])
 
   return {
@@ -44,6 +56,6 @@ export function useFilteredItems(allItems: any, searchProperties: string[], colu
     setFilterText,
     filterColumns,
     setFilterColumns,
-    filteredItems
+    filteredItems,
   }
 }

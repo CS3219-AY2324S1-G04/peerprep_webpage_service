@@ -1,4 +1,5 @@
 import { Box, Typography } from '@mui/joy'
+
 import Chip from '../Chip'
 
 export interface HeaderProps {
@@ -11,20 +12,16 @@ const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
 
   return (
     <Box display="flex">
-      <Typography level='h3'>{title}</Typography>
-      {chipLabel && (
-        <Chip sx={styles.chip}>
-          {chipLabel}
-        </Chip>
-      )}
+      <Typography level="h3">{title}</Typography>
+      {chipLabel && <Chip sx={styles.chip}>{chipLabel}</Chip>}
     </Box>
   )
 }
 
 const styles = {
   chip: {
-    ml: 1
-  }
+    ml: 1,
+  },
 } as const
 
 export default Header

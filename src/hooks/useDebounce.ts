@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from "react"
+import { useEffect, useState } from 'react'
 
-export function useDebouncedValue(value: any, delay: number) {
+export function useDebouncedValue<T>(value: T, delay: number) {
   // State and setters for debounced value
-  const [debouncedValue, setDebouncedValue] = useState(value)
+  const [debouncedValue, setDebouncedValue] = useState<T>(value)
 
   useEffect(() => {
     // Update state to the passed in value after the specified delay
@@ -20,18 +20,4 @@ export function useDebouncedValue(value: any, delay: number) {
   }, [value, delay])
 
   return debouncedValue
-}
-
-export function useDebouncedEffect(effectFn: any, value: any, delay = 350) {
-  const effectRef = useRef(effectFn)
-  const updatedValue = useDebouncedValue(value, delay)
-  useEffect(() => {
-    effectRef.current = effectFn
-  }, [effectFn])
-  useEffect(() => {
-    if (effectRef.current) {
-      return effectRef.current(updatedValue)
-    }
-    return undefined
-  }, [updatedValue])
 }

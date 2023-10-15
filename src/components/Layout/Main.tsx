@@ -9,12 +9,16 @@ const Main: React.FC<BoxProps> = (props: BoxProps) => {
       component="main"
       className="Main"
       {...props}
-      sx={[{ 
-        height: '100%',
-        p: 2,
-        bgcolor: (theme) =>
-        mode === 'light' ? theme.vars.palette.background.level1 : theme.vars.palette.background.body,
-       }, ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
+      sx={[
+        {
+          height: '100%',
+          p: 2,
+          bgcolor: (theme) =>
+            mode === 'light'
+              ? theme.vars.palette.background.level1
+              : theme.vars.palette.background.body,
+        },
+        ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
       ]}
     />
   )

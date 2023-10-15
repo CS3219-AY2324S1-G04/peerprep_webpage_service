@@ -1,7 +1,8 @@
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
 import { Link } from '@mui/joy'
-import * as React from 'react'
 import { visuallyHidden } from '@mui/utils'
+import * as React from 'react'
+
 import { SortDirection } from '../../utils/types'
 
 interface TableHeadProps {
@@ -12,20 +13,20 @@ interface TableHeadProps {
 }
 
 export const TableHead: React.FC<TableHeadProps> = (props: TableHeadProps) => {
-  const { sortKey = "", sortDir = false, onSort, children, ...rest } = props
-  let hasSorting = sortDir && sortKey && onSort ? true : false
-  let headers = !hasSorting
+  const { sortKey = '', sortDir = false, onSort, children, ...rest } = props
+  const hasSorting = sortDir && sortKey && onSort ? true : false
+  const headers = !hasSorting
     ? children
     : React.Children.map(children, (child) => {
-      if (React.isValidElement(child)) {
-        return React.cloneElement(child, {
-          ...child.props,
-          onSort,
-          sortDir: child.props.id === sortKey ? sortDir : false,
-          sortable: !hasSorting ? false : child.props.sortable
-        })
-      }
-    })
+        if (React.isValidElement(child)) {
+          return React.cloneElement(child, {
+            ...child.props,
+            onSort,
+            sortDir: child.props.id === sortKey ? sortDir : false,
+            sortable: !hasSorting ? false : child.props.sortable,
+          })
+        }
+      })
   return (
     <thead {...rest}>
       <tr>{headers}</tr>
@@ -40,7 +41,9 @@ interface TableSortLabelProps {
   children: React.ReactNode
 }
 
-const TableSortLabel: React.FC<TableSortLabelProps> = (props: TableSortLabelProps) => {
+const TableSortLabel: React.FC<TableSortLabelProps> = (
+  props: TableSortLabelProps,
+) => {
   const { active, direction, onClick, children } = props
 
   return (
@@ -71,27 +74,18 @@ interface TableColumnHeadProps {
   sortable?: boolean
   sortDir?: SortDirection
   onSort?: (newSortKey: string) => void
-  cellProps?: any
+  cellProps?: React.ThHTMLAttributes<HTMLTableCellElement>
   children: React.ReactNode
 }
 
-
-export const TableColumnHead: React.FC<TableColumnHeadProps> = (props: TableColumnHeadProps) => {
-  const {
-    id,
-    children,
-    cellProps,
-    sortable = true,
-    sortDir,
-    onSort
-  } = props
+export const TableColumnHead: React.FC<TableColumnHeadProps> = (
+  props: TableColumnHeadProps,
+) => {
+  const { id, children, cellProps, sortable = true, sortDir, onSort } = props
   const canSort = onSort && sortable
 
   return (
-    <th
-      key={id}
-      {...cellProps}
-    >
+    <th key={id} {...cellProps}>
       {canSort ? (
         <TableSortLabel
           active={!!sortDir}
@@ -101,7 +95,7 @@ export const TableColumnHead: React.FC<TableColumnHeadProps> = (props: TableColu
           {children}
           {canSort ? (
             <span style={visuallyHidden}>
-              {sortDir === "desc" ? "sorted descending" : "sorted ascending"}
+              {sortDir === 'desc' ? 'sorted descending' : 'sorted ascending'}
             </span>
           ) : null}
         </TableSortLabel>

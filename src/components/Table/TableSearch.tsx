@@ -1,12 +1,14 @@
-import { Input } from "@mui/joy"
 import SearchIcon from '@mui/icons-material/Search'
+import { Input } from '@mui/joy'
 
 interface TableSearchBoxProps {
-  onChange: (value: string) => void,
+  onChange: (value: string) => void
   value: string
 }
 
-export const TableSearchBox: React.FC<TableSearchBoxProps> = (props: TableSearchBoxProps) => {
+export const TableSearchBox: React.FC<TableSearchBoxProps> = (
+  props: TableSearchBoxProps,
+) => {
   const { value, onChange } = props
   return (
     <Input

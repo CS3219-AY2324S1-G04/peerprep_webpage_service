@@ -1,22 +1,29 @@
-import { useState, useMemo, useEffect, useRef } from "react"
-import { orderBy } from "lodash"
-import { SortDirection } from "../utils/types"
+import { orderBy } from 'lodash'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
-const getStringValueForSort = (item: any, property: any) =>
-  (item[property] || "").toLowerCase()
+import { SortDirection } from '../utils/types'
 
-const sortByString = (items: any[], sortKey: string, sortDir: SortDirection) => {
+const getStringValueForSort = <T>(item: T, property: string) => {
+  const stringValue: string = item[property as keyof T] as string
+  return (stringValue || '').toLowerCase()
+}
+
+const sortByString = <T>(
+  items: T[],
+  sortKey: string,
+  sortDir: SortDirection,
+) => {
   return orderBy(
     items,
-    [(item: any) => getStringValueForSort(item, sortKey)],
-    [sortDir]
+    [(item: string) => getStringValueForSort(item, sortKey)],
+    [sortDir],
   )
 }
 
-export const useSortedItems = (
-  items: any[],
+export const useSortedItems = <T>(
+  items: T[],
   initial = {},
-  sortItems = sortByString
+  sortItems = sortByString,
 ) => {
   // We don't want to re-render if the sort fn changes
   // because most likely it changed "accidentally" by
@@ -29,26 +36,25 @@ export const useSortedItems = (
 
   const [sort, setSort] = useState({
     sortDir: SortDirection.Ascending,
-    sortKey: "",
-    ...initial
+    sortKey: '',
+    ...initial,
   })
 
   const onSort = (newSortKey: string) => {
-    const isAsc = sort.sortKey === newSortKey && sort.sortDir === "asc"
+    const isAsc = sort.sortKey === newSortKey && sort.sortDir === 'asc'
     setSort({
       sortKey: newSortKey,
-      sortDir: isAsc ? SortDirection.Descending : SortDirection.Ascending
+      sortDir: isAsc ? SortDirection.Descending : SortDirection.Ascending,
     })
   }
-  // Sort case-insensitive by whatever column is selected, use userId to break sorting ties
   const sortedItems = useMemo(
     () => sortItemsRef.current(items, sort.sortKey, sort.sortDir),
-    [items, sort]
+    [items, sort],
   )
 
   return {
     sortedItems,
     onSort,
-    ...sort
+    ...sort,
   }
 }

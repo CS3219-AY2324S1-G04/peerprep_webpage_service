@@ -1,4 +1,6 @@
 import { CssBaseline, CssVarsProvider } from '@mui/joy'
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { Route, Routes } from 'react-router-dom'
 
 import { Layout } from './components/Layout'
@@ -7,15 +9,13 @@ import Dashboard from './pages/Dashboard'
 import Problems from './pages/Problems'
 import Paths from './utils/constants/navigation'
 import theme from './utils/theme/themeOverride'
-import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
 import { CommonSagaActions } from './utils/types'
 
 const App: React.FC = () => {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch({ type: CommonSagaActions.APP_INIT })
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="App" style={{ height: '100%' }}>

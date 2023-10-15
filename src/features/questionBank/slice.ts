@@ -11,15 +11,20 @@ const questionBankSlice = createSlice({
   name: 'questionBank',
   initialState,
   reducers: {
-    setQuestionsList: (state: QuestionBankState, { payload: questionsList }: PayloadAction<Question[]>) => {
+    setQuestionsList: (
+      state: QuestionBankState,
+      { payload: questionsList }: PayloadAction<Question[]>,
+    ) => {
       state.questionsList = questionsList
     },
-    setCategories: (state: QuestionBankState, { payload: categories }: PayloadAction<string[]>) => {
+    setCategories: (
+      state: QuestionBankState,
+      { payload: categories }: PayloadAction<string[]>,
+    ) => {
       state.categories = categories
-    }
+    },
   },
 })
-
 
 export const { setQuestionsList, setCategories } = questionBankSlice.actions
 
