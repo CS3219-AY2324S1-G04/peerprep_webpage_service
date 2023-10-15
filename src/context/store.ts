@@ -4,9 +4,11 @@ import createSagaMiddleware from 'redux-saga'
 
 import commonReducer from '../features/common/slice'
 import questionBankReducer from '../features/questionBank/slice'
+import userInfoReducer from '../features/userInfo/slice'
 import rootSaga from '../features/rootSaga'
 
-const middleware: Middleware[] = []
+const extraMiddlewares: Middleware[] = []
+extraMiddlewares.push(createLogger())
 
 const logger = createLogger()
 const sagaMiddleware = createSagaMiddleware()
@@ -18,8 +20,10 @@ export const store = configureStore({
   reducer: {
     common: commonReducer,
     questionBank: questionBankReducer,
+    userInfo: userInfoReducer,
   },
-  middleware,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(extraMiddlewares),
   devTools: true,
 })
 
