@@ -1,6 +1,5 @@
 import { CssBaseline, CssVarsProvider } from '@mui/joy'
 import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
 import { Route, Routes } from 'react-router-dom'
 
 import { Layout } from './components/Layout'
@@ -43,6 +42,7 @@ const App: React.FC = () => {
             <GuestNavigationBar />
           </Layout.Header>
           <Layout.Main>
+            <Layout.Background />
             <Routes>
               <Route path="/" element={<Root />} />
               <Route path={Paths.Dashboard} element={<Dashboard />} />
