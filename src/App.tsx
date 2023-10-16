@@ -1,5 +1,6 @@
 import { CssBaseline, CssVarsProvider } from '@mui/joy'
 import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { Route, Routes } from 'react-router-dom'
 
 import { Layout } from './components/Layout'
@@ -16,12 +17,17 @@ import SignUp from './pages/SignUp'
 import { getUserProfile } from './services/userService'
 import Paths from './utils/constants/navigation'
 import theme from './utils/theme/themeOverride'
+import { CommonSagaActions } from './utils/types'
 
 const App: React.FC = () => {
-  // TODO: Rework this using Redux Saga
   const dispatch = useAppDispatch()
   const isLoggedIn: boolean = useAppSelector(selectIsLoggedIn)
 
+  useEffect(() => {
+    dispatch({ type: CommonSagaActions.APP_INIT })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // TODO: Rework this using Redux Saga
   useEffect(() => {
     if (isLoggedIn) {
       getUserProfile().then((profile) => dispatch(updateUserInfo(profile)))
@@ -29,7 +35,7 @@ const App: React.FC = () => {
   })
 
   return (
-    <div className="App">
+    <div className="App" style={{ height: '100%' }}>
       <CssVarsProvider theme={theme}>
         <CssBaseline />
         <Layout.Root>
