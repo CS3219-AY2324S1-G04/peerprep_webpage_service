@@ -26,7 +26,7 @@ const styles = {
       padding: { xs: '0rem', sm: '3rem 4.5rem' },
       backgroundColor: {
         xs: 'rgba(0,0,0,0)',
-        sm: theme.palette.neutral.softBg,
+        sm: theme.palette.background.surface,
       },
       boxShadow: { xs: '0rem', sm: 'sm' },
       borderRadius: 'md',

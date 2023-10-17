@@ -1,11 +1,20 @@
 import { Box, Divider } from '@mui/joy'
-import React, { PropsWithChildren } from 'react'
+import React from 'react'
 
-const UserForm: React.FC<
-  PropsWithChildren<{
-    onSubmit?: React.FormEventHandler<HTMLFormElement>
-  }>
-> = ({ children, onSubmit }) => {
+import ConfirmPasswordField from './ConfirmPasswordField'
+import EmailAddressField from './EmailAddressField'
+import PasswordField from './PasswordField'
+import UserFormContainer from './UserFormContainer'
+import UserFormFooter from './UserFormFooter'
+import UserFormHeader from './UserFormHeader'
+import UserFormSuccessMessage from './UserFormSuccessMessage'
+import UsernameField from './UsernameField'
+
+interface UserFormProps extends React.PropsWithChildren {
+  onSubmit?: React.FormEventHandler<HTMLFormElement>
+}
+
+const UserForm = ({ children, onSubmit }: UserFormProps) => {
   const childrenComponents = React.Children.toArray(children)
 
   const formHeader = childrenComponents.shift()
@@ -41,13 +50,14 @@ const styles = {
   },
 } as const
 
-// TODO: Rework this using Redux Saga
-export enum SubmissionStatus {
-  yetToSubmit,
-  submitting,
-  succeeded,
-  failedErrorUnknown,
-  failedErrorKnown,
-}
+UserForm.Container = UserFormContainer
+UserForm.Header = UserFormHeader
+UserForm.Footer = UserFormFooter
+UserForm.SuccessMessage = UserFormSuccessMessage
+
+UserForm.UsernameField = UsernameField
+UserForm.EmailAddressField = EmailAddressField
+UserForm.PasswordField = PasswordField
+UserForm.ConfirmPasswordField = ConfirmPasswordField
 
 export default UserForm
