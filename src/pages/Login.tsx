@@ -3,12 +3,7 @@ import { FormEvent, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { FieldInfo } from '../components/Form/FormField'
-import PasswordField from '../components/UserForm/PasswordField'
 import UserForm from '../components/UserForm/UserForm'
-import UserFormContainer from '../components/UserForm/UserFormContainer'
-import UserFormFooter from '../components/UserForm/UserFormFooter'
-import UserFormHeader from '../components/UserForm/UserFormHeader'
-import UsernameField from '../components/UserForm/UsernameField'
 import { getIsLoggedIn } from '../features/user/selector'
 import { UserSagaActions } from '../features/user/types'
 import { useAppDispatch } from '../hooks/useAppDispatch'
@@ -55,18 +50,18 @@ const Login: React.FC = () => {
   }
 
   return (
-    <UserFormContainer>
+    <UserForm.Container>
       <UserForm onSubmit={canSubmit ? handleSubmit : undefined}>
-        <UserFormHeader
+        <UserForm.Header
           title="Log in to your account"
           message={['Welcome back! Please enter your details.']}
         />
-        <UsernameField
+        <UserForm.UsernameField
           fieldInfo={usernameFieldInfo}
           setFieldInfo={setUsernameFieldInfo}
           shouldValidate={false}
         />
-        <PasswordField
+        <UserForm.PasswordField
           fieldInfo={passwordFieldInfo}
           setFieldInfo={setPasswordFieldInfo}
           shouldValidate={false}
@@ -76,13 +71,13 @@ const Login: React.FC = () => {
           Sign in
         </Button>
 
-        <UserFormFooter
+        <UserForm.Footer
           leadingMessage="Don't have an account?"
           linkMessage="Sign up"
           linkPath={Paths.SignUp}
         />
       </UserForm>
-    </UserFormContainer>
+    </UserForm.Container>
   )
 }
 

@@ -3,15 +3,7 @@ import { AxiosError } from 'axios'
 import React, { FormEvent, useState } from 'react'
 
 import { FieldInfo } from '../components/Form/FormField'
-import ConfirmPasswordField from '../components/UserForm/ConfirmPasswordField'
-import EmailField from '../components/UserForm/EmailField'
-import PasswordField from '../components/UserForm/PasswordField'
 import UserForm from '../components/UserForm/UserForm'
-import UserFormContainer from '../components/UserForm/UserFormContainer'
-import UserFormFooter from '../components/UserForm/UserFormFooter'
-import UserFormHeader from '../components/UserForm/UserFormHeader'
-import UserFormSuccessMessage from '../components/UserForm/UserFormSuccessMessage'
-import UsernameField from '../components/UserForm/UsernameField'
 import userService, { CreateUserParamError } from '../services/userService'
 import Paths from '../utils/constants/navigation'
 
@@ -93,9 +85,9 @@ const SignUp: React.FC = () => {
   }
 
   return (
-    <UserFormContainer>
+    <UserForm.Container>
       {submissionStatus === SubmissionStatus.succeeded ? (
-        <UserFormSuccessMessage
+        <UserForm.SuccessMessage
           title="Sign Up Successful!"
           linkLeadingMessage="You can now"
           linkMessage="Login"
@@ -103,26 +95,26 @@ const SignUp: React.FC = () => {
         />
       ) : (
         <UserForm onSubmit={canSubmit ? handleSubmit : undefined}>
-          <UserFormHeader
+          <UserForm.Header
             title="Welcome to PeerPrep! 👋🏼"
             message={[
               'Hello, I guess you are new around here.',
               "Let's start by creating your account!",
             ]}
           />
-          <EmailField
+          <UserForm.EmailAddressField
             fieldInfo={emailAddressFieldInfo}
             setFieldInfo={setEmailAddressFieldInfo}
           />
-          <UsernameField
+          <UserForm.UsernameField
             fieldInfo={usernameFieldInfo}
             setFieldInfo={setUsernameFieldInfo}
           />
-          <PasswordField
+          <UserForm.PasswordField
             fieldInfo={passwordFieldInfo}
             setFieldInfo={setPasswordFieldInfo}
           />
-          <ConfirmPasswordField
+          <UserForm.ConfirmPasswordField
             fieldInfo={confirmPasswordFieldInfo}
             setFieldInfo={setConfirmPasswordFieldInfo}
             passwordFieldInfo={passwordFieldInfo}
@@ -136,14 +128,14 @@ const SignUp: React.FC = () => {
             Create an account
           </Button>
 
-          <UserFormFooter
+          <UserForm.Footer
             leadingMessage="Already have an account?"
             linkMessage="Login"
             linkPath={Paths.Login}
           />
         </UserForm>
       )}
-    </UserFormContainer>
+    </UserForm.Container>
   )
 }
 
