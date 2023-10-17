@@ -11,6 +11,5 @@ export const UserSagaActions = {
   CREATE_SESSION: '@userInfo/CREATE_SESSION',
   // DELETE_SESSION: '@userInfo/DELETE_SESSION', // TODO:
   GET_USER_PROFILE: '@userInfo/GET_USER_PROFILE',
-  // UPDATE_USER_PROFILE: '@userInfo/UPDATE_USER_PROFILE', // TODO:
   // DELETE_USER: '@userInfo/DELETE_USER', // TODO:
 }

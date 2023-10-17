@@ -2,7 +2,7 @@ import { AxiosError } from 'axios'
 import { all, fork, put, takeLatest } from 'redux-saga/effects'
 
 import { store } from '../../context/store'
-import userService, { LoginCredential } from '../../services/userService'
+import userService, { UserCredential } from '../../services/userService'
 import { Action, CommonSagaActions } from '../../utils/types'
 import { addLoadingTask, removeLoadingTask } from '../common/slice'
 import { getIsLoggedIn } from './selector'
@@ -15,7 +15,7 @@ function* initLoggedIn() {
   }
 }
 
-function* createSession(action: Action<LoginCredential>) {
+function* createSession(action: Action<UserCredential>) {
   yield put(addLoadingTask(UserSagaActions.CREATE_SESSION))
 
   try {

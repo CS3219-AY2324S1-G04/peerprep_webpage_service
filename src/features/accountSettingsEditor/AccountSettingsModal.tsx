@@ -7,17 +7,22 @@ import {
   ModalOverflow,
   Typography,
 } from '@mui/joy'
+import { AxiosError } from 'axios'
 import React, { useState } from 'react'
 
 import { FieldInfo } from '../../components/Form/FormField'
 import ConfirmPasswordField from '../../components/UserForm/ConfirmPasswordField'
-import EmailField from '../../components/UserForm/EmailField'
+import EmailAddressField from '../../components/UserForm/EmailAddressField'
 import PasswordField from '../../components/UserForm/PasswordField'
 import UsernameField from '../../components/UserForm/UsernameField'
+import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
-import { UserProfile } from '../../services/userService'
-import { selectProfile } from '../userInfo/selector'
-import DeleteAccountModal from './DeleteAccountModal'
+import userService, {
+  UpdateUserParamError,
+  UserProfile,
+} from '../../services/userService'
+import { getUserProfile } from '../user/selector'
+import { UserSagaActions } from '../user/types'
 
 const AccountSettingsModal: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -43,24 +48,81 @@ const AccountSettingsModal: React.FC = () => {
 }
 
 const EditProfileSection: React.FC = () => {
-  const profile: UserProfile | undefined = useAppSelector(selectProfile)
+  const dispatch = useAppDispatch()
 
-  const [emailFieldInfo, setEmailFieldInfo] = useState<FieldInfo>({
-    value: profile?.email ?? '',
-  })
+  const profile: UserProfile | undefined = useAppSelector(getUserProfile)
+
+  const [emailAddressFieldInfo, setEmailAddressFieldInfo] = useState<FieldInfo>(
+    {
+      value: profile?.emailAddress ?? '',
+    },
+  )
   const [usernameFieldInfo, setUsernameFieldInfo] = useState<FieldInfo>({
     value: profile?.username ?? '',
   })
 
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+
+  const canSubmit: boolean =
+    !isSubmitting &&
+    emailAddressFieldInfo.value.length > 0 &&
+    usernameFieldInfo.value.length > 0 &&
+    emailAddressFieldInfo.errorMessage === undefined &&
+    usernameFieldInfo.errorMessage === undefined
+
+  async function submit() {
+    setIsSubmitting(true)
+
+    try {
+      await userService.updateUserProfile({
+        emailAddress: emailAddressFieldInfo.value,
+        username: usernameFieldInfo.value,
+      })
+      // TODO: Show toast / snackbar containing success message
+      console.log('Successfully updated.')
+    } catch (error) {
+      if (isErrorCausedByInvalidParams(error)) {
+        updateParamErrorMessages((error as AxiosError).response?.data ?? {})
+      } else {
+        // TODO: Show toast / snackbar containing error message
+        console.error('Sorry, please try again later.')
+      }
+    }
+
+    setIsSubmitting(false)
+
+    dispatch({ type: UserSagaActions.GET_USER_PROFILE })
+  }
+
+  function isErrorCausedByInvalidParams(error: unknown): boolean {
+    return error instanceof AxiosError && error.response?.status === 400
+  }
+
+  function updateParamErrorMessages(paramError: UpdateUserParamError) {
+    setEmailAddressFieldInfo({
+      value: emailAddressFieldInfo.value,
+      errorMessage: paramError.emailAddress,
+    })
+    setUsernameFieldInfo({
+      value: usernameFieldInfo.value,
+      errorMessage: paramError.username,
+    })
+  }
+
   return (
     <>
       <Typography sx={styles.sectionTitle}>Profile</Typography>
-      <EmailField fieldInfo={emailFieldInfo} setFieldInfo={setEmailFieldInfo} />
+      <EmailAddressField
+        fieldInfo={emailAddressFieldInfo}
+        setFieldInfo={setEmailAddressFieldInfo}
+      />
       <UsernameField
         fieldInfo={usernameFieldInfo}
         setFieldInfo={setUsernameFieldInfo}
       />
-      <Button>Update Profile</Button>
+      <Button disabled={!canSubmit} loading={isSubmitting} onClick={submit}>
+        Update Profile
+      </Button>
     </>
   )
 }
@@ -115,15 +177,56 @@ const MiscSection: React.FC = () => {
   )
 }
 
+const DeleteAccountModal: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false)
+
+  const [passwordFieldInfo, setPasswordFieldInfo] = useState<FieldInfo>({
+    value: '',
+  })
+
+  return (
+    <>
+      <Button color="danger" onClick={() => setIsOpen(true)}>
+        Delete Account
+      </Button>
+      <Modal open={isOpen} onClose={() => setIsOpen(false)}>
+        <ModalOverflow>
+          <ModalDialog sx={styles.modalDialog}>
+            <Typography sx={styles.sectionTitle}>Delete Account</Typography>
+            <Typography>
+              Account deletion is permanent, it cannot be undone. If you would
+              like to proceed, enter your password below.
+            </Typography>
+            <PasswordField
+              fieldInfo={passwordFieldInfo}
+              setFieldInfo={setPasswordFieldInfo}
+              shouldValidate={false}
+            />
+            <Button
+              disabled={
+                passwordFieldInfo.errorMessage !== undefined ||
+                passwordFieldInfo.value === ''
+              }
+              color="danger"
+            >
+              Delete Account
+            </Button>
+          </ModalDialog>
+        </ModalOverflow>
+      </Modal>
+    </>
+  )
+}
+
 const styles = {
   modalDialog: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '24px',
-    width: '400px',
+    gap: '1.5rem',
+    width: '25rem',
   },
-  sectionTitle: { textAlign: 'center', fontWeight: 'bold', fontSize: '24px' },
-  divider: { margin: '0px' },
+  sectionTitle: { textAlign: 'center', fontWeight: 'bold', fontSize: '1.5rem' },
+  divider: { margin: 0 },
 }
 
 export default AccountSettingsModal

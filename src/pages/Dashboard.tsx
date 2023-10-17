@@ -1,8 +1,16 @@
 import { PersonRounded } from '@mui/icons-material'
-import { AspectRatio, Box, Card, Sheet, Skeleton, Typography } from '@mui/joy'
+import {
+  AspectRatio,
+  Box,
+  Card,
+  Sheet,
+  Skeleton,
+  Theme,
+  Typography,
+} from '@mui/joy'
 
 import AccountSettingsModal from '../features/accountSettingsEditor/AccountSettingsModal'
-import { selectProfile } from '../features/userInfo/selector'
+import { getUserProfile } from '../features/user/selector'
 import { useAppSelector } from '../hooks/useAppSelector'
 import { UserProfile, UserRole } from '../services/userService'
 
@@ -28,7 +36,7 @@ const Dashboard: React.FC = () => {
 }
 
 const ProfileCard: React.FC = () => {
-  const profile: UserProfile | undefined = useAppSelector(selectProfile)
+  const profile: UserProfile | undefined = useAppSelector(getUserProfile)
 
   return (
     <Card variant="soft" sx={profileCardStyles.card}>
@@ -50,10 +58,10 @@ const ProfileCard: React.FC = () => {
           </Typography>
 
           <Typography noWrap={true} sx={profileCardStyles.email}>
-            {profile?.email === undefined ? (
-              <Skeleton>Email</Skeleton>
+            {profile?.emailAddress === undefined ? (
+              <Skeleton>Email address</Skeleton>
             ) : (
-              profile!.email
+              profile!.emailAddress
             )}
           </Typography>
 
@@ -100,15 +108,23 @@ const generalStyles = {
     maxWidth: '72rem',
     gap: '1rem',
   },
+  card: (theme: Theme) => {
+    return {
+      backgroundColor: theme.palette.background.surface,
+      boxShadow: 'sm',
+    }
+  },
 }
 
 const profileCardStyles = {
-  card: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1rem',
-    boxShadow: 'sm',
-  },
+  card: [
+    generalStyles.card,
+    {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '1rem',
+    },
+  ],
   profileContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -142,11 +158,11 @@ const profileCardStyles = {
 }
 
 const placeholderCard2Styles = {
-  card: { boxShadow: 'sm' },
+  card: generalStyles.card,
 }
 
 const placeholderCard3Styles = {
-  card: { gridColumn: '1 / -1', boxShadow: 'sm' },
+  card: [generalStyles.card, { gridColumn: '1 / -1' }],
 }
 
 export default Dashboard

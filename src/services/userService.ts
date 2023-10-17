@@ -38,7 +38,7 @@ export async function createUser(
 }
 
 export async function createSession(
-  credential: LoginCredential,
+  credential: UserCredential,
   controller?: AbortController,
 ): Promise<void> {
   return await axios.post(`${baseUrl}/sessions`, undefined, {
@@ -67,6 +67,31 @@ export async function getUserProfile(
   }
 }
 
+export async function updateUserProfile(
+  info: UserProfileUpdateInfo,
+  controller?: AbortController,
+): Promise<void> {
+  try {
+    return await axios.put(`${baseUrl}/user/profile`, undefined, {
+      params: {
+        [usernameKey]: info.username,
+        [emailAddressKey]: info.emailAddress,
+      },
+      signal: controller?.signal,
+    })
+  } catch (error) {
+    if (error instanceof AxiosError && error.response?.status === 400) {
+      const paramError: UpdateUserParamError = {
+        username: error.response.data[usernameKey],
+        emailAddress: error.response.data[emailAddressKey],
+      }
+
+      error.response.data = paramError
+      throw error
+    }
+  }
+}
+
 export enum UserRole {
   user = 'user',
   maintainer = 'maintainer',
@@ -86,9 +111,14 @@ export interface UserCreationInfo {
   readonly password: string
 }
 
-export interface LoginCredential {
+export interface UserCredential {
   readonly username: string
   readonly password: string
+}
+
+export interface UserProfileUpdateInfo {
+  readonly username: string
+  readonly emailAddress: string
 }
 
 export interface CreateUserParamError {
@@ -97,4 +127,9 @@ export interface CreateUserParamError {
   readonly password?: string
 }
 
-export default { createUser, createSession, getUserProfile }
+export interface UpdateUserParamError {
+  readonly username?: string
+  readonly emailAddress?: string
+}
+
+export default { createUser, createSession, getUserProfile, updateUserProfile }
