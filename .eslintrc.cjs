@@ -36,11 +36,6 @@ module.exports = {
     '@typescript-eslint/naming-convention': [
       2,
       {
-        selector: 'default',
-        format: ['PascalCase', 'camelCase'],
-      },
-
-      {
         selector: 'variable',
         format: ['camelCase', 'UPPER_CASE', 'PascalCase'],
       },
@@ -70,6 +65,7 @@ module.exports = {
         tabWidth: 2,
         ignoreUrls: true,
         ignoreStrings: true,
+        ignoreTemplateLiterals: true,
         ignoreRegExpLiterals: true,
       },
     ],
