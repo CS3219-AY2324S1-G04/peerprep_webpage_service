@@ -1,25 +1,27 @@
-import { Button, Typography } from '@mui/joy'
-import { AxiosError, CanceledError } from 'axios'
+import { Button } from '@mui/joy'
 import { FormEvent, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { FieldInfo } from '../components/Form/FormField'
 import PasswordField from '../components/UserForm/PasswordField'
-import UserForm, { SubmissionStatus } from '../components/UserForm/UserForm'
+import UserForm from '../components/UserForm/UserForm'
 import UserFormContainer from '../components/UserForm/UserFormContainer'
 import UserFormFooter from '../components/UserForm/UserFormFooter'
 import UserFormHeader from '../components/UserForm/UserFormHeader'
 import UsernameField from '../components/UserForm/UsernameField'
-import { updateUserInfo } from '../features/userInfo/slice'
+import { getIsLoggedIn } from '../features/user/selector'
+import { UserSagaActions } from '../features/user/types'
 import { useAppDispatch } from '../hooks/useAppDispatch'
-import userService, { UserProfile } from '../services/userService'
+import { useAppSelector } from '../hooks/useAppSelector'
+import useTaskSubscriber from '../hooks/useTaskSubscriber'
 import Paths from '../utils/constants/navigation'
-
-let abortController: AbortController
 
 const Login: React.FC = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+  const isLoggedIn = useAppSelector(getIsLoggedIn)
+
+  const [isSubmitting] = useTaskSubscriber(UserSagaActions.CREATE_SESSION)
 
   const [usernameFieldInfo, setUsernameFieldInfo] = useState<FieldInfo>({
     value: '',
@@ -28,76 +30,29 @@ const Login: React.FC = () => {
     value: '',
   })
 
-  const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
-    SubmissionStatus.yetToSubmit,
-  )
-
-  useEffect(() => {
-    return () => {
-      abortController?.abort()
-    }
-  }, [])
-
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault()
-    await submit()
-  }
-
-  // TODO: Rework this using Redux Saga
-  async function submit() {
-    abortController?.abort()
-    abortController = new AbortController()
-
-    setSubmissionStatus(SubmissionStatus.submitting)
-
-    let userProfile: UserProfile
-    try {
-      await userService.createSession(
-        usernameFieldInfo.value,
-        passwordFieldInfo.value,
-        abortController,
-      )
-
-      userProfile = await userService.getUserProfile(abortController)
-    } catch (e) {
-      if (e instanceof CanceledError) {
-        setSubmissionStatus(SubmissionStatus.yetToSubmit)
-      } else if (e instanceof AxiosError && e.response?.status === 401) {
-        setSubmissionStatus(SubmissionStatus.failedErrorKnown)
-      } else {
-        setSubmissionStatus(SubmissionStatus.failedErrorUnknown)
-      }
-
-      return
-    }
-
-    setSubmissionStatus(SubmissionStatus.succeeded)
-    dispatch(updateUserInfo(userProfile))
-    navigate(Paths.Dashboard)
-  }
-
-  function getErrorMessage(
-    submissionStatus: SubmissionStatus,
-  ): string | undefined {
-    switch (submissionStatus) {
-      case SubmissionStatus.failedErrorKnown: {
-        return 'Incorrect username or password.'
-      }
-      case SubmissionStatus.failedErrorUnknown: {
-        return 'Sorry, please try again later.'
-      }
-      default: {
-        return undefined
-      }
-    }
-  }
-
   const canSubmit: boolean =
-    submissionStatus !== SubmissionStatus.submitting &&
+    !isSubmitting &&
     usernameFieldInfo.value.length > 0 &&
     passwordFieldInfo.value.length > 0 &&
     usernameFieldInfo.errorMessage === undefined &&
     passwordFieldInfo.errorMessage === undefined
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate(Paths.Root)
+    }
+  }, [isLoggedIn]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault()
+    dispatch({
+      type: UserSagaActions.CREATE_SESSION,
+      payload: {
+        username: usernameFieldInfo.value,
+        password: passwordFieldInfo.value,
+      },
+    })
+  }
 
   return (
     <UserFormContainer>
@@ -117,19 +72,10 @@ const Login: React.FC = () => {
           shouldValidate={false}
         />
 
-        <Button
-          disabled={!canSubmit}
-          loading={submissionStatus == SubmissionStatus.submitting}
-          type="submit"
-        >
+        <Button disabled={!canSubmit} loading={isSubmitting} type="submit">
           Sign in
         </Button>
 
-        {getErrorMessage(submissionStatus) === undefined ? null : (
-          <Typography textAlign="center" color="danger">
-            {getErrorMessage(submissionStatus)}
-          </Typography>
-        )}
         <UserFormFooter
           leadingMessage="Don't have an account?"
           linkMessage="Sign up"

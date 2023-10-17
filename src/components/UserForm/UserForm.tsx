@@ -41,13 +41,4 @@ const styles = {
   },
 } as const
 
-// TODO: Rework this using Redux Saga
-export enum SubmissionStatus {
-  yetToSubmit,
-  submitting,
-  succeeded,
-  failedErrorUnknown,
-  failedErrorKnown,
-}
-
 export default UserForm
