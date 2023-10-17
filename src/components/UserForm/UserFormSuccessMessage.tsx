@@ -3,7 +3,7 @@ import { Link as RouterLink } from 'react-router-dom'
 
 import Paths from '../../utils/constants/navigation'
 
-const FormSuccessMessage: React.FC<{
+const UserFormSuccessMessage: React.FC<{
   title: string
   linkLeadingMessage: string
   linkMessage: string
@@ -33,12 +33,12 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: '8px',
+    gap: '0.5rem',
   },
-  logo: { width: '50px' },
-  title: { fontWeight: 'bold', fontSize: '30px' },
+  logo: { width: '3.125rem' },
+  title: { fontWeight: 'bold', fontSize: '1.875rem' },
   messageBody: { textAlign: 'center' },
   link: { fontWeight: 'bold', textDecoration: 'none' },
 }
 
-export default FormSuccessMessage
+export default UserFormSuccessMessage
