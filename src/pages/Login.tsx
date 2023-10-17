@@ -38,7 +38,7 @@ const Login: React.FC = () => {
     }
   }, [isLoggedIn]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  async function handleSubmit(e: FormEvent) {
+  function handleSubmit(e: FormEvent) {
     e.preventDefault()
     dispatch({
       type: UserSagaActions.CREATE_SESSION,

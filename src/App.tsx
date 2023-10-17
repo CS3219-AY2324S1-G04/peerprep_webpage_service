@@ -4,9 +4,7 @@ import { Route, Routes } from 'react-router-dom'
 
 import { Layout } from './components/Layout'
 import GuestNavigationBar from './components/Navigation/GuestNavigationBar'
-import { getIsLoggedIn } from './features/user/selector'
 import { useAppDispatch } from './hooks/useAppDispatch'
-import { useAppSelector } from './hooks/useAppSelector'
 import Dashboard from './pages/Dashboard'
 import Login from './pages/Login'
 import Problems from './pages/Problems'
@@ -18,17 +16,10 @@ import { CommonSagaActions } from './utils/types'
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch()
-  const isLoggedIn: boolean = useAppSelector(getIsLoggedIn)
 
   useEffect(() => {
     dispatch({ type: CommonSagaActions.APP_INIT })
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      dispatch({ type: CommonSagaActions.APP_LOGGED_IN_INIT })
-    }
-  }, [isLoggedIn]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="App" style={{ height: '100%' }}>

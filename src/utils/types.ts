@@ -19,7 +19,7 @@ export interface SimpleMap<V = string> {
 
 export const CommonSagaActions = {
   APP_INIT: '@common/APP_INIT',
-  APP_LOGGED_IN_INIT: '@common/APP_LOGGED_IN_INIT',
+  LOGGED_IN_INIT: '@common/APP_LOGGED_IN_INIT',
 }
 
 export const LoadingKeys = {
