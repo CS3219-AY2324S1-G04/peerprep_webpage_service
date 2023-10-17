@@ -32,7 +32,7 @@ function* createSession(action: Action<LoginCredential>) {
 }
 
 function* getUserProfile() {
-  // yield put(addLoadingTask(UserSagaActions.GET_USER_PROFILE))
+  yield put(addLoadingTask(UserSagaActions.GET_USER_PROFILE))
 
   try {
     yield put(setUserProfile(yield userService.getUserProfile()))
@@ -49,7 +49,7 @@ function* getUserProfile() {
 
     console.error(error)
   } finally {
-    // yield put(removeLoadingTask(UserSagaActions.GET_USER_PROFILE))
+    yield put(removeLoadingTask(UserSagaActions.GET_USER_PROFILE))
   }
 }
 
