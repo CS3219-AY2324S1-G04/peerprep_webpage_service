@@ -8,6 +8,7 @@ export const emailAddressKey: string = 'email-address'
 export const userIdKey: string = 'user-id'
 export const userRoleKey: string = 'user-role'
 export const passwordKey: string = 'password'
+export const newPasswordKey: string = 'new-password'
 export const sessionTokenKey: string = 'session-token'
 
 export async function createUser(
@@ -15,7 +16,7 @@ export async function createUser(
   controller?: AbortController,
 ): Promise<void> {
   try {
-    return await axios.post(`${baseUrl}/users`, undefined, {
+    await axios.post(`${baseUrl}/users`, undefined, {
       params: {
         [usernameKey]: info.username,
         [emailAddressKey]: info.emailAddress,
@@ -32,8 +33,9 @@ export async function createUser(
       }
 
       error.response.data = paramError
-      throw error
     }
+
+    throw error
   }
 }
 
@@ -41,7 +43,7 @@ export async function createSession(
   credential: UserCredential,
   controller?: AbortController,
 ): Promise<void> {
-  return await axios.post(`${baseUrl}/sessions`, undefined, {
+  await axios.post(`${baseUrl}/sessions`, undefined, {
     params: {
       [usernameKey]: credential.username,
       [passwordKey]: credential.password,
@@ -72,7 +74,7 @@ export async function updateUserProfile(
   controller?: AbortController,
 ): Promise<void> {
   try {
-    return await axios.put(`${baseUrl}/user/profile`, undefined, {
+    await axios.put(`${baseUrl}/user/profile`, undefined, {
       params: {
         [usernameKey]: info.username,
         [emailAddressKey]: info.emailAddress,
@@ -87,8 +89,34 @@ export async function updateUserProfile(
       }
 
       error.response.data = paramError
-      throw error
     }
+
+    throw error
+  }
+}
+
+export async function updatePassword(
+  info: UserPasswordUpdateInfo,
+  controller?: AbortController,
+): Promise<void> {
+  try {
+    await axios.put(`${baseUrl}/user/password`, undefined, {
+      params: {
+        [passwordKey]: info.password,
+        [newPasswordKey]: info.newPassword,
+      },
+      signal: controller?.signal,
+    })
+  } catch (error) {
+    if (error instanceof AxiosError && error.response?.status === 400) {
+      const paramError: UpdatePasswordParamError = {
+        newPassword: error.response.data[newPasswordKey],
+      }
+
+      error.response.data = paramError
+    }
+
+    throw error
   }
 }
 
@@ -121,6 +149,11 @@ export interface UserProfileUpdateInfo {
   readonly emailAddress: string
 }
 
+export interface UserPasswordUpdateInfo {
+  readonly password: string
+  readonly newPassword: string
+}
+
 export interface CreateUserParamError {
   readonly username?: string
   readonly emailAddress?: string
@@ -132,4 +165,14 @@ export interface UpdateUserParamError {
   readonly emailAddress?: string
 }
 
-export default { createUser, createSession, getUserProfile, updateUserProfile }
+export interface UpdatePasswordParamError {
+  readonly newPassword?: string
+}
+
+export default {
+  createUser,
+  createSession,
+  getUserProfile,
+  updateUserProfile,
+  updatePassword,
+}

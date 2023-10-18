@@ -79,7 +79,7 @@ const EditProfileSection: React.FC = () => {
         username: usernameFieldInfo.value,
       })
       // TODO: Show toast / snackbar containing success message
-      console.log('Successfully updated.')
+      console.log('Profile has been updated.')
     } catch (error) {
       if (isErrorCausedByInvalidParams(error)) {
         updateParamErrorMessages((error as AxiosError).response?.data ?? {})
@@ -138,6 +138,50 @@ const ChangePasswordSection: React.FC = () => {
   const [confirmNewPasswordFieldInfo, setConfirmNewPasswordFieldInfo] =
     useState<FieldInfo>({ value: '' })
 
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+
+  const canSubmit: boolean =
+    !isSubmitting &&
+    currentPasswordFieldInfo.value.length > 0 &&
+    newPasswordFieldInfo.value.length > 0 &&
+    confirmNewPasswordFieldInfo.value.length > 0 &&
+    currentPasswordFieldInfo.errorMessage === undefined &&
+    newPasswordFieldInfo.errorMessage === undefined &&
+    confirmNewPasswordFieldInfo.errorMessage === undefined
+
+  async function submit() {
+    setIsSubmitting(true)
+
+    try {
+      await userService.updatePassword({
+        password: currentPasswordFieldInfo.value,
+        newPassword: newPasswordFieldInfo.value,
+      })
+
+      // TODO: Show toast / snackbar containing success message
+      console.log('Password has been changed.')
+    } catch (error) {
+      // No need to check for HTTP 400 error caused by invalid new password as
+      // long as server and client are using the same password validation rules
+
+      if (isErrorCausedByUnauthorisedAccess(error)) {
+        setCurrentPasswordFieldInfo({
+          value: currentPasswordFieldInfo.value,
+          errorMessage: 'Incorrect password.',
+        })
+      } else {
+        // TODO: Show toast / snackbar containing error message
+        console.error('Sorry, please try again later.')
+      }
+    }
+
+    setIsSubmitting(false)
+  }
+
+  function isErrorCausedByUnauthorisedAccess(error: unknown): boolean {
+    return error instanceof AxiosError && error.response?.status === 401
+  }
+
   return (
     <>
       <Typography sx={styles.sectionTitle}>Change Password</Typography>
@@ -161,7 +205,9 @@ const ChangePasswordSection: React.FC = () => {
         label="Confirm New Password"
         placeholder="Enter your new password again"
       />
-      <Button>Change Password</Button>
+      <Button disabled={!canSubmit} loading={isSubmitting} onClick={submit}>
+        Change Password
+      </Button>
     </>
   )
 }
