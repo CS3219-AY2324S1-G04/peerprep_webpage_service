@@ -1,5 +1,7 @@
 import { UserProfile } from '../../services/userService'
 
+export const cookieIsLoggedInKey = 'is-logged-in'
+
 export interface UserState {
   isLoggedIn: boolean
 

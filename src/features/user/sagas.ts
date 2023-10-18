@@ -1,19 +1,24 @@
 import { AxiosError } from 'axios'
 import { all, fork, put, takeLatest } from 'redux-saga/effects'
 
-import { store } from '../../context/store'
 import userService, {
   UserCredential,
   UserDeletionCredential,
 } from '../../services/userService'
 import { Action, CommonSagaActions } from '../../utils/types'
 import { addLoadingTask, removeLoadingTask } from '../common/slice'
-import { getIsLoggedIn } from './selector'
-import { setUserProfile, updateIsLoggedIn } from './slice'
-import { UserSagaActions } from './types'
+import { setIsLoggedIn, setUserProfile } from './slice'
+import { UserSagaActions, cookieIsLoggedInKey } from './types'
 
-function* initLoggedIn() {
-  if (getIsLoggedIn(store.getState())) {
+function* initIsLoggedIn() {
+  yield put(
+    setIsLoggedIn(document.cookie.includes(`${cookieIsLoggedInKey}=true`)),
+  )
+}
+
+function* initLoggedInUser(action: Action<boolean>) {
+  const isLoggedIn: boolean = action.payload
+  if (isLoggedIn) {
     yield put({ type: CommonSagaActions.LOGGED_IN_INIT })
   }
 }
@@ -23,7 +28,7 @@ function* createSession(action: Action<UserCredential>) {
 
   try {
     yield userService.createSession(action.payload)
-    yield put(updateIsLoggedIn())
+    yield put(setIsLoggedIn(true))
   } catch (error) {
     if (
       error instanceof AxiosError &&
@@ -49,7 +54,7 @@ function* getUserProfile() {
     yield put(setUserProfile(yield userService.getUserProfile()))
   } catch (error) {
     if (error instanceof AxiosError && error.response?.status === 401) {
-      yield put(updateIsLoggedIn())
+      yield put(setIsLoggedIn(false))
 
       // TODO: Show toast / snackbar containing error message
       console.error('Session has been revoked.')
@@ -69,7 +74,7 @@ function* deleteUser(action: Action<UserDeletionCredential>) {
 
   try {
     yield userService.deleteUser(action.payload)
-    yield put(updateIsLoggedIn())
+    yield put(setIsLoggedIn(false))
   } catch (error) {
     if (error instanceof AxiosError && error.response?.status === 401) {
       // TODO: Show toast / snackbar containing error message
@@ -83,11 +88,12 @@ function* deleteUser(action: Action<UserDeletionCredential>) {
   }
 }
 
-export function* watchInitLoggedIn() {
-  yield takeLatest(
-    [CommonSagaActions.APP_INIT, updateIsLoggedIn.type],
-    initLoggedIn,
-  )
+export function* watchInitIsLoggedIn() {
+  yield takeLatest([CommonSagaActions.APP_INIT], initIsLoggedIn)
+}
+
+export function* watchInitLoggedInUser() {
+  yield takeLatest([setIsLoggedIn.type], initLoggedInUser)
 }
 
 export function* watchCreateSession() {
@@ -107,7 +113,8 @@ export function* watchDeleteUser() {
 
 export function* userSaga() {
   yield all([
-    fork(watchInitLoggedIn),
+    fork(watchInitIsLoggedIn),
+    fork(watchInitLoggedInUser),
     fork(watchCreateSession),
     fork(watchGetUserProfile),
     fork(watchDeleteUser),
