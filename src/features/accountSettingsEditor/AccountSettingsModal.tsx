@@ -162,6 +162,10 @@ const ChangePasswordSection: React.FC = () => {
 
       // TODO: Show toast / snackbar containing success message
       console.log('Password has been changed.')
+
+      setCurrentPasswordFieldInfo({ value: '' })
+      setNewPasswordFieldInfo({ value: '' })
+      setConfirmNewPasswordFieldInfo({ value: '' })
     } catch (error) {
       // No need to check for HTTP 400 error caused by invalid new password as
       // long as server and client are using the same password validation rules
