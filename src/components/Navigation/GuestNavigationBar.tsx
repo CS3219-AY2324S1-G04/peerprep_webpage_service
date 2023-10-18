@@ -2,12 +2,13 @@ import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
 import { Box, Button, Input, List, ListItem, ListItemButton } from '@mui/joy'
 import { Fragment } from 'react'
 
+import { useRouteMatch } from '../../hooks/useRouteMatch'
 import { guestNavigationList } from '../../utils/constants/navigation'
-import { getRouteMatch } from '../../utils/helpers/navigation'
 import ColorSchemeToggle from '../ColorSchemeToggle'
 import Logo from '../Logo'
 
 const GuestNavigationBar: React.FC = () => {
+  const routeMatch = useRouteMatch()
 
   return (
     <Fragment>
@@ -15,7 +16,7 @@ const GuestNavigationBar: React.FC = () => {
         <Box sx={styles.leftColumn}>
           <List role="menubar" orientation="horizontal" sx={styles.list}>
             {guestNavigationList.map((page, index) => {
-              const isActivePage = getRouteMatch(page.url)
+              const isActivePage = routeMatch.getRouteMatch(page.url)
               return (
                 <ListItem key={`${page.title}-${index}`}>
                   <ListItemButton
@@ -28,8 +29,7 @@ const GuestNavigationBar: React.FC = () => {
                   </ListItemButton>
                 </ListItem>
               )
-            }
-            )}
+            })}
           </List>
         </Box>
         <Box sx={styles.middleColumn}>
@@ -70,7 +70,7 @@ const styles = {
   middleColumn: {
     gridColumn: '2 / 3',
     paddingTop: 1,
-    justifySelf: 'center'
+    justifySelf: 'center',
   },
   rightColumn: {
     gridColumn: '3 / 4',
@@ -82,7 +82,7 @@ const styles = {
   list: {
     height: '100%',
     '.active': {
-      borderColor: 'primary.500'
+      borderColor: 'primary.500',
     },
   },
   listItemButton: {

@@ -4,6 +4,7 @@ import { Route, Routes } from 'react-router-dom'
 
 import { Layout } from './components/Layout'
 import GuestNavigationBar from './components/Navigation/GuestNavigationBar'
+import { Toaster } from './components/Toaster/Toaster'
 import { useAppDispatch } from './hooks/useAppDispatch'
 import Dashboard from './pages/Dashboard'
 import Login from './pages/Login'
@@ -30,6 +31,7 @@ const App: React.FC = () => {
             <GuestNavigationBar />
           </Layout.Header>
           <Layout.Main>
+            <Toaster />
             {/* // TODO: Change routes depending on login status */}
             <Routes>
               <Route path={Paths.Root} element={<Root />} />
