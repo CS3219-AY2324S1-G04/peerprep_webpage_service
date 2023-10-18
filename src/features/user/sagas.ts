@@ -2,7 +2,10 @@ import { AxiosError } from 'axios'
 import { all, fork, put, takeLatest } from 'redux-saga/effects'
 
 import { store } from '../../context/store'
-import userService, { UserCredential } from '../../services/userService'
+import userService, {
+  DeleteUserInfo,
+  UserCredential,
+} from '../../services/userService'
 import { Action, CommonSagaActions } from '../../utils/types'
 import { addLoadingTask, removeLoadingTask } from '../common/slice'
 import { getIsLoggedIn } from './selector'
@@ -61,6 +64,25 @@ function* getUserProfile() {
   }
 }
 
+function* deleteUser(action: Action<DeleteUserInfo>) {
+  yield put(addLoadingTask(UserSagaActions.DELETE_USER))
+
+  try {
+    yield userService.deleteUser(action.payload)
+    yield put(updateIsLoggedIn())
+  } catch (error) {
+    if (error instanceof AxiosError && error.response?.status === 401) {
+      // TODO: Show toast / snackbar containing error message
+      console.error('Incorrect password')
+    } else {
+      // TODO: Show toast / snackbar containing error message
+      console.error('Sorry, please try again later.')
+    }
+  } finally {
+    yield put(removeLoadingTask(UserSagaActions.DELETE_USER))
+  }
+}
+
 export function* watchInitLoggedIn() {
   yield takeLatest(
     [CommonSagaActions.APP_INIT, updateIsLoggedIn.type],
@@ -79,10 +101,15 @@ export function* watchGetUserProfile() {
   )
 }
 
+export function* watchDeleteUser() {
+  yield takeLatest([UserSagaActions.DELETE_USER], deleteUser)
+}
+
 export function* userSaga() {
   yield all([
     fork(watchInitLoggedIn),
     fork(watchCreateSession),
     fork(watchGetUserProfile),
+    fork(watchDeleteUser),
   ])
 }

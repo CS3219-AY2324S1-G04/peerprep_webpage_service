@@ -17,8 +17,10 @@ import PasswordField from '../../components/UserForm/PasswordField'
 import UsernameField from '../../components/UserForm/UsernameField'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
+import useTaskSubscriber from '../../hooks/useTaskSubscriber'
 import userService, {
-  UpdateUserParamError,
+  DeleteUserInfo,
+  UpdateUserProfileParamError,
   UserProfile,
 } from '../../services/userService'
 import { getUserProfile } from '../user/selector'
@@ -98,7 +100,7 @@ const EditProfileSection: React.FC = () => {
     return error instanceof AxiosError && error.response?.status === 400
   }
 
-  function updateParamErrorMessages(paramError: UpdateUserParamError) {
+  function updateParamErrorMessages(paramError: UpdateUserProfileParamError) {
     setEmailAddressFieldInfo({
       value: emailAddressFieldInfo.value,
       errorMessage: paramError.emailAddress,
@@ -226,9 +228,26 @@ const MiscSection: React.FC = () => {
 const DeleteAccountModal: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false)
 
+  const dispatch = useAppDispatch()
+  const [isSubmitting] = useTaskSubscriber(UserSagaActions.DELETE_USER)
+
   const [passwordFieldInfo, setPasswordFieldInfo] = useState<FieldInfo>({
     value: '',
   })
+
+  const canSubmit: boolean =
+    !isSubmitting &&
+    passwordFieldInfo.value.length > 0 &&
+    passwordFieldInfo.errorMessage === undefined
+
+  function submit() {
+    dispatch({
+      type: UserSagaActions.DELETE_USER,
+      payload: {
+        password: passwordFieldInfo.value,
+      } as DeleteUserInfo,
+    })
+  }
 
   return (
     <>
@@ -249,11 +268,10 @@ const DeleteAccountModal: React.FC = () => {
               shouldValidate={false}
             />
             <Button
-              disabled={
-                passwordFieldInfo.errorMessage !== undefined ||
-                passwordFieldInfo.value === ''
-              }
+              disabled={!canSubmit}
+              loading={isSubmitting}
               color="danger"
+              onClick={submit}
             >
               Delete Account
             </Button>

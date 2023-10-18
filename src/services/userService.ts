@@ -83,7 +83,7 @@ export async function updateUserProfile(
     })
   } catch (error) {
     if (error instanceof AxiosError && error.response?.status === 400) {
-      const paramError: UpdateUserParamError = {
+      const paramError: UpdateUserProfileParamError = {
         username: error.response.data[usernameKey],
         emailAddress: error.response.data[emailAddressKey],
       }
@@ -120,6 +120,18 @@ export async function updatePassword(
   }
 }
 
+export async function deleteUser(
+  info: DeleteUserInfo,
+  controller?: AbortController,
+): Promise<void> {
+  await axios.delete(`${baseUrl}/user`, {
+    params: {
+      [passwordKey]: info.password,
+    },
+    signal: controller?.signal,
+  })
+}
+
 export enum UserRole {
   user = 'user',
   maintainer = 'maintainer',
@@ -154,13 +166,17 @@ export interface UserPasswordUpdateInfo {
   readonly newPassword: string
 }
 
+export interface DeleteUserInfo {
+  readonly password: string
+}
+
 export interface CreateUserParamError {
   readonly username?: string
   readonly emailAddress?: string
   readonly password?: string
 }
 
-export interface UpdateUserParamError {
+export interface UpdateUserProfileParamError {
   readonly username?: string
   readonly emailAddress?: string
 }
@@ -175,4 +191,5 @@ export default {
   getUserProfile,
   updateUserProfile,
   updatePassword,
+  deleteUser,
 }
