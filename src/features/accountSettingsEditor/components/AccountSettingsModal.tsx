@@ -10,21 +10,21 @@ import {
 import { AxiosError } from 'axios'
 import React, { useEffect, useState } from 'react'
 
-import { FieldInfo } from '../../components/Form/FormField'
-import ConfirmPasswordField from '../../components/UserForm/ConfirmPasswordField'
-import EmailAddressField from '../../components/UserForm/EmailAddressField'
-import PasswordField from '../../components/UserForm/PasswordField'
-import UsernameField from '../../components/UserForm/UsernameField'
-import { useAppDispatch } from '../../hooks/useAppDispatch'
-import { useAppSelector } from '../../hooks/useAppSelector'
-import useTaskSubscriber from '../../hooks/useTaskSubscriber'
+import { FieldInfo } from '../../../components/Form/FormField'
+import ConfirmPasswordField from '../../../components/UserForm/ConfirmPasswordField'
+import EmailAddressField from '../../../components/UserForm/EmailAddressField'
+import PasswordField from '../../../components/UserForm/PasswordField'
+import UsernameField from '../../../components/UserForm/UsernameField'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
+import { useAppSelector } from '../../../hooks/useAppSelector'
+import useTaskSubscriber from '../../../hooks/useTaskSubscriber'
 import userService, {
   UpdateUserProfileParamError,
   UserDeletionCredential,
   UserProfile,
-} from '../../services/userService'
-import { getUserProfile } from '../user/selector'
-import { UserSagaActions } from '../user/types'
+} from '../../../services/userService'
+import { getUserProfile } from '../../user/selector'
+import { UserSagaActions } from '../../user/types'
 
 const AccountSettingsModal: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false)

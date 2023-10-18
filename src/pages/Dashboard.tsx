@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/joy'
 
-import AccountSettingsModal from '../features/accountSettingsEditor/AccountSettingsModal'
+import AccountSettingsModal from '../features/accountSettingsEditor/components/AccountSettingsModal'
 import { getUserProfile } from '../features/user/selector'
 import { useAppSelector } from '../hooks/useAppSelector'
 import { UserProfile, UserRole } from '../services/userService'
