@@ -41,12 +41,13 @@ const Login: React.FC = () => {
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
-    dispatch({
+
+    dispatch<{ type: string; payload: UserCredential }>({
       type: UserSagaActions.CREATE_SESSION,
       payload: {
         username: usernameFieldInfo.value,
         password: passwordFieldInfo.value,
-      } as UserCredential,
+      },
     })
   }
 

@@ -3,8 +3,8 @@ import { all, fork, put, takeLatest } from 'redux-saga/effects'
 
 import { store } from '../../context/store'
 import userService, {
-  DeleteUserInfo,
   UserCredential,
+  UserDeletionCredential,
 } from '../../services/userService'
 import { Action, CommonSagaActions } from '../../utils/types'
 import { addLoadingTask, removeLoadingTask } from '../common/slice'
@@ -64,7 +64,7 @@ function* getUserProfile() {
   }
 }
 
-function* deleteUser(action: Action<DeleteUserInfo>) {
+function* deleteUser(action: Action<UserDeletionCredential>) {
   yield put(addLoadingTask(UserSagaActions.DELETE_USER))
 
   try {

@@ -19,8 +19,8 @@ import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import useTaskSubscriber from '../../hooks/useTaskSubscriber'
 import userService, {
-  DeleteUserInfo,
   UpdateUserProfileParamError,
+  UserDeletionCredential,
   UserProfile,
 } from '../../services/userService'
 import { getUserProfile } from '../user/selector'
@@ -226,10 +226,10 @@ const MiscSection: React.FC = () => {
 }
 
 const DeleteAccountModal: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false)
-
   const dispatch = useAppDispatch()
   const [isSubmitting] = useTaskSubscriber(UserSagaActions.DELETE_USER)
+
+  const [isOpen, setIsOpen] = useState(false)
 
   const [passwordFieldInfo, setPasswordFieldInfo] = useState<FieldInfo>({
     value: '',
@@ -241,11 +241,11 @@ const DeleteAccountModal: React.FC = () => {
     passwordFieldInfo.errorMessage === undefined
 
   function submit() {
-    dispatch({
+    dispatch<{ type: string; payload: UserDeletionCredential }>({
       type: UserSagaActions.DELETE_USER,
       payload: {
         password: passwordFieldInfo.value,
-      } as DeleteUserInfo,
+      },
     })
   }
 

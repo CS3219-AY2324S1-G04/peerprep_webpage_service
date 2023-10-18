@@ -121,7 +121,7 @@ export async function updatePassword(
 }
 
 export async function deleteUser(
-  info: DeleteUserInfo,
+  info: UserDeletionCredential,
   controller?: AbortController,
 ): Promise<void> {
   await axios.delete(`${baseUrl}/user`, {
@@ -166,24 +166,17 @@ export interface UserPasswordUpdateInfo {
   readonly newPassword: string
 }
 
-export interface DeleteUserInfo {
+export interface UserDeletionCredential {
   readonly password: string
 }
 
-export interface CreateUserParamError {
-  readonly username?: string
-  readonly emailAddress?: string
-  readonly password?: string
-}
+export interface CreateUserParamError extends Partial<UserCreationInfo> {}
 
-export interface UpdateUserProfileParamError {
-  readonly username?: string
-  readonly emailAddress?: string
-}
+export interface UpdateUserProfileParamError
+  extends Partial<UserProfileUpdateInfo> {}
 
-export interface UpdatePasswordParamError {
-  readonly newPassword?: string
-}
+export interface UpdatePasswordParamError
+  extends Partial<UserPasswordUpdateInfo> {}
 
 export default {
   createUser,
