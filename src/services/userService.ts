@@ -8,6 +8,7 @@ export const emailAddressKey: string = 'email-address'
 export const userIdKey: string = 'user-id'
 export const userRoleKey: string = 'user-role'
 export const passwordKey: string = 'password'
+export const newPasswordKey: string = 'new-password'
 export const sessionTokenKey: string = 'session-token'
 
 export async function createUser(
@@ -15,7 +16,7 @@ export async function createUser(
   controller?: AbortController,
 ): Promise<void> {
   try {
-    return await axios.post(`${baseUrl}/users`, undefined, {
+    await axios.post(`${baseUrl}/users`, undefined, {
       params: {
         [usernameKey]: info.username,
         [emailAddressKey]: info.emailAddress,
@@ -32,16 +33,17 @@ export async function createUser(
       }
 
       error.response.data = paramError
-      throw error
     }
+
+    throw error
   }
 }
 
 export async function createSession(
-  credential: LoginCredential,
+  credential: UserCredential,
   controller?: AbortController,
 ): Promise<void> {
-  return await axios.post(`${baseUrl}/sessions`, undefined, {
+  await axios.post(`${baseUrl}/sessions`, undefined, {
     params: {
       [usernameKey]: credential.username,
       [passwordKey]: credential.password,
@@ -67,6 +69,69 @@ export async function getUserProfile(
   }
 }
 
+export async function updateUserProfile(
+  info: UserProfileUpdateInfo,
+  controller?: AbortController,
+): Promise<void> {
+  try {
+    await axios.put(`${baseUrl}/user/profile`, undefined, {
+      params: {
+        [usernameKey]: info.username,
+        [emailAddressKey]: info.emailAddress,
+      },
+      signal: controller?.signal,
+    })
+  } catch (error) {
+    if (error instanceof AxiosError && error.response?.status === 400) {
+      const paramError: UpdateUserProfileParamError = {
+        username: error.response.data[usernameKey],
+        emailAddress: error.response.data[emailAddressKey],
+      }
+
+      error.response.data = paramError
+    }
+
+    throw error
+  }
+}
+
+export async function updatePassword(
+  info: UserPasswordUpdateInfo,
+  controller?: AbortController,
+): Promise<void> {
+  try {
+    await axios.put(`${baseUrl}/user/password`, undefined, {
+      params: {
+        [passwordKey]: info.password,
+        [newPasswordKey]: info.newPassword,
+      },
+      signal: controller?.signal,
+    })
+  } catch (error) {
+    if (error instanceof AxiosError && error.response?.status === 400) {
+      const paramError: UpdatePasswordParamError = {
+        newPassword: error.response.data[newPasswordKey],
+      }
+
+      error.response.data = paramError
+    }
+
+    throw error
+  }
+}
+
+export async function deleteUser(
+  info: UserDeletionCredential,
+  controller?: AbortController,
+): Promise<void> {
+  await axios.delete(`${baseUrl}/user`, {
+    params: {
+      [passwordKey]: info.password,
+    },
+    signal: controller?.signal,
+  })
+}
+
 export enum UserRole {
   user = 'user',
   maintainer = 'maintainer',
@@ -86,15 +151,38 @@ export interface UserCreationInfo {
   readonly password: string
 }
 
-export interface LoginCredential {
+export interface UserCredential {
   readonly username: string
   readonly password: string
 }
 
-export interface CreateUserParamError {
-  readonly username?: string
-  readonly emailAddress?: string
-  readonly password?: string
+export interface UserProfileUpdateInfo {
+  readonly username: string
+  readonly emailAddress: string
 }
 
-export default { createUser, createSession, getUserProfile }
+export interface UserPasswordUpdateInfo {
+  readonly password: string
+  readonly newPassword: string
+}
+
+export interface UserDeletionCredential {
+  readonly password: string
+}
+
+export interface CreateUserParamError extends Partial<UserCreationInfo> {}
+
+export interface UpdateUserProfileParamError
+  extends Partial<UserProfileUpdateInfo> {}
+
+export interface UpdatePasswordParamError
+  extends Partial<UserPasswordUpdateInfo> {}
+
+export default {
+  createUser,
+  createSession,
+  getUserProfile,
+  updateUserProfile,
+  updatePassword,
+  deleteUser,
+}

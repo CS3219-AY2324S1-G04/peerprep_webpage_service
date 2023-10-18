@@ -53,9 +53,9 @@ const SignUp: React.FC = () => {
       })
 
       setSubmissionStatus(SubmissionStatus.succeeded)
-    } catch (e) {
-      if (isErrorCauseByInvalidParams(e)) {
-        updateParamErrorMessages((e as AxiosError).response?.data ?? {})
+    } catch (error) {
+      if (isErrorCauseByInvalidParams(error)) {
+        updateParamErrorMessages((error as AxiosError).response?.data ?? {})
       } else {
         // TODO: Show toast / snackbar containing error message
         console.error('Sorry, please try again later.')
@@ -65,8 +65,8 @@ const SignUp: React.FC = () => {
     }
   }
 
-  function isErrorCauseByInvalidParams(e: unknown): boolean {
-    return e instanceof AxiosError && e.response?.status === 400
+  function isErrorCauseByInvalidParams(error: unknown): boolean {
+    return error instanceof AxiosError && error.response?.status === 400
   }
 
   function updateParamErrorMessages(paramError: CreateUserParamError) {

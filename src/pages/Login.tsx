@@ -9,6 +9,7 @@ import { UserSagaActions } from '../features/user/types'
 import { useAppDispatch } from '../hooks/useAppDispatch'
 import { useAppSelector } from '../hooks/useAppSelector'
 import useTaskSubscriber from '../hooks/useTaskSubscriber'
+import { UserCredential } from '../services/userService'
 import Paths from '../utils/constants/navigation'
 
 const Login: React.FC = () => {
@@ -40,7 +41,8 @@ const Login: React.FC = () => {
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
-    dispatch({
+
+    dispatch<{ type: string; payload: UserCredential }>({
       type: UserSagaActions.CREATE_SESSION,
       payload: {
         username: usernameFieldInfo.value,

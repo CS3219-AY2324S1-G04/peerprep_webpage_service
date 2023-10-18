@@ -3,18 +3,21 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 import { UserProfile } from '../../services/userService'
-import { UserState } from './types'
+import { UserState, cookieIsLoggedInKey } from './types'
+
+const cookieIsLoggedInExpiry: Date = new Date((Math.pow(2, 31) - 1) * 1000)
 
 const initialState: UserState = {
-  isLoggedIn: isLoggedIn(),
+  isLoggedIn: false,
 }
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    updateIsLoggedIn: (state) => {
-      state.isLoggedIn = isLoggedIn()
+    setIsLoggedIn: (state, action: PayloadAction<boolean>) => {
+      document.cookie = `${cookieIsLoggedInKey}=${action.payload}; expires=${cookieIsLoggedInExpiry}`
+      state.isLoggedIn = action.payload
     },
     setUserProfile: (state, action: PayloadAction<UserProfile | undefined>) => {
       state.userProfile = action.payload
@@ -22,10 +25,6 @@ const userSlice = createSlice({
   },
 })
 
-function isLoggedIn() {
-  return document.cookie.includes('is-logged-in=true')
-}
-
-export const { updateIsLoggedIn, setUserProfile } = userSlice.actions
+export const { setIsLoggedIn, setUserProfile } = userSlice.actions
 
 export default userSlice.reducer
