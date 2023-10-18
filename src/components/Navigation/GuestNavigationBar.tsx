@@ -1,6 +1,7 @@
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
 import { Box, Button, Input, List, ListItem, ListItemButton } from '@mui/joy'
 import { Fragment } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { useRouteMatch } from '../../hooks/useRouteMatch'
 import { guestNavigationList } from '../../utils/constants/navigation'
@@ -9,6 +10,7 @@ import Logo from '../Logo'
 
 const GuestNavigationBar: React.FC = () => {
   const routeMatch = useRouteMatch()
+  const navigate = useNavigate()
 
   return (
     <Fragment>
@@ -22,8 +24,8 @@ const GuestNavigationBar: React.FC = () => {
                   <ListItemButton
                     className={isActivePage ? 'active' : ''}
                     component="a"
-                    href={page.url}
                     sx={styles.listItemButton}
+                    onClick={() => navigate(page.url)}
                   >
                     {page.title}
                   </ListItemButton>
