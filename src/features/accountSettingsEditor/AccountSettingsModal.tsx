@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@mui/joy'
 import { AxiosError } from 'axios'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { FieldInfo } from '../../components/Form/FormField'
 import ConfirmPasswordField from '../../components/UserForm/ConfirmPasswordField'
@@ -243,6 +243,10 @@ const DeleteAccountModal: React.FC = () => {
     !isSubmitting &&
     passwordFieldInfo.value.length > 0 &&
     passwordFieldInfo.errorMessage === undefined
+
+  useEffect(() => {
+    setPasswordFieldInfo({ value: '' })
+  }, [isOpen])
 
   function submit() {
     dispatch<{ type: string; payload: UserDeletionCredential }>({
