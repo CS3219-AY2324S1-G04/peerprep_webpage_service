@@ -4,34 +4,22 @@ import { Route, Routes } from 'react-router-dom'
 
 import { Layout } from './components/Layout'
 import GuestNavigationBar from './components/Navigation/GuestNavigationBar'
-import { selectIsLoggedIn } from './features/userInfo/selector'
-import { updateUserInfo } from './features/userInfo/slice'
 import { useAppDispatch } from './hooks/useAppDispatch'
-import { useAppSelector } from './hooks/useAppSelector'
 import Dashboard from './pages/Dashboard'
 import Login from './pages/Login'
 import Problems from './pages/Problems'
 import Root from './pages/Root'
 import SignUp from './pages/SignUp'
-import { getUserProfile } from './services/userService'
 import Paths from './utils/constants/navigation'
 import theme from './utils/theme/themeOverride'
 import { CommonSagaActions } from './utils/types'
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch()
-  const isLoggedIn: boolean = useAppSelector(selectIsLoggedIn)
 
   useEffect(() => {
     dispatch({ type: CommonSagaActions.APP_INIT })
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-  // TODO: Rework this using Redux Saga
-  useEffect(() => {
-    if (isLoggedIn) {
-      getUserProfile().then((profile) => dispatch(updateUserInfo(profile)))
-    }
-  })
 
   return (
     <div className="App" style={{ height: '100%' }}>
@@ -43,8 +31,9 @@ const App: React.FC = () => {
           </Layout.Header>
           <Layout.Main>
             <Layout.Background />
+            {/* // TODO: Change routes depending on login status */}
             <Routes>
-              <Route path="/" element={<Root />} />
+              <Route path={Paths.Root} element={<Root />} />
               <Route path={Paths.Dashboard} element={<Dashboard />} />
               <Route path={Paths.Problems} element={<Problems />} />
               <Route path={Paths.Login} element={<Login />} />

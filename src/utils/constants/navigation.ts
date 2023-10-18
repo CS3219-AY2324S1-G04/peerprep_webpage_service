@@ -4,6 +4,7 @@ interface Page {
 }
 
 enum Paths {
+  Root = '/',
   Dashboard = '/dashboard',
   Problems = '/problems',
   Rankings = '/rankings',
