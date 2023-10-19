@@ -1,7 +1,6 @@
 import axios, { AxiosError } from 'axios'
 
-import { store } from '../context/store'
-import { getIsDevEnv, getUserServiceBaseUrl } from '../features/config/selector'
+import { isDevEnv, userServiceBaseUrl } from '../utils/config'
 
 export const usernameKey: string = 'username'
 export const emailAddressKey: string = 'email-address'
@@ -16,14 +15,14 @@ export async function createUser(
   controller?: AbortController,
 ): Promise<void> {
   try {
-    await axios.post(`${getBaseUrl()}/users`, undefined, {
+    await axios.post(`${userServiceBaseUrl}/users`, undefined, {
       params: {
         [usernameKey]: info.username,
         [emailAddressKey]: info.emailAddress,
         [passwordKey]: info.password,
       },
       signal: controller?.signal,
-      withCredentials: getIsDevEnv(store.getState()),
+      withCredentials: isDevEnv,
     })
   } catch (error) {
     if (error instanceof AxiosError && error.response?.status === 400) {
@@ -44,13 +43,13 @@ export async function createSession(
   credential: UserCredential,
   controller?: AbortController,
 ): Promise<void> {
-  await axios.post(`${getBaseUrl()}/sessions`, undefined, {
+  await axios.post(`${userServiceBaseUrl}/sessions`, undefined, {
     params: {
       [usernameKey]: credential.username,
       [passwordKey]: credential.password,
     },
     signal: controller?.signal,
-    withCredentials: getIsDevEnv(store.getState()),
+    withCredentials: isDevEnv,
   })
 }
 
@@ -58,9 +57,9 @@ export async function getUserProfile(
   controller?: AbortController,
 ): Promise<UserProfile> {
   const data = (
-    await axios.get(`${getBaseUrl()}/user/profile`, {
+    await axios.get(`${userServiceBaseUrl}/user/profile`, {
       signal: controller?.signal,
-      withCredentials: getIsDevEnv(store.getState()),
+      withCredentials: isDevEnv,
     })
   ).data
 
@@ -77,13 +76,13 @@ export async function updateUserProfile(
   controller?: AbortController,
 ): Promise<void> {
   try {
-    await axios.put(`${getBaseUrl()}/user/profile`, undefined, {
+    await axios.put(`${userServiceBaseUrl}/user/profile`, undefined, {
       params: {
         [usernameKey]: info.username,
         [emailAddressKey]: info.emailAddress,
       },
       signal: controller?.signal,
-      withCredentials: getIsDevEnv(store.getState()),
+      withCredentials: isDevEnv,
     })
   } catch (error) {
     if (error instanceof AxiosError && error.response?.status === 400) {
@@ -104,13 +103,13 @@ export async function updatePassword(
   controller?: AbortController,
 ): Promise<void> {
   try {
-    await axios.put(`${getBaseUrl()}/user/password`, undefined, {
+    await axios.put(`${userServiceBaseUrl}/user/password`, undefined, {
       params: {
         [passwordKey]: info.password,
         [newPasswordKey]: info.newPassword,
       },
       signal: controller?.signal,
-      withCredentials: getIsDevEnv(store.getState()),
+      withCredentials: isDevEnv,
     })
   } catch (error) {
     if (error instanceof AxiosError && error.response?.status === 400) {
@@ -129,17 +128,13 @@ export async function deleteUser(
   info: UserDeletionCredential,
   controller?: AbortController,
 ): Promise<void> {
-  await axios.delete(`${getBaseUrl()}/user`, {
+  await axios.delete(`${userServiceBaseUrl}/user`, {
     params: {
       [passwordKey]: info.password,
     },
     signal: controller?.signal,
-    withCredentials: getIsDevEnv(store.getState()),
+    withCredentials: isDevEnv,
   })
-}
-
-function getBaseUrl(): string {
-  return getUserServiceBaseUrl(store.getState())
 }
 
 export enum UserRole {
