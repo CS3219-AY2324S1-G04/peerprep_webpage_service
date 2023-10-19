@@ -1,7 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 import { all, fork, put, select, takeLatest } from 'redux-saga/effects'
 
-import { store } from '../../context/store'
 import {
   Action,
   CommonSagaActions,
@@ -9,7 +8,6 @@ import {
   ServiceResponse,
 } from '../../utils/types'
 import { addLoadingTask, removeLoadingTask } from '../common/slice'
-import { getQuestionServiceBaseUrl } from '../config/selector'
 import { getFullQuestionMap } from './selectors'
 import { addCachedFullQuestion, setCategories, setQuestionsList } from './slice'
 import { Question, QuestionBankSagaActions } from './types'
@@ -60,11 +58,6 @@ function* getSelectedQuestion(action: Action<string>) {
   } finally {
     yield put(removeLoadingTask(LoadingKeys.FETCHING_SELECTED_QUESTION))
   }
-}
-
-// TODO: Replace "http://localhost:9001" with this
-function getBaseUrl(): string {
-  return getQuestionServiceBaseUrl(store.getState())
 }
 
 export function* watchGetAllQuestions() {
