@@ -1,10 +1,7 @@
 import axios, { AxiosError } from 'axios'
 
 import { store } from '../context/store'
-import { getIsDevEnv } from '../features/config/selector'
-
-// TODO: Should be configured via a config
-const baseUrl: string = 'http://localhost:3000/user-service'
+import { getIsDevEnv, getUserServiceBaseUrl } from '../features/config/selector'
 
 export const usernameKey: string = 'username'
 export const emailAddressKey: string = 'email-address'
@@ -19,7 +16,7 @@ export async function createUser(
   controller?: AbortController,
 ): Promise<void> {
   try {
-    await axios.post(`${baseUrl}/users`, undefined, {
+    await axios.post(`${getBaseUrl()}/users`, undefined, {
       params: {
         [usernameKey]: info.username,
         [emailAddressKey]: info.emailAddress,
@@ -47,7 +44,7 @@ export async function createSession(
   credential: UserCredential,
   controller?: AbortController,
 ): Promise<void> {
-  await axios.post(`${baseUrl}/sessions`, undefined, {
+  await axios.post(`${getBaseUrl()}/sessions`, undefined, {
     params: {
       [usernameKey]: credential.username,
       [passwordKey]: credential.password,
@@ -61,7 +58,7 @@ export async function getUserProfile(
   controller?: AbortController,
 ): Promise<UserProfile> {
   const data = (
-    await axios.get(`${baseUrl}/user/profile`, {
+    await axios.get(`${getBaseUrl()}/user/profile`, {
       signal: controller?.signal,
       withCredentials: getIsDevEnv(store.getState()),
     })
@@ -80,7 +77,7 @@ export async function updateUserProfile(
   controller?: AbortController,
 ): Promise<void> {
   try {
-    await axios.put(`${baseUrl}/user/profile`, undefined, {
+    await axios.put(`${getBaseUrl()}/user/profile`, undefined, {
       params: {
         [usernameKey]: info.username,
         [emailAddressKey]: info.emailAddress,
@@ -107,7 +104,7 @@ export async function updatePassword(
   controller?: AbortController,
 ): Promise<void> {
   try {
-    await axios.put(`${baseUrl}/user/password`, undefined, {
+    await axios.put(`${getBaseUrl()}/user/password`, undefined, {
       params: {
         [passwordKey]: info.password,
         [newPasswordKey]: info.newPassword,
@@ -132,13 +129,17 @@ export async function deleteUser(
   info: UserDeletionCredential,
   controller?: AbortController,
 ): Promise<void> {
-  await axios.delete(`${baseUrl}/user`, {
+  await axios.delete(`${getBaseUrl()}/user`, {
     params: {
       [passwordKey]: info.password,
     },
     signal: controller?.signal,
     withCredentials: getIsDevEnv(store.getState()),
   })
+}
+
+function getBaseUrl(): string {
+  return getUserServiceBaseUrl(store.getState())
 }
 
 export enum UserRole {
