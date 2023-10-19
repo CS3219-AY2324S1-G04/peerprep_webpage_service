@@ -11,7 +11,7 @@ const Main: React.FC<BoxProps> = (props: BoxProps) => {
       {...props}
       sx={[
         {
-          height: '100%',
+          height: 'fit-content',
           p: 2,
           bgcolor: (theme) =>
             mode === 'light'
