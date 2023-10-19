@@ -1,5 +1,8 @@
 import axios, { AxiosError } from 'axios'
 
+import { store } from '../context/store'
+import { getIsDevEnv } from '../features/config/selector'
+
 // TODO: Should be configured via a config
 const baseUrl: string = 'http://localhost:3000/user-service'
 
@@ -23,6 +26,7 @@ export async function createUser(
         [passwordKey]: info.password,
       },
       signal: controller?.signal,
+      withCredentials: getIsDevEnv(store.getState()),
     })
   } catch (error) {
     if (error instanceof AxiosError && error.response?.status === 400) {
@@ -49,6 +53,7 @@ export async function createSession(
       [passwordKey]: credential.password,
     },
     signal: controller?.signal,
+    withCredentials: getIsDevEnv(store.getState()),
   })
 }
 
@@ -58,6 +63,7 @@ export async function getUserProfile(
   const data = (
     await axios.get(`${baseUrl}/user/profile`, {
       signal: controller?.signal,
+      withCredentials: getIsDevEnv(store.getState()),
     })
   ).data
 
@@ -80,6 +86,7 @@ export async function updateUserProfile(
         [emailAddressKey]: info.emailAddress,
       },
       signal: controller?.signal,
+      withCredentials: getIsDevEnv(store.getState()),
     })
   } catch (error) {
     if (error instanceof AxiosError && error.response?.status === 400) {
@@ -106,6 +113,7 @@ export async function updatePassword(
         [newPasswordKey]: info.newPassword,
       },
       signal: controller?.signal,
+      withCredentials: getIsDevEnv(store.getState()),
     })
   } catch (error) {
     if (error instanceof AxiosError && error.response?.status === 400) {
@@ -129,6 +137,7 @@ export async function deleteUser(
       [passwordKey]: info.password,
     },
     signal: controller?.signal,
+    withCredentials: getIsDevEnv(store.getState()),
   })
 }
 
