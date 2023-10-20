@@ -1,24 +1,18 @@
-import { Button, Sheet, Typography } from '@mui/joy'
-import { Box } from '@mui/material'
-import { AxiosError, CanceledError } from 'axios'
-import React, { useEffect, useState } from 'react'
+import { Button } from '@mui/joy'
+import { AxiosError } from 'axios'
+import React, { FormEvent, useState } from 'react'
 
-import Form, { SubmissionStatus } from '../components/Form/Form'
 import { FieldInfo } from '../components/Form/FormField'
-import FormFooter from '../components/Form/FormFooter'
-import FormHeader from '../components/Form/FormHeader'
-import FormSuccessMessage from '../components/Form/FormSuccessMessage'
-import ConfirmPasswordField from '../components/UserForm/ConfirmPasswordField'
-import EmailField from '../components/UserForm/EmailField'
-import PasswordField from '../components/UserForm/PasswordField'
-import UsernameField from '../components/UserForm/UsernameField'
-import userService from '../services/userService'
+import UserForm from '../components/UserForm/UserForm'
+import userService, { CreateUserParamError } from '../services/userService'
 import Paths from '../utils/constants/navigation'
 
-let abortController: AbortController
-
 const SignUp: React.FC = () => {
-  const [emailFieldInfo, setEmailFieldInfo] = useState<FieldInfo>({ value: '' })
+  const [emailAddressFieldInfo, setEmailAddressFieldInfo] = useState<FieldInfo>(
+    {
+      value: '',
+    },
+  )
   const [usernameFieldInfo, setUsernameFieldInfo] = useState<FieldInfo>({
     value: '',
   })
@@ -32,167 +26,124 @@ const SignUp: React.FC = () => {
     SubmissionStatus.yetToSubmit,
   )
 
-  // TODO: Rework this using Redux Saga
-  async function submit() {
-    abortController?.abort()
-    abortController = new AbortController()
+  const canSubmit: boolean =
+    submissionStatus !== SubmissionStatus.submitting &&
+    emailAddressFieldInfo.value.length > 0 &&
+    usernameFieldInfo.value.length > 0 &&
+    passwordFieldInfo.value.length > 0 &&
+    confirmPasswordFieldInfo.value.length > 0 &&
+    emailAddressFieldInfo.errorMessage === undefined &&
+    usernameFieldInfo.errorMessage === undefined &&
+    passwordFieldInfo.errorMessage === undefined &&
+    confirmPasswordFieldInfo.errorMessage === undefined
 
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault()
+    await submit()
+  }
+
+  async function submit() {
     setSubmissionStatus(SubmissionStatus.submitting)
 
     try {
-      await userService.createUser(
-        usernameFieldInfo.value,
-        emailFieldInfo.value,
-        passwordFieldInfo.value,
-        abortController,
-      )
+      await userService.createUser({
+        username: usernameFieldInfo.value,
+        emailAddress: emailAddressFieldInfo.value,
+        password: passwordFieldInfo.value,
+      })
 
       setSubmissionStatus(SubmissionStatus.succeeded)
-    } catch (e) {
-      if (isErrorCauseByAbort(e)) {
-        return
+    } catch (error) {
+      if (isErrorCauseByInvalidParams(error)) {
+        updateParamErrorMessages((error as AxiosError).response?.data ?? {})
+      } else {
+        // TODO: Show toast / snackbar containing error message
+        console.error('Sorry, please try again later.')
       }
 
-      if (isErrorCauseByInvalidParams(e)) {
-        setSubmissionStatus(SubmissionStatus.failedErrorKnown)
-        updateParamErrorMessages((e as AxiosError).response?.data ?? {})
-      } else {
-        setSubmissionStatus(SubmissionStatus.failedErrorUnknown)
-      }
+      setSubmissionStatus(SubmissionStatus.failed)
     }
   }
 
-  function isErrorCauseByAbort(e: unknown): boolean {
-    return e instanceof CanceledError
+  function isErrorCauseByInvalidParams(error: unknown): boolean {
+    return error instanceof AxiosError && error.response?.status === 400
   }
 
-  function isErrorCauseByInvalidParams(e: unknown): boolean {
-    return e instanceof AxiosError && e.response?.status === 400
-  }
-
-  function updateParamErrorMessages(paramErrorInfo: {
-    email?: string
-    username?: string
-    password?: string
-  }) {
-    setEmailFieldInfo({
-      value: emailFieldInfo.value,
-      errorMessage: paramErrorInfo.email,
+  function updateParamErrorMessages(paramError: CreateUserParamError) {
+    setEmailAddressFieldInfo({
+      value: emailAddressFieldInfo.value,
+      errorMessage: paramError.emailAddress,
     })
     setUsernameFieldInfo({
       value: usernameFieldInfo.value,
-      errorMessage: paramErrorInfo.username,
+      errorMessage: paramError.username,
     })
     setPasswordFieldInfo({
       value: passwordFieldInfo.value,
-      errorMessage: paramErrorInfo.password,
+      errorMessage: paramError.password,
     })
   }
 
-  useEffect(() => {
-    return () => {
-      abortController?.abort()
-    }
-  }, [])
-
   return (
-    <Box sx={styles.overallContainer}>
-      <Sheet variant="soft" sx={styles.sheet}>
-        <Box sx={styles.formContainer}>
-          {submissionStatus === SubmissionStatus.succeeded ? (
-            <FormSuccessMessage
-              title="Sign Up Successful!"
-              linkLeadingMessage="You can now"
-              linkMessage="Login"
-              linkPath={Paths.Login}
-            />
-          ) : (
-            <Form>
-              <FormHeader
-                title="Welcome to PeerPrep! 👋🏼"
-                message={[
-                  'Hello, I guess you are new around here.',
-                  "Let's start by creating your account!",
-                ]}
-              />
-              <EmailField
-                fieldInfo={emailFieldInfo}
-                setFieldInfo={setEmailFieldInfo}
-              />
-              <UsernameField
-                fieldInfo={usernameFieldInfo}
-                setFieldInfo={setUsernameFieldInfo}
-              />
-              <PasswordField
-                fieldInfo={passwordFieldInfo}
-                setFieldInfo={setPasswordFieldInfo}
-              />
-              <ConfirmPasswordField
-                fieldInfo={confirmPasswordFieldInfo}
-                setFieldInfo={setConfirmPasswordFieldInfo}
-                passwordFieldInfo={passwordFieldInfo}
-              />
+    <UserForm.Container>
+      {submissionStatus === SubmissionStatus.succeeded ? (
+        <UserForm.SuccessMessage
+          title="Sign Up Successful!"
+          linkLeadingMessage="You can now"
+          linkMessage="Login"
+          linkPath={Paths.Login}
+        />
+      ) : (
+        <UserForm onSubmit={canSubmit ? handleSubmit : undefined}>
+          <UserForm.Header
+            title="Welcome to PeerPrep! 👋🏼"
+            message={[
+              'Hello, I guess you are new around here.',
+              "Let's start by creating your account!",
+            ]}
+          />
+          <UserForm.EmailAddressField
+            fieldInfo={emailAddressFieldInfo}
+            setFieldInfo={setEmailAddressFieldInfo}
+          />
+          <UserForm.UsernameField
+            fieldInfo={usernameFieldInfo}
+            setFieldInfo={setUsernameFieldInfo}
+          />
+          <UserForm.PasswordField
+            fieldInfo={passwordFieldInfo}
+            setFieldInfo={setPasswordFieldInfo}
+          />
+          <UserForm.ConfirmPasswordField
+            fieldInfo={confirmPasswordFieldInfo}
+            setFieldInfo={setConfirmPasswordFieldInfo}
+            passwordFieldInfo={passwordFieldInfo}
+          />
 
-              <Button
-                disabled={
-                  emailFieldInfo.value.length === 0 ||
-                  usernameFieldInfo.value.length === 0 ||
-                  passwordFieldInfo.value.length === 0 ||
-                  confirmPasswordFieldInfo.value.length === 0 ||
-                  emailFieldInfo.errorMessage !== undefined ||
-                  usernameFieldInfo.errorMessage !== undefined ||
-                  passwordFieldInfo.errorMessage !== undefined ||
-                  confirmPasswordFieldInfo.errorMessage !== undefined
-                }
-                loading={submissionStatus == SubmissionStatus.submitting}
-                onClick={submit}
-              >
-                Create an account
-              </Button>
+          <Button
+            disabled={!canSubmit}
+            loading={submissionStatus === SubmissionStatus.submitting}
+            type="submit"
+          >
+            Create an account
+          </Button>
 
-              {submissionStatus == SubmissionStatus.failedErrorUnknown ? (
-                <Typography textAlign="center" color="danger">
-                  Sorry, please try again later.
-                </Typography>
-              ) : (
-                <></>
-              )}
-              <FormFooter
-                leadingMessage="Already have an account?"
-                linkMessage="Login"
-                linkPath={Paths.Login}
-              />
-            </Form>
-          )}
-        </Box>
-      </Sheet>
-    </Box>
+          <UserForm.Footer
+            leadingMessage="Already have an account?"
+            linkMessage="Login"
+            linkPath={Paths.Login}
+          />
+        </UserForm>
+      )}
+    </UserForm.Container>
   )
 }
 
-const styles = {
-  overallContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    padding: '50px 0px',
-  },
-  sheet: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    minWidth: '510px',
-    padding: '48px 0px',
-    boxShadow: 'sm',
-    borderRadius: 'sm',
-  },
-  formContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    minWidth: '365px',
-    maxWidth: '365px',
-  },
-} as const
+enum SubmissionStatus {
+  yetToSubmit,
+  submitting,
+  succeeded,
+  failed,
+}
 
 export default SignUp

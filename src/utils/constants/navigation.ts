@@ -1,9 +1,10 @@
 interface Page {
-  url: string
+  url: Paths
   title: string
 }
 
 enum Paths {
+  Root = '/',
   Dashboard = '/dashboard',
   Problems = '/problems',
   Rankings = '/rankings',

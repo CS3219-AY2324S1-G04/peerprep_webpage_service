@@ -13,7 +13,7 @@ const Header: React.FC<BoxProps> = (props: BoxProps) => {
 
 const styles = {
   header: {
-    p: 2,
+    px: 2,
     gap: 2,
     bgcolor: 'background.surface',
     display: 'flex',

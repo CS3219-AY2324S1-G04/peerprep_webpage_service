@@ -21,13 +21,21 @@ const PasswordField: React.FC<{
   fieldInfo: FieldInfo
   setFieldInfo: React.Dispatch<React.SetStateAction<FieldInfo>>
   shouldValidate?: boolean
-}> = ({ fieldInfo, setFieldInfo, shouldValidate = true }) => {
+  label?: string
+  placeholder?: string
+}> = ({
+  fieldInfo,
+  setFieldInfo,
+  shouldValidate = true,
+  label = 'Password',
+  placeholder = 'Enter your password',
+}) => {
   return (
     <FormField
-      label="Password"
+      label={label}
       info={fieldInfo}
       setInfo={setFieldInfo}
-      placeholder="Enter your password"
+      placeholder={placeholder}
       validate={shouldValidate ? validate : undefined}
       inputType="password"
     />

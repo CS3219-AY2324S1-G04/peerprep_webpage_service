@@ -11,7 +11,7 @@ export interface RouteMatches {
   isSignUpPage: boolean
 }
 
-export default (): RouteMatches => {
+export function useRouteMatch() {
   const isDashboardPage = useMatch(Paths.Dashboard)
   const isProblemsPage = useMatch(Paths.Problems)
   const isRankingsPage = useMatch(Paths.Rankings)
@@ -19,12 +19,22 @@ export default (): RouteMatches => {
   const isLoginPage = useMatch(Paths.Login)
   const isSignUpPage = useMatch(Paths.SignUp)
 
-  return {
-    isDashboardPage: Boolean(isDashboardPage),
-    isProblemsPage: Boolean(isProblemsPage),
-    isRankingsPage: Boolean(isRankingsPage),
-    isProfilePage: Boolean(isProfilePage),
-    isLoginPage: Boolean(isLoginPage),
-    isSignUpPage: Boolean(isSignUpPage),
+  const getRouteMatch = (path: Paths) => {
+    switch (path) {
+      case Paths.Dashboard:
+        return isDashboardPage
+      case Paths.Problems:
+        return isProblemsPage
+      case Paths.Rankings:
+        return isRankingsPage
+      case Paths.Profile:
+        return isProfilePage
+      case Paths.SignUp:
+        return isSignUpPage
+      default:
+        return isLoginPage
+    }
   }
+
+  return { getRouteMatch }
 }

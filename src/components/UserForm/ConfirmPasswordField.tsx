@@ -6,7 +6,15 @@ const ConfirmPasswordField: React.FC<{
   fieldInfo: FieldInfo
   setFieldInfo: React.Dispatch<React.SetStateAction<FieldInfo>>
   passwordFieldInfo: FieldInfo
-}> = ({ fieldInfo, setFieldInfo, passwordFieldInfo }) => {
+  label?: string
+  placeholder?: string
+}> = ({
+  fieldInfo,
+  setFieldInfo,
+  passwordFieldInfo,
+  label = 'Confirm Password',
+  placeholder = 'Enter your password again',
+}) => {
   function validate(confirmPassword: string) {
     return confirmPassword !== passwordFieldInfo.value
       ? 'Password does not match.'
@@ -23,10 +31,10 @@ const ConfirmPasswordField: React.FC<{
 
   return (
     <FormField
-      label="Confirm Password"
+      label={label}
       info={fieldInfo}
       setInfo={setFieldInfo}
-      placeholder="Enter your password again"
+      placeholder={placeholder}
       validate={validate}
       inputType="password"
     />

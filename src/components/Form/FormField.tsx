@@ -5,14 +5,14 @@ const FormField: React.FC<{
   label: string
   info: FieldInfo
   setInfo: React.Dispatch<React.SetStateAction<FieldInfo>>
-  placeholder: string
+  placeholder?: string
   validate?: (value: string) => string | undefined
   inputType?: string
 }> = ({
   label,
   info,
   setInfo,
-  placeholder,
+  placeholder = '',
   validate = () => undefined,
   inputType = 'text',
 }) => {
