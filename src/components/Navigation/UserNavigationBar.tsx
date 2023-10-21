@@ -1,17 +1,19 @@
 import { Logout, Settings } from '@mui/icons-material'
 import {
   Avatar,
+  Divider,
   Dropdown,
   ListItemDecorator,
   Menu,
   MenuButton,
   MenuItem,
   Theme,
+  Typography,
 } from '@mui/joy'
 import React, { useState } from 'react'
 
 import AccountSettingsModal from '../../features/accountSettingsEditor/components/AccountSettingsModal'
-import { getUsername } from '../../features/user/selector'
+import { getEmailAddress, getUsername } from '../../features/user/selector'
 import { UserSagaActions } from '../../features/user/types'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
@@ -22,6 +24,7 @@ const UserNavigationBar: React.FC = () => {
   const dispatch = useAppDispatch()
 
   const username = useAppSelector(getUsername)
+  const emailAddress = useAppSelector(getEmailAddress)
 
   const [isAccountSettingsModalOpen, setIsAccountSettingsModalOpen] =
     useState(false)
@@ -46,6 +49,15 @@ const UserNavigationBar: React.FC = () => {
               return { zIndex: theme.zIndex.tooltip }
             }}
           >
+            <MenuItem sx={styles.userProfileContainer}>
+              <Typography noWrap={true} sx={styles.username}>
+                {username}
+              </Typography>
+              <Typography noWrap={true} sx={styles.emailAddress}>
+                {emailAddress}
+              </Typography>
+            </MenuItem>
+            <Divider />
             <MenuItem onClick={openEditAccountSettings}>
               <ListItemDecorator>
                 <Settings />
@@ -68,6 +80,16 @@ const UserNavigationBar: React.FC = () => {
       />
     </>
   )
+}
+
+const styles = {
+  userProfileContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    pointerEvents: 'none',
+  },
+  username: { width: 0, minWidth: '100%', fontSize: '1rem' },
+  emailAddress: { width: 0, minWidth: '100%', fontSize: '0.8rem' },
 }
 
 export default UserNavigationBar
