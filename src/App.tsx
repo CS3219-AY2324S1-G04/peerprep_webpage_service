@@ -9,6 +9,7 @@ import { useAppDispatch } from './hooks/useAppDispatch'
 import Dashboard from './pages/Dashboard'
 import Login from './pages/Login'
 import Problems from './pages/Problems'
+import Room from './pages/Room'
 import Root from './pages/Root'
 import SignUp from './pages/SignUp'
 import Paths from './utils/constants/navigation'
@@ -39,6 +40,7 @@ const App: React.FC = () => {
               <Route path={Paths.Problems} element={<Problems />} />
               <Route path={Paths.Login} element={<Login />} />
               <Route path={Paths.SignUp} element={<SignUp />} />
+              <Route path={Paths.Room} element={<Room />} />
               {/* TODO: Create a route with path "*" for an Error 404 page */}
             </Routes>
           </Layout.Main>
