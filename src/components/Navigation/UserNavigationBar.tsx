@@ -12,11 +12,15 @@ import React, { useState } from 'react'
 
 import AccountSettingsModal from '../../features/accountSettingsEditor/components/AccountSettingsModal'
 import { getUsername } from '../../features/user/selector'
+import { UserSagaActions } from '../../features/user/types'
+import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { userNavigationList } from '../../utils/constants/navigation'
 import NavigationBar from './NavigationBar'
 
 const UserNavigationBar: React.FC = () => {
+  const dispatch = useAppDispatch()
+
   const username = useAppSelector(getUsername)
 
   const [isAccountSettingsModalOpen, setIsAccountSettingsModalOpen] =
@@ -24,6 +28,10 @@ const UserNavigationBar: React.FC = () => {
 
   function openEditAccountSettings() {
     setIsAccountSettingsModalOpen(true)
+  }
+
+  function logout() {
+    dispatch({ type: UserSagaActions.DELETE_SESSION })
   }
 
   return (
@@ -44,7 +52,7 @@ const UserNavigationBar: React.FC = () => {
               </ListItemDecorator>
               Edit Account Settings
             </MenuItem>
-            <MenuItem>
+            <MenuItem onClick={logout}>
               <ListItemDecorator>
                 <Logout />
               </ListItemDecorator>
