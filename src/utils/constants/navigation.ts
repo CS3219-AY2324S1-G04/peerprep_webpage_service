@@ -8,11 +8,14 @@ enum Paths {
   Dashboard = '/dashboard',
   Problems = '/problems',
   Rankings = '/rankings',
-  Profile = '/profile',
   Login = '/login',
   SignUp = '/signup',
 }
 
+const DashboardPage: PageNavigation = {
+  url: Paths.Dashboard,
+  title: 'Dashboard',
+}
 const ProblemsPage: PageNavigation = {
   url: Paths.Problems,
   title: 'Problems',
@@ -23,6 +26,12 @@ const RankingsPage: PageNavigation = {
 }
 
 export const guestNavigationList: PageNavigation[] = [
+  ProblemsPage,
+  RankingsPage,
+]
+
+export const userNavigationList: PageNavigation[] = [
+  DashboardPage,
   ProblemsPage,
   RankingsPage,
 ]
