@@ -1,5 +1,6 @@
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
 import { Box, Input, List, ListItem, ListItemButton } from '@mui/joy'
+import { SxProps } from '@mui/joy/styles/types'
 import { Fragment, PropsWithChildren } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -60,15 +61,15 @@ const styles = {
     display: 'grid',
     gridTemplateColumns: 'repeat(3, 1fr)',
     width: '100%',
-  },
+  } as SxProps,
   leftColumn: {
     gridColumn: '1 / 2',
-  },
+  } as SxProps,
   middleColumn: {
     gridColumn: '2 / 3',
     paddingTop: 1,
     justifySelf: 'center',
-  },
+  } as SxProps,
   rightColumn: {
     gridColumn: '3 / 4',
     display: 'flex',
@@ -77,17 +78,17 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'flex-end',
     columnGap: '8px',
-  },
+  } as SxProps,
   list: {
     height: '100%',
     '.active': {
       borderColor: 'primary.500',
     },
-  },
+  } as SxProps,
   listItemButton: {
     border: 'unset',
     borderBottom: '2px solid transparent',
-  },
+  } as SxProps,
   input: {
     flexBasis: '500px',
     display: {
@@ -95,7 +96,7 @@ const styles = {
       sm: 'flex',
     },
     boxShadow: 'sm',
-  },
+  } as SxProps,
 } as const
 
 export default NavigationBar

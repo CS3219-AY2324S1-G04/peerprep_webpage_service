@@ -1,4 +1,5 @@
 import { Button } from '@mui/joy'
+import { SxProps } from '@mui/joy/styles/types'
 import { useNavigate } from 'react-router-dom'
 
 import Paths, { guestNavigationList } from '../../utils/constants/navigation'
@@ -30,7 +31,7 @@ const GuestNavigationBar: React.FC = () => {
 const styles = {
   button: {
     width: '10rem',
-  },
+  } as SxProps,
 } as const
 
 export default GuestNavigationBar
