@@ -29,7 +29,7 @@ const GuestNavigationBar: React.FC = () => {
 
 const styles = {
   button: {
-    width: '40%',
+    width: '10rem',
   },
 } as const
 
