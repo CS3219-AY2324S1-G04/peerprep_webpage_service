@@ -4,7 +4,7 @@ import { Fragment } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { useRouteMatch } from '../../hooks/useRouteMatch'
-import { guestNavigationList } from '../../utils/constants/navigation'
+import Paths, { guestNavigationList } from '../../utils/constants/navigation'
 import ColorSchemeToggle from '../ColorSchemeToggle'
 import Logo from '../Logo'
 
@@ -47,10 +47,18 @@ const GuestNavigationBar: React.FC = () => {
               sx={styles.input}
             />
             <ColorSchemeToggle />
-            <Button variant="plain" sx={styles.button}>
+            <Button
+              variant="plain"
+              sx={styles.button}
+              onClick={() => navigate(Paths.Login)}
+            >
               Log in
             </Button>
-            <Button size="md" sx={styles.button}>
+            <Button
+              size="md"
+              sx={styles.button}
+              onClick={() => navigate(Paths.SignUp)}
+            >
               Sign up
             </Button>
           </Box>
@@ -106,6 +114,7 @@ const styles = {
     width: '100%',
     display: 'flex',
     height: '80%',
+    columnGap: '8px',
   },
 } as const
 
