@@ -1,4 +1,3 @@
-import { Settings } from '@mui/icons-material'
 import {
   Button,
   Divider,
@@ -26,26 +25,22 @@ import userService, {
 import { getUserProfile } from '../../user/selector'
 import { UserSagaActions } from '../../user/types'
 
-const AccountSettingsModal: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false)
-
+const AccountSettingsModal: React.FC<{
+  isOpen: boolean
+  setIsOpen: (value: React.SetStateAction<boolean>) => void
+}> = ({ isOpen, setIsOpen, ...rest }) => {
   return (
-    <>
-      <Button onClick={() => setIsOpen(true)} startDecorator={<Settings />}>
-        Account Settings
-      </Button>
-      <Modal open={isOpen} onClose={() => setIsOpen(false)}>
-        <ModalOverflow>
-          <ModalDialog sx={styles.modalDialog}>
-            <EditProfileSection />
-            <Divider sx={styles.divider} />
-            <ChangePasswordSection />
-            <Divider sx={styles.divider} />
-            <MiscSection />
-          </ModalDialog>
-        </ModalOverflow>
-      </Modal>
-    </>
+    <Modal open={isOpen} onClose={() => setIsOpen(false)} {...rest}>
+      <ModalOverflow>
+        <ModalDialog sx={styles.modalDialog}>
+          <EditProfileSection />
+          <Divider sx={styles.divider} />
+          <ChangePasswordSection />
+          <Divider sx={styles.divider} />
+          <MiscSection />
+        </ModalDialog>
+      </ModalOverflow>
+    </Modal>
   )
 }
 

@@ -1,6 +1,7 @@
 import { AxiosError } from 'axios'
 import { all, fork, put, takeLatest } from 'redux-saga/effects'
 
+import { toast } from '../../components/Toaster/toast'
 import userService, {
   UserCredential,
   UserDeletionCredential,
@@ -44,6 +45,25 @@ function* createSession(action: Action<UserCredential>) {
     console.error(error)
   } finally {
     yield put(removeLoadingTask(UserSagaActions.CREATE_SESSION))
+  }
+}
+
+function* deleteSession() {
+  yield put(addLoadingTask(UserSagaActions.DELETE_SESSION))
+
+  try {
+    yield userService.deleteSession()
+    yield put(setIsLoggedIn(false))
+
+    toast.success('Logout Successful')
+  } catch (error) {
+    if (error instanceof AxiosError && error.response?.status === 401) {
+      toast.error('Logout Failed: Session is invalid.')
+    } else {
+      toast.error('Logout Failed: Please try again later.')
+    }
+  } finally {
+    yield put(removeLoadingTask(UserSagaActions.DELETE_SESSION))
   }
 }
 
@@ -100,6 +120,10 @@ export function* watchCreateSession() {
   yield takeLatest([UserSagaActions.CREATE_SESSION], createSession)
 }
 
+export function* watchDeleteSession() {
+  yield takeLatest([UserSagaActions.DELETE_SESSION], deleteSession)
+}
+
 export function* watchGetUserProfile() {
   yield takeLatest(
     [CommonSagaActions.LOGGED_IN_INIT, UserSagaActions.GET_USER_PROFILE],
@@ -116,6 +140,7 @@ export function* userSaga() {
     fork(watchInitIsLoggedIn),
     fork(watchInitLoggedInUser),
     fork(watchCreateSession),
+    fork(watchDeleteSession),
     fork(watchGetUserProfile),
     fork(watchDeleteUser),
   ])

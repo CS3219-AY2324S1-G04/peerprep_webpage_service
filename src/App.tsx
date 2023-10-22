@@ -4,8 +4,11 @@ import { Route, Routes } from 'react-router-dom'
 
 import { Layout } from './components/Layout'
 import GuestNavigationBar from './components/Navigation/GuestNavigationBar'
+import UserNavigationBar from './components/Navigation/UserNavigationBar'
 import { Toaster } from './components/Toaster/Toaster'
+import { getIsLoggedIn } from './features/user/selector'
 import { useAppDispatch } from './hooks/useAppDispatch'
+import { useAppSelector } from './hooks/useAppSelector'
 import Dashboard from './pages/Dashboard'
 import Login from './pages/Login'
 import MatchRoom from './pages/MatchRoom'
@@ -19,6 +22,7 @@ import { CommonSagaActions } from './utils/types'
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch()
+  const isLoggedIn = useAppSelector(getIsLoggedIn)
 
   useEffect(() => {
     dispatch({ type: CommonSagaActions.APP_INIT })
@@ -30,7 +34,7 @@ const App: React.FC = () => {
         <CssBaseline />
         <Layout.Root>
           <Layout.Header>
-            <GuestNavigationBar />
+            {isLoggedIn ? <UserNavigationBar /> : <GuestNavigationBar />}
           </Layout.Header>
           <Layout.Main>
             <Toaster />

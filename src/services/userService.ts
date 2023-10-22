@@ -53,6 +53,13 @@ export async function createSession(
   })
 }
 
+export async function deleteSession(controller?: AbortController) {
+  await axios.delete(`${userServiceBaseUrl}/session`, {
+    signal: controller?.signal,
+    withCredentials: isDevEnv,
+  })
+}
+
 export async function getUserProfile(
   controller?: AbortController,
 ): Promise<UserProfile> {
@@ -186,6 +193,7 @@ export interface UpdatePasswordParamError
 export default {
   createUser,
   createSession,
+  deleteSession,
   getUserProfile,
   updateUserProfile,
   updatePassword,
