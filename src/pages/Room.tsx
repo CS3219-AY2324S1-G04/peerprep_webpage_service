@@ -1,13 +1,12 @@
-import { useMatch } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
-import Editor from '../features/editor/Editor'
-import Paths from '../utils/constants/navigation'
+import Editor from '../features/room/components/Editor'
 
 const Room: React.FC = () => {
-  const match = useMatch(Paths.Room)
-  const id = match?.params.sessionId || ''
+  const params = useParams()
+  const roomId = params.roomId || 'default'
 
-  return <Editor id={id} />
+  return <Editor id={roomId} />
 }
 
 export default Room

@@ -9,7 +9,7 @@ import * as Y from 'yjs'
 
 import CodeArea from './CodeArea'
 
-export default function Editor({ id }: { id: string }) {
+function Editor({ id }: { id: string }) {
   const doc = new Y.Doc()
   const host = 'ws://localhost:9004'
   const wsProvider = new WebsocketProvider(host, id, doc)
@@ -47,7 +47,8 @@ export default function Editor({ id }: { id: string }) {
 
   wsProvider.on('status', (event) => {
     console.log('socket event', event.status) // logs "connected" or "disconnected"
-    if (event.status == "connected" && !hasConnect) {
+
+    if (event.status == 'connected' && !hasConnect) {
       setHasConnect(true)
     }
   })
@@ -58,5 +59,9 @@ export default function Editor({ id }: { id: string }) {
         <CodeArea editorExtensions={editorExtensions} text={text} />
       </div>
     )
+  } else {
+    return <div> Connecting... </div>
   }
 }
+
+export default Editor

@@ -11,7 +11,8 @@ enum Paths {
   Profile = '/profile',
   Login = '/login',
   SignUp = '/signup',
-  Room = '/room/:sessionId',
+  MatchRoom = '/room',
+  Room = '/room/:roomId',
 }
 
 const ProblemsPage: Page = {

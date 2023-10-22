@@ -3,7 +3,7 @@ import CodeMirror, { Extension } from '@uiw/react-codemirror'
 import React from 'react'
 import * as Y from 'yjs'
 
-export default function CodeArea({
+function CodeArea({
   text,
   editorExtensions,
 }: {
@@ -29,3 +29,5 @@ export default function CodeArea({
     </div>
   )
 }
+
+export default CodeArea
