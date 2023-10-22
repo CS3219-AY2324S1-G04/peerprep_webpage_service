@@ -1,13 +1,15 @@
-import { PersonRounded } from '@mui/icons-material'
+import { PersonRounded, Settings } from '@mui/icons-material'
 import {
   AspectRatio,
   Box,
+  Button,
   Card,
   Sheet,
   Skeleton,
   Theme,
   Typography,
 } from '@mui/joy'
+import { useState } from 'react'
 
 import AccountSettingsModal from '../features/accountSettingsEditor/components/AccountSettingsModal'
 import { getUserProfile } from '../features/user/selector'
@@ -37,6 +39,9 @@ const Dashboard: React.FC = () => {
 
 const ProfileCard: React.FC = () => {
   const profile: UserProfile | undefined = useAppSelector(getUserProfile)
+
+  const [isAccountSettingsModalOpen, setIsAccountSettingsModalOpen] =
+    useState(false)
 
   return (
     <Card variant="soft" sx={profileCardStyles.card}>
@@ -89,7 +94,17 @@ const ProfileCard: React.FC = () => {
           )}
         </Box>
       </Box>
-      <AccountSettingsModal />
+
+      <Button
+        onClick={() => setIsAccountSettingsModalOpen(true)}
+        startDecorator={<Settings />}
+      >
+        Account Settings
+      </Button>
+      <AccountSettingsModal
+        isOpen={isAccountSettingsModalOpen}
+        setIsOpen={setIsAccountSettingsModalOpen}
+      />
     </Card>
   )
 }

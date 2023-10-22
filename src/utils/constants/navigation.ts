@@ -1,4 +1,4 @@
-interface Page {
+export interface PageNavigation {
   url: Paths
   title: string
 }
@@ -8,20 +8,32 @@ enum Paths {
   Dashboard = '/dashboard',
   Problems = '/problems',
   Rankings = '/rankings',
-  Profile = '/profile',
   Login = '/login',
   SignUp = '/signup',
 }
 
-const ProblemsPage: Page = {
+const DashboardPage: PageNavigation = {
+  url: Paths.Dashboard,
+  title: 'Dashboard',
+}
+const ProblemsPage: PageNavigation = {
   url: Paths.Problems,
   title: 'Problems',
 }
-const RankingsPage: Page = {
+const RankingsPage: PageNavigation = {
   url: Paths.Rankings,
   title: 'Rankings',
 }
 
-export const guestNavigationList: Page[] = [ProblemsPage, RankingsPage]
+export const guestNavigationList: PageNavigation[] = [
+  ProblemsPage,
+  RankingsPage,
+]
+
+export const userNavigationList: PageNavigation[] = [
+  DashboardPage,
+  ProblemsPage,
+  RankingsPage,
+]
 
 export default Paths
