@@ -10,6 +10,7 @@ import { AxiosError } from 'axios'
 import React, { useEffect, useState } from 'react'
 
 import { FieldInfo } from '../../../components/Form/FormField'
+import { toast } from '../../../components/Toaster/toast'
 import ConfirmPasswordField from '../../../components/UserForm/ConfirmPasswordField'
 import EmailAddressField from '../../../components/UserForm/EmailAddressField'
 import PasswordField from '../../../components/UserForm/PasswordField'
@@ -75,14 +76,13 @@ const EditProfileSection: React.FC = () => {
         emailAddress: emailAddressFieldInfo.value,
         username: usernameFieldInfo.value,
       })
-      // TODO: Show toast / snackbar containing success message
-      console.log('Profile has been updated.')
+      toast.success('Profile updated.')
     } catch (error) {
       if (isErrorCausedByInvalidParams(error)) {
         updateParamErrorMessages((error as AxiosError).response?.data ?? {})
+        toast.error('Profile update failed: One or more fields are invalid.')
       } else {
-        // TODO: Show toast / snackbar containing error message
-        console.error('Sorry, please try again later.')
+        toast.error('Profile update failed: Please try again later.')
       }
     }
 
@@ -155,12 +155,11 @@ const ChangePasswordSection: React.FC = () => {
         newPassword: newPasswordFieldInfo.value,
       })
 
-      // TODO: Show toast / snackbar containing success message
-      console.log('Password has been changed.')
-
       setCurrentPasswordFieldInfo({ value: '' })
       setNewPasswordFieldInfo({ value: '' })
       setConfirmNewPasswordFieldInfo({ value: '' })
+
+      toast.success('Password changed.')
     } catch (error) {
       // No need to check for HTTP 400 error caused by invalid new password as
       // long as server and client are using the same password validation rules
@@ -170,9 +169,10 @@ const ChangePasswordSection: React.FC = () => {
           value: currentPasswordFieldInfo.value,
           errorMessage: 'Incorrect password.',
         })
+
+        toast.error('Password change failed: Incorrect password.')
       } else {
-        // TODO: Show toast / snackbar containing error message
-        console.error('Sorry, please try again later.')
+        toast.error('Password change failed: Please try again later.')
       }
     }
 

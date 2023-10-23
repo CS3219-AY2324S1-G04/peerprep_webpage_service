@@ -30,16 +30,16 @@ function* createSession(action: Action<UserCredential>) {
   try {
     yield userService.createSession(action.payload)
     yield put(setIsLoggedIn(true))
+
+    toast.success('Login successful.')
   } catch (error) {
     if (
       error instanceof AxiosError &&
       (error.response?.status === 401 || error.response?.status === 400)
     ) {
-      // TODO: Show toast / snackbar containing error message
-      console.error('Invalid username and/or password.')
+      toast.error('Login failed: Invalid username and/or password.')
     } else {
-      // TODO: Show toast / snackbar containing error message
-      console.error('Sorry, please try again later.')
+      toast.error('Login failed: Please try again later.')
     }
 
     console.error(error)
@@ -55,12 +55,12 @@ function* deleteSession() {
     yield userService.deleteSession()
     yield put(setIsLoggedIn(false))
 
-    toast.success('Logout Successful')
+    toast.success('Logout successful.')
   } catch (error) {
     if (error instanceof AxiosError && error.response?.status === 401) {
-      toast.error('Logout Failed: Session is invalid.')
+      toast.error('Logout failed: Session is invalid.')
     } else {
-      toast.error('Logout Failed: Please try again later.')
+      toast.error('Logout failed: Please try again later.')
     }
   } finally {
     yield put(removeLoadingTask(UserSagaActions.DELETE_SESSION))
@@ -76,11 +76,10 @@ function* getUserProfile() {
     if (error instanceof AxiosError && error.response?.status === 401) {
       yield put(setIsLoggedIn(false))
 
-      // TODO: Show toast / snackbar containing error message
-      console.error('Session has been revoked.')
+      // TODO: Revoking should be handled by a different user service endpoint
+      toast.error('Session has been revoked.')
     } else {
-      // TODO: Show toast / snackbar containing error message
-      console.error('Sorry, please try again later.')
+      toast.error('Fetching user profile failed: Please try again later.')
     }
 
     console.error(error)
@@ -95,13 +94,13 @@ function* deleteUser(action: Action<UserDeletionCredential>) {
   try {
     yield userService.deleteUser(action.payload)
     yield put(setIsLoggedIn(false))
+
+    toast.success('User deleted.')
   } catch (error) {
     if (error instanceof AxiosError && error.response?.status === 401) {
-      // TODO: Show toast / snackbar containing error message
-      console.error('Incorrect password')
+      toast.error('User deletion failed: Incorrect password.')
     } else {
-      // TODO: Show toast / snackbar containing error message
-      console.error('Sorry, please try again later.')
+      toast.error('User deletion failed: Please try again later.')
     }
   } finally {
     yield put(removeLoadingTask(UserSagaActions.DELETE_USER))
