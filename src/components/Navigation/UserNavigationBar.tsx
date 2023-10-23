@@ -43,11 +43,7 @@ const UserNavigationBar: React.FC = () => {
       <NavigationBar navigationList={userNavigationList}>
         <Dropdown>
           <MenuButton variant="plain" sx={styles.avatarMenuButton}>
-            <Avatar
-              alt={username}
-              shape={AvatarShape.squircleSm}
-              sx={styles.avatar}
-            />
+            <Avatar alt={username} shape={AvatarShape.squircleSm} />
           </MenuButton>
           <Menu
             sx={(theme: Theme) => {
@@ -91,7 +87,6 @@ const styles = {
   avatarMenuButton: {
     padding: 0,
   } as SxProps,
-  avatar: { height: '2.5rem' } as SxProps,
   userProfileContainer: {
     display: 'flex',
     flexDirection: 'column',
