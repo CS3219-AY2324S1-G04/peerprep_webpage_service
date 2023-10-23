@@ -53,6 +53,13 @@ export async function createSession(
   })
 }
 
+export async function keepSessionAlive(controller?: AbortController) {
+  await axios.post(`${userServiceBaseUrl}/session/keep-alive`, undefined, {
+    signal: controller?.signal,
+    withCredentials: isDevEnv,
+  })
+}
+
 export async function deleteSession(controller?: AbortController) {
   await axios.delete(`${userServiceBaseUrl}/session`, {
     signal: controller?.signal,
@@ -193,6 +200,7 @@ export interface UpdatePasswordParamError
 export default {
   createUser,
   createSession,
+  keepSessionAlive,
   deleteSession,
   fetchUserProfile,
   updateUserProfile,

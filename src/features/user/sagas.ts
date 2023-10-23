@@ -24,6 +24,16 @@ function* initLoggedInUser(action: Action<boolean>) {
   }
 }
 
+function* keepSessionAlive() {
+  try {
+    yield userService.keepSessionAlive()
+  } catch (error) {
+    if (error instanceof AxiosError && error.response?.status === 401) {
+      yield put(setIsLoggedIn(false))
+    }
+  }
+}
+
 function* login(action: Action<UserCredential>) {
   yield put(addLoadingTask(UserSagaActions.LOGIN))
 
@@ -110,6 +120,10 @@ export function* watchInitLoggedInUser() {
   yield takeLatest([setIsLoggedIn.type], initLoggedInUser)
 }
 
+export function* watchKeepSessionAlive() {
+  yield takeLatest([CommonSagaActions.LOGGED_IN_INIT], keepSessionAlive)
+}
+
 export function* watchLogin() {
   yield takeLatest([UserSagaActions.LOGIN], login)
 }
@@ -137,5 +151,6 @@ export function* userSaga() {
     fork(watchLogout),
     fork(watchFetchUserProfile),
     fork(watchDeleteUser),
+    fork(watchKeepSessionAlive),
   ])
 }
