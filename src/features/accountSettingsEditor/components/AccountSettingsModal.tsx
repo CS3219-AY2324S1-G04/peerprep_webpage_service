@@ -81,6 +81,10 @@ const EditProfileSection: React.FC = () => {
       if (isErrorCausedByInvalidParams(error)) {
         updateParamErrorMessages((error as AxiosError).response?.data ?? {})
         toast.error('Profile update failed: One or more fields are invalid.')
+      } else if (isErrorCausedByAuthentication(error)) {
+        toast.error(
+          `Profile update failed: ${(error as AxiosError).response?.data}.`,
+        )
       } else {
         toast.error('Profile update failed: Please try again later.')
       }
@@ -93,6 +97,10 @@ const EditProfileSection: React.FC = () => {
 
   function isErrorCausedByInvalidParams(error: unknown): boolean {
     return error instanceof AxiosError && error.response?.status === 400
+  }
+
+  function isErrorCausedByAuthentication(error: unknown): boolean {
+    return error instanceof AxiosError && error.response?.status === 401
   }
 
   function updateParamErrorMessages(paramError: UpdateUserProfileParamError) {
@@ -164,13 +172,10 @@ const ChangePasswordSection: React.FC = () => {
       // No need to check for HTTP 400 error caused by invalid new password as
       // long as server and client are using the same password validation rules
 
-      if (isErrorCausedByUnauthorisedAccess(error)) {
-        setCurrentPasswordFieldInfo({
-          value: currentPasswordFieldInfo.value,
-          errorMessage: 'Incorrect password.',
-        })
-
-        toast.error('Password change failed: Incorrect password.')
+      if (isErrorCausedByAuthentication(error)) {
+        toast.error(
+          `Password change failed: ${(error as AxiosError).response?.data}.`,
+        )
       } else {
         toast.error('Password change failed: Please try again later.')
       }
@@ -179,7 +184,7 @@ const ChangePasswordSection: React.FC = () => {
     setIsSubmitting(false)
   }
 
-  function isErrorCausedByUnauthorisedAccess(error: unknown): boolean {
+  function isErrorCausedByAuthentication(error: unknown): boolean {
     return error instanceof AxiosError && error.response?.status === 401
   }
 

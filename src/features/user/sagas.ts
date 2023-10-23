@@ -41,8 +41,6 @@ function* login(action: Action<UserCredential>) {
     } else {
       toast.error('Login failed: Please try again later.')
     }
-
-    console.error(error)
   } finally {
     yield put(removeLoadingTask(UserSagaActions.LOGIN))
   }
@@ -58,7 +56,7 @@ function* logout() {
     toast.success('Logout successful.')
   } catch (error) {
     if (error instanceof AxiosError && error.response?.status === 401) {
-      toast.error('Logout failed: Session is invalid.')
+      toast.error(`Logout failed: ${error.response?.data}`)
     } else {
       toast.error('Logout failed: Please try again later.')
     }
@@ -74,10 +72,7 @@ function* getUserProfile() {
     yield put(setUserProfile(yield userService.getUserProfile()))
   } catch (error) {
     if (error instanceof AxiosError && error.response?.status === 401) {
-      yield put(setIsLoggedIn(false))
-
-      // TODO: Revoking should be handled by a different user service endpoint
-      toast.error('Session has been revoked.')
+      toast.error(`Fetching user profile failed: ${error.response?.data}`)
     } else {
       toast.error('Fetching user profile failed: Please try again later.')
     }
@@ -98,7 +93,7 @@ function* deleteUser(action: Action<UserDeletionCredential>) {
     toast.success('User deleted.')
   } catch (error) {
     if (error instanceof AxiosError && error.response?.status === 401) {
-      toast.error('User deletion failed: Incorrect password.')
+      toast.error(`User deletion failed: ${error.response?.data}`)
     } else {
       toast.error('User deletion failed: Please try again later.')
     }
