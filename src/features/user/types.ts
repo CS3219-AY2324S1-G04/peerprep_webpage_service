@@ -12,6 +12,6 @@ export interface UserState {
 export const UserSagaActions = {
   LOGIN: '@userInfo/LOGIN',
   LOGOUT: '@userInfo/LOGOUT',
-  GET_USER_PROFILE: '@userInfo/GET_USER_PROFILE',
+  FETCH_USER_PROFILE: '@userInfo/FETCH_USER_PROFILE',
   DELETE_USER: '@userInfo/DELETE_USER',
 }

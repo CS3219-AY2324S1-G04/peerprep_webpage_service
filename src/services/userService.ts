@@ -60,7 +60,7 @@ export async function deleteSession(controller?: AbortController) {
   })
 }
 
-export async function getUserProfile(
+export async function fetchUserProfile(
   controller?: AbortController,
 ): Promise<UserProfile> {
   const data = (
@@ -194,7 +194,7 @@ export default {
   createUser,
   createSession,
   deleteSession,
-  getUserProfile,
+  fetchUserProfile,
   updateUserProfile,
   updatePassword,
   deleteUser,

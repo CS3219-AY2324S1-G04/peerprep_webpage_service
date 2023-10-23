@@ -65,11 +65,11 @@ function* logout() {
   }
 }
 
-function* getUserProfile() {
-  yield put(addLoadingTask(UserSagaActions.GET_USER_PROFILE))
+function* fetchUserProfile() {
+  yield put(addLoadingTask(UserSagaActions.FETCH_USER_PROFILE))
 
   try {
-    yield put(setUserProfile(yield userService.getUserProfile()))
+    yield put(setUserProfile(yield userService.fetchUserProfile()))
   } catch (error) {
     if (error instanceof AxiosError && error.response?.status === 401) {
       toast.error(`Fetching user profile failed: ${error.response?.data}`)
@@ -79,7 +79,7 @@ function* getUserProfile() {
 
     console.error(error)
   } finally {
-    yield put(removeLoadingTask(UserSagaActions.GET_USER_PROFILE))
+    yield put(removeLoadingTask(UserSagaActions.FETCH_USER_PROFILE))
   }
 }
 
@@ -118,10 +118,10 @@ export function* watchLogout() {
   yield takeLatest([UserSagaActions.LOGOUT], logout)
 }
 
-export function* watchGetUserProfile() {
+export function* watchFetchUserProfile() {
   yield takeLatest(
-    [CommonSagaActions.LOGGED_IN_INIT, UserSagaActions.GET_USER_PROFILE],
-    getUserProfile,
+    [CommonSagaActions.LOGGED_IN_INIT, UserSagaActions.FETCH_USER_PROFILE],
+    fetchUserProfile,
   )
 }
 
@@ -135,7 +135,7 @@ export function* userSaga() {
     fork(watchInitLoggedInUser),
     fork(watchLogin),
     fork(watchLogout),
-    fork(watchGetUserProfile),
+    fork(watchFetchUserProfile),
     fork(watchDeleteUser),
   ])
 }

@@ -92,7 +92,7 @@ const EditProfileSection: React.FC = () => {
 
     setIsSubmitting(false)
 
-    dispatch({ type: UserSagaActions.GET_USER_PROFILE })
+    dispatch({ type: UserSagaActions.FETCH_USER_PROFILE })
   }
 
   function isErrorCausedByInvalidParams(error: unknown): boolean {
