@@ -17,7 +17,7 @@ const Login: React.FC = () => {
   const navigate = useNavigate()
   const isLoggedIn = useAppSelector(getIsLoggedIn)
 
-  const [isSubmitting] = useTaskSubscriber(UserSagaActions.CREATE_SESSION)
+  const [isSubmitting] = useTaskSubscriber(UserSagaActions.LOGIN)
 
   const [usernameFieldInfo, setUsernameFieldInfo] = useState<FieldInfo>({
     value: '',
@@ -43,7 +43,7 @@ const Login: React.FC = () => {
     e.preventDefault()
 
     dispatch<{ type: string; payload: UserCredential }>({
-      type: UserSagaActions.CREATE_SESSION,
+      type: UserSagaActions.LOGIN,
       payload: {
         username: usernameFieldInfo.value,
         password: passwordFieldInfo.value,

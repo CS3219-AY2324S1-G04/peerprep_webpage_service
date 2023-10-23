@@ -24,8 +24,8 @@ function* initLoggedInUser(action: Action<boolean>) {
   }
 }
 
-function* createSession(action: Action<UserCredential>) {
-  yield put(addLoadingTask(UserSagaActions.CREATE_SESSION))
+function* login(action: Action<UserCredential>) {
+  yield put(addLoadingTask(UserSagaActions.LOGIN))
 
   try {
     yield userService.createSession(action.payload)
@@ -44,12 +44,12 @@ function* createSession(action: Action<UserCredential>) {
 
     console.error(error)
   } finally {
-    yield put(removeLoadingTask(UserSagaActions.CREATE_SESSION))
+    yield put(removeLoadingTask(UserSagaActions.LOGIN))
   }
 }
 
-function* deleteSession() {
-  yield put(addLoadingTask(UserSagaActions.DELETE_SESSION))
+function* logout() {
+  yield put(addLoadingTask(UserSagaActions.LOGOUT))
 
   try {
     yield userService.deleteSession()
@@ -63,7 +63,7 @@ function* deleteSession() {
       toast.error('Logout failed: Please try again later.')
     }
   } finally {
-    yield put(removeLoadingTask(UserSagaActions.DELETE_SESSION))
+    yield put(removeLoadingTask(UserSagaActions.LOGOUT))
   }
 }
 
@@ -115,12 +115,12 @@ export function* watchInitLoggedInUser() {
   yield takeLatest([setIsLoggedIn.type], initLoggedInUser)
 }
 
-export function* watchCreateSession() {
-  yield takeLatest([UserSagaActions.CREATE_SESSION], createSession)
+export function* watchLogin() {
+  yield takeLatest([UserSagaActions.LOGIN], login)
 }
 
-export function* watchDeleteSession() {
-  yield takeLatest([UserSagaActions.DELETE_SESSION], deleteSession)
+export function* watchLogout() {
+  yield takeLatest([UserSagaActions.LOGOUT], logout)
 }
 
 export function* watchGetUserProfile() {
@@ -138,8 +138,8 @@ export function* userSaga() {
   yield all([
     fork(watchInitIsLoggedIn),
     fork(watchInitLoggedInUser),
-    fork(watchCreateSession),
-    fork(watchDeleteSession),
+    fork(watchLogin),
+    fork(watchLogout),
     fork(watchGetUserProfile),
     fork(watchDeleteUser),
   ])
