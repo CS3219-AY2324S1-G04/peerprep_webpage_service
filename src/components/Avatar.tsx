@@ -10,25 +10,35 @@ export enum AvatarShape {
   squircleLg,
 }
 
-const Avatar: React.FC<{
-  src?: string
-  alt?: string
-  shape?: AvatarShape
-  sx?: SxProps
-}> = ({ src, alt = '', shape = AvatarShape.circle, sx = {} }) => {
+const Avatar: React.FC<
+  BoxProps<
+    'img' | 'div',
+    {
+      src?: string
+      alt?: string
+      size?: number // In rem
+      shape?: AvatarShape
+      sx?: SxProps
+    }
+  >
+> = ({
+  src = undefined,
+  alt = '',
+  size = 2.5,
+  shape = AvatarShape.circle,
+  sx = {},
+  ...rest
+}) => {
   return src !== undefined ? (
-    <ImageAvatar src={src} shape={shape} sx={sx} />
+    <ImageAvatar src={src} size={size} shape={shape} sx={sx} {...rest} />
   ) : (
-    <TextAvatar text={alt} shape={shape} sx={sx} />
+    <TextAvatar text={alt} size={size} shape={shape} sx={sx} {...rest} />
   )
 }
 
-const BaseAvatar: React.FC<BoxProps<'img' | 'div', { shape: AvatarShape }>> = ({
-  shape,
-  sx,
-  children,
-  ...rest
-}) => {
+const BaseAvatar: React.FC<
+  BoxProps<'img' | 'div', { size: number; shape: AvatarShape }>
+> = ({ size, shape, sx, children, ...rest }) => {
   function getBorderRadius(shape: AvatarShape): string | undefined {
     switch (shape) {
       case AvatarShape.square:
@@ -46,6 +56,8 @@ const BaseAvatar: React.FC<BoxProps<'img' | 'div', { shape: AvatarShape }>> = ({
 
   return (
     <Box
+      width={`${size}rem`}
+      height={`${size}rem`}
       sx={[
         styles.avatar,
         { borderRadius: getBorderRadius(shape) },
@@ -58,19 +70,37 @@ const BaseAvatar: React.FC<BoxProps<'img' | 'div', { shape: AvatarShape }>> = ({
   )
 }
 
-const ImageAvatar: React.FC<{
-  src: string
-  shape: AvatarShape
-  sx: SxProps
-}> = ({ src, shape, sx }) => {
-  return <BaseAvatar shape={shape} component="img" src={src} sx={sx} />
+const ImageAvatar: React.FC<
+  BoxProps<
+    'img',
+    {
+      size: number
+      shape: AvatarShape
+    }
+  >
+> = ({ src, size, shape, sx, ...rest }) => {
+  return (
+    <BaseAvatar
+      size={size}
+      shape={shape}
+      component="img"
+      src={src}
+      sx={sx}
+      {...rest}
+    />
+  )
 }
 
-const TextAvatar: React.FC<{
-  text: string
-  shape: AvatarShape
-  sx: SxProps
-}> = ({ text, shape, sx }) => {
+const TextAvatar: React.FC<
+  BoxProps<
+    'div',
+    {
+      text: string
+      size: number
+      shape: AvatarShape
+    }
+  >
+> = ({ text, size, shape, sx, ...rest }) => {
   const hueRange: [number, number] = [0, 360]
   const saturationRange: [number, number] = [60, 71]
   const lightnessRange: [number, number] = [50, 61]
@@ -123,6 +153,7 @@ const TextAvatar: React.FC<{
 
   return (
     <BaseAvatar
+      size={size}
       shape={shape}
       sx={[
         {
@@ -130,9 +161,11 @@ const TextAvatar: React.FC<{
         },
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
+      {...rest}
     >
       <Typography
         sx={{
+          fontSize: `${size * 0.4}rem`,
           color: backgroundColor.isLight()
             ? lightBackgroundTextColor.string()
             : darkBackgroundTextColor.string(),
@@ -151,7 +184,6 @@ const styles = {
       justifyContent: 'center',
       alignItems: 'center',
       border: 1,
-      aspectRatio: 1,
       objectFit: 'cover',
       borderColor: theme.palette.neutral.outlinedBorder,
     }
