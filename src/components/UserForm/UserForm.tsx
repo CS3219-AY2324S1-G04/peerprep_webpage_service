@@ -1,4 +1,5 @@
 import { Box, Divider } from '@mui/joy'
+import { SxProps } from '@mui/joy/styles/types'
 import React from 'react'
 
 import ConfirmPasswordField from './ConfirmPasswordField'
@@ -21,10 +22,10 @@ const UserForm = ({ children, onSubmit }: UserFormProps) => {
   const formFooter = childrenComponents.pop()
 
   return (
-    <Box component="form" sx={styles.formContainer} onSubmit={onSubmit}>
+    <Box component="form" onSubmit={onSubmit}>
       {formHeader}
       <Box height="32px" />
-      <Box sx={styles.formBodyContainer}>{childrenComponents}</Box>
+      <Box sx={styles.formBody}>{childrenComponents}</Box>
       <Box height="24px" />
       <Divider />
       <Box height="24px" />
@@ -34,20 +35,13 @@ const UserForm = ({ children, onSubmit }: UserFormProps) => {
 }
 
 const styles = {
-  formContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    minWidth: { xs: 0, sm: '22.813rem' },
-    maxWidth: '22.813rem',
-  },
-  formBodyContainer: {
+  formBody: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'stretch',
     gap: '1.5rem',
     width: '100%',
-  },
+  } as SxProps,
 } as const
 
 UserForm.Container = UserFormContainer
