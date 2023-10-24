@@ -1,20 +1,33 @@
 import { AxiosError } from 'axios'
-import { all, fork, put, takeLatest } from 'redux-saga/effects'
+import { all, delay, fork, put, takeLatest } from 'redux-saga/effects'
 
 import { toast } from '../../components/Toaster/toast'
+import { store } from '../../context/store'
 import userService, {
   UserCredential,
   UserDeletionCredential,
 } from '../../services/userService'
 import { Action, CommonSagaActions } from '../../utils/types'
 import { addLoadingTask, removeLoadingTask } from '../common/slice'
+import { getIsLoggedIn } from './selector'
 import { setIsLoggedIn, setUserProfile } from './slice'
 import { UserSagaActions, cookieIsLoggedInKey } from './types'
 
-function* initIsLoggedIn() {
-  yield put(
-    setIsLoggedIn(document.cookie.includes(`${cookieIsLoggedInKey}=true`)),
-  )
+const syncIsLoggedInDelayMillis: number = 1000
+
+function* periodicallySyncIsLoggedInCookie() {
+  while (true) {
+    const currIsLoggedIn: boolean = getIsLoggedIn(store.getState())
+    const correctIsLoggedIn: boolean = document.cookie.includes(
+      `${cookieIsLoggedInKey}=true`,
+    )
+
+    if (currIsLoggedIn !== correctIsLoggedIn) {
+      yield put(setIsLoggedIn(correctIsLoggedIn))
+    }
+
+    yield delay(syncIsLoggedInDelayMillis)
+  }
 }
 
 function* initLoggedInUser(action: Action<boolean>) {
@@ -29,6 +42,7 @@ function* keepSessionAlive() {
     yield userService.keepSessionAlive()
   } catch (error) {
     if (error instanceof AxiosError && error.response?.status === 401) {
+      toast.error('Session has been revoked.')
       yield put(setIsLoggedIn(false))
     }
   }
@@ -112,8 +126,11 @@ function* deleteUser(action: Action<UserDeletionCredential>) {
   }
 }
 
-export function* watchInitIsLoggedIn() {
-  yield takeLatest([CommonSagaActions.APP_INIT], initIsLoggedIn)
+export function* watchPeriodicallySyncIsLoggedInCookie() {
+  yield takeLatest(
+    [CommonSagaActions.APP_INIT],
+    periodicallySyncIsLoggedInCookie,
+  )
 }
 
 export function* watchInitLoggedInUser() {
@@ -145,12 +162,12 @@ export function* watchDeleteUser() {
 
 export function* userSaga() {
   yield all([
-    fork(watchInitIsLoggedIn),
+    fork(watchPeriodicallySyncIsLoggedInCookie),
     fork(watchInitLoggedInUser),
+    fork(watchKeepSessionAlive),
     fork(watchLogin),
     fork(watchLogout),
     fork(watchFetchUserProfile),
     fork(watchDeleteUser),
-    fork(watchKeepSessionAlive),
   ])
 }
