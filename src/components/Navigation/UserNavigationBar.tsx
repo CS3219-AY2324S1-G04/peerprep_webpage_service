@@ -1,3 +1,4 @@
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
 import { Logout, Settings } from '@mui/icons-material'
 import {
   Divider,
@@ -8,6 +9,7 @@ import {
   MenuItem,
   Theme,
   Typography,
+  Input,
 } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
 import React, { useState } from 'react'
@@ -20,6 +22,9 @@ import { useAppSelector } from '../../hooks/useAppSelector'
 import { userNavigationList } from '../../utils/constants/navigation'
 import Avatar, { AvatarShape } from '../Avatar'
 import NavigationBar from './NavigationBar'
+import NavigationList from './NavigationList'
+import Logo from '../Logo'
+import ColorSchemeToggle from '../ColorSchemeToggle'
 
 const UserNavigationBar: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -40,39 +45,55 @@ const UserNavigationBar: React.FC = () => {
 
   return (
     <>
-      <NavigationBar navigationList={userNavigationList}>
-        <Dropdown>
-          <MenuButton variant="plain" sx={styles.avatarMenuButton}>
-            <Avatar alt={username} shape={AvatarShape.squircleSm} />
-          </MenuButton>
-          <Menu
-            sx={(theme: Theme) => {
-              return { zIndex: theme.zIndex.tooltip }
-            }}
-          >
-            <MenuItem sx={styles.userProfileContainer}>
-              <Typography noWrap={true} sx={styles.username}>
-                {username}
-              </Typography>
-              <Typography noWrap={true} sx={styles.emailAddress}>
-                {emailAddress}
-              </Typography>
-            </MenuItem>
-            <Divider />
-            <MenuItem onClick={openEditAccountSettings}>
-              <ListItemDecorator>
-                <Settings />
-              </ListItemDecorator>
-              Edit Account Settings
-            </MenuItem>
-            <MenuItem onClick={logout}>
-              <ListItemDecorator>
-                <Logout />
-              </ListItemDecorator>
-              Logout
-            </MenuItem>
-          </Menu>
-        </Dropdown>
+      <NavigationBar>
+        <NavigationBar.Left>
+          <NavigationList list={userNavigationList} />
+        </NavigationBar.Left>
+        <NavigationBar.Middle>
+          <Logo />
+        </NavigationBar.Middle>
+        <NavigationBar.Right wrapperClass={styles.rightColumnOverride}>
+        <Input
+          size="md"
+          variant="outlined"
+          placeholder="Search"
+          startDecorator={<SearchRoundedIcon color="primary" />}
+          sx={styles.input}
+        />
+        <ColorSchemeToggle />
+          <Dropdown>
+            <MenuButton variant="plain" sx={{ padding: 0 }}>
+              <Avatar alt={username} shape={AvatarShape.squircleSm} />
+            </MenuButton>
+            <Menu
+              sx={(theme: Theme) => {
+                return { zIndex: theme.zIndex.tooltip }
+              }}
+            >
+              <MenuItem sx={styles.userProfileContainer}>
+                <Typography noWrap={true} sx={styles.username}>
+                  {username}
+                </Typography>
+                <Typography noWrap={true} sx={styles.emailAddress}>
+                  {emailAddress}
+                </Typography>
+              </MenuItem>
+              <Divider />
+              <MenuItem onClick={openEditAccountSettings}>
+                <ListItemDecorator>
+                  <Settings />
+                </ListItemDecorator>
+                Edit Account Settings
+              </MenuItem>
+              <MenuItem onClick={logout}>
+                <ListItemDecorator>
+                  <Logout />
+                </ListItemDecorator>
+                Logout
+              </MenuItem>
+            </Menu>
+          </Dropdown>
+        </NavigationBar.Right>
       </NavigationBar>
 
       <AccountSettingsModal
@@ -91,9 +112,20 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     pointerEvents: 'none',
-  } as SxProps,
-  username: { width: 0, minWidth: '100%', fontSize: '1rem' } as SxProps,
-  emailAddress: { width: 0, minWidth: '100%', fontSize: '0.8rem' } as SxProps,
+  },
+  username: { width: 0, minWidth: '100%', fontSize: '1rem' },
+  emailAddress: { width: 0, minWidth: '100%', fontSize: '0.8rem' },
+  rightColumnOverride: {
+    justifyContent: 'flex-end',
+  },
+  input: {
+    flexBasis: '500px',
+    display: {
+      xs: 'none',
+      md: 'flex',
+    },
+    boxShadow: 'sm',
+  },
 }
 
 export default UserNavigationBar
