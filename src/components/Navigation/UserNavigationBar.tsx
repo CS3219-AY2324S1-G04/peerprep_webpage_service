@@ -63,7 +63,7 @@ const UserNavigationBar: React.FC = () => {
         <ColorSchemeToggle />
           <Dropdown>
             <MenuButton variant="plain" sx={{ padding: 0 }}>
-              <Avatar alt={username} variant="solid" size="md" />
+              <Avatar alt={username} shape={AvatarShape.squircleSm} />
             </MenuButton>
             <Menu
               sx={(theme: Theme) => {
