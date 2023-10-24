@@ -1,5 +1,14 @@
 import { AxiosError } from 'axios'
-import { all, call, delay, fork, put, takeLatest } from 'redux-saga/effects'
+import {
+  all,
+  call,
+  delay,
+  fork,
+  put,
+  race,
+  take,
+  takeLatest,
+} from 'redux-saga/effects'
 
 import { toast } from '../../components/Toaster/toast'
 import { store } from '../../context/store'
@@ -31,10 +40,12 @@ function* periodicallySyncIsLoggedInCookie() {
   }
 }
 
-function* initLoggedInUser(action: Action<boolean>) {
+function* dispatchLoginStateChangeAction(action: Action<boolean>) {
   const isLoggedIn: boolean = action.payload
   if (isLoggedIn) {
     yield put({ type: CommonSagaActions.LOGGED_IN_INIT })
+  } else {
+    yield put({ type: CommonSagaActions.LOGGED_OUT_TEARDOWN })
   }
 }
 
@@ -49,16 +60,12 @@ function* keepSessionAlive() {
   }
 }
 
-// Ensures that if the session is revoked from anywhere other than the the
-// browser the app is running in (e.g. revoked by the server), the app will be
-// able to handle it.
-// TODO: Come up with a better way to handle this other than frequent polling.
+// Ensures that if the session is revoked from anywhere other than the browser
+// the app is running in (e.g. revoked by the server), the app will be aware of
+// it.
+// TODO: Come up with a better way to handle this other than polling the server.
 function* periodicallyValidateSession() {
   while (true) {
-    if (!getIsLoggedIn(store.getState())) {
-      return
-    }
-
     yield call(keepSessionAlive)
     yield delay(validateSessionDelayMillis)
   }
@@ -149,8 +156,8 @@ export function* watchPeriodicallySyncIsLoggedInCookie() {
   )
 }
 
-export function* watchInitLoggedInUser() {
-  yield takeLatest([setIsLoggedIn.type], initLoggedInUser)
+export function* watchDispatchLoginStateChangeAction() {
+  yield takeLatest([setIsLoggedIn.type], dispatchLoginStateChangeAction)
 }
 
 export function* watchKeepSessionAlive() {
@@ -158,10 +165,12 @@ export function* watchKeepSessionAlive() {
 }
 
 export function* watchPeriodicallyValidateSession() {
-  yield takeLatest(
-    [CommonSagaActions.LOGGED_IN_INIT],
-    periodicallyValidateSession,
-  )
+  yield takeLatest(CommonSagaActions.LOGGED_IN_INIT, function* () {
+    yield race([
+      call(periodicallyValidateSession),
+      take(CommonSagaActions.LOGGED_OUT_TEARDOWN),
+    ])
+  })
 }
 
 export function* watchLogin() {
@@ -186,7 +195,7 @@ export function* watchDeleteUser() {
 export function* userSaga() {
   yield all([
     fork(watchPeriodicallySyncIsLoggedInCookie),
-    fork(watchInitLoggedInUser),
+    fork(watchDispatchLoginStateChangeAction),
     fork(watchKeepSessionAlive),
     fork(watchPeriodicallyValidateSession),
     fork(watchLogin),
