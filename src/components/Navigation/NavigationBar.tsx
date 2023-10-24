@@ -1,58 +1,51 @@
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
-import { Box, Input, List, ListItem, ListItemButton } from '@mui/joy'
+import { Box } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
 import { Fragment, PropsWithChildren } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { combineStyles } from '../../utils/theme/styles'
 
-import { useRouteMatch } from '../../hooks/useRouteMatch'
-import { PageNavigation } from '../../utils/constants/navigation'
-import ColorSchemeToggle from '../ColorSchemeToggle'
-import Logo from '../Logo'
+interface NavigationBarProps {
+  children: React.ReactNode
+}
 
-const NavigationBar: React.FC<
-  PropsWithChildren<{ navigationList: PageNavigation[] }>
-> = ({ children, navigationList }) => {
-  const routeMatch = useRouteMatch()
-  const navigate = useNavigate()
+interface NavBarRightColumnProps extends PropsWithChildren{
+  wrapperClass?: SxProps
+}
+
+const NavigationBar = (props: NavigationBarProps) => {
+  const { children } = props
 
   return (
     <Fragment>
       <Box sx={styles.root}>
-        <Box sx={styles.leftColumn}>
-          <List role="menubar" orientation="horizontal" sx={styles.list}>
-            {navigationList.map((page, index) => {
-              const isActivePage = routeMatch.getRouteMatch(page.url)
-              return (
-                <ListItem key={`${page.title}-${index}`}>
-                  <ListItemButton
-                    className={isActivePage ? 'active' : ''}
-                    component="a"
-                    sx={styles.listItemButton}
-                    onClick={() => navigate(page.url)}
-                  >
-                    {page.title}
-                  </ListItemButton>
-                </ListItem>
-              )
-            })}
-          </List>
-        </Box>
-        <Box sx={styles.middleColumn}>
-          <Logo />
-        </Box>
-        <Box sx={styles.rightColumn}>
-          <Input
-            size="md"
-            variant="outlined"
-            placeholder="Search"
-            startDecorator={<SearchRoundedIcon color="primary" />}
-            sx={styles.input}
-          />
-          <ColorSchemeToggle />
-          {children}
-        </Box>
+        {children}
       </Box>
     </Fragment>
+  )
+}
+
+NavigationBar.Left = function NavBarLeftColumn(props: PropsWithChildren) {
+  return (
+    <Box sx={styles.leftColumn}>
+      {props.children}
+    </Box>
+  )
+}
+
+NavigationBar.Middle = function NavBarMiddleColumn(props: PropsWithChildren) {
+  return (
+    <Box sx={styles.middleColumn}>
+      {props.children}
+    </Box>
+  )
+}
+
+NavigationBar.Right = function NavBarRightColumn(props: NavBarRightColumnProps) {
+  return (
+    <Box sx={styles.rightColumn}>
+      <Box sx={combineStyles(styles.rightColumnWrapper, props.wrapperClass)}>
+        {props.children}
+      </Box>
+    </Box>
   )
 }
 
@@ -64,6 +57,10 @@ const styles = {
   } as SxProps,
   leftColumn: {
     gridColumn: '1 / 2',
+    display: {
+      xs: 'none',
+      sm: 'flex',
+    },
   } as SxProps,
   middleColumn: {
     gridColumn: '2 / 3',
@@ -72,31 +69,21 @@ const styles = {
   } as SxProps,
   rightColumn: {
     gridColumn: '3 / 4',
-    display: 'flex',
     paddingTop: 2,
     paddingBottom: 2,
     alignItems: 'center',
     justifyContent: 'flex-end',
-    columnGap: '8px',
-  } as SxProps,
-  list: {
-    height: '100%',
-    '.active': {
-      borderColor: 'primary.500',
-    },
-  } as SxProps,
-  listItemButton: {
-    border: 'unset',
-    borderBottom: '2px solid transparent',
-  } as SxProps,
-  input: {
-    flexBasis: '500px',
     display: {
       xs: 'none',
       sm: 'flex',
     },
-    boxShadow: 'sm',
   } as SxProps,
+  rightColumnWrapper: {
+    width: '100%',
+    display: 'flex',
+    height: '80%',
+    columnGap: '8px',
+  } as SxProps
 } as const
 
 export default NavigationBar
