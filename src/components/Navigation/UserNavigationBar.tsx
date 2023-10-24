@@ -1,6 +1,5 @@
 import { Logout, Settings } from '@mui/icons-material'
 import {
-  Avatar,
   Divider,
   Dropdown,
   ListItemDecorator,
@@ -10,6 +9,7 @@ import {
   Theme,
   Typography,
 } from '@mui/joy'
+import { SxProps } from '@mui/joy/styles/types'
 import React, { useState } from 'react'
 
 import AccountSettingsModal from '../../features/accountSettingsEditor/components/AccountSettingsModal'
@@ -18,6 +18,7 @@ import { UserSagaActions } from '../../features/user/types'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { userNavigationList } from '../../utils/constants/navigation'
+import Avatar, { AvatarShape } from '../Avatar'
 import NavigationBar from './NavigationBar'
 
 const UserNavigationBar: React.FC = () => {
@@ -41,8 +42,8 @@ const UserNavigationBar: React.FC = () => {
     <>
       <NavigationBar navigationList={userNavigationList}>
         <Dropdown>
-          <MenuButton variant="plain" sx={{ padding: 0 }}>
-            <Avatar alt={username} variant="solid" size="md" />
+          <MenuButton variant="plain" sx={styles.avatarMenuButton}>
+            <Avatar alt={username} shape={AvatarShape.squircleSm} />
           </MenuButton>
           <Menu
             sx={(theme: Theme) => {
@@ -83,13 +84,16 @@ const UserNavigationBar: React.FC = () => {
 }
 
 const styles = {
+  avatarMenuButton: {
+    padding: 0,
+  } as SxProps,
   userProfileContainer: {
     display: 'flex',
     flexDirection: 'column',
     pointerEvents: 'none',
-  },
-  username: { width: 0, minWidth: '100%', fontSize: '1rem' },
-  emailAddress: { width: 0, minWidth: '100%', fontSize: '0.8rem' },
+  } as SxProps,
+  username: { width: 0, minWidth: '100%', fontSize: '1rem' } as SxProps,
+  emailAddress: { width: 0, minWidth: '100%', fontSize: '0.8rem' } as SxProps,
 }
 
 export default UserNavigationBar
