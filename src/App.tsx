@@ -10,10 +10,12 @@ import { getIsLoggedIn } from './features/user/selector'
 import { useAppDispatch } from './hooks/useAppDispatch'
 import { useAppSelector } from './hooks/useAppSelector'
 import Dashboard from './pages/Dashboard'
+import GuestRedirect from './pages/GuestRedirect'
 import Login from './pages/Login'
 import Problems from './pages/Problems'
-import Root from './pages/Root'
+import Rankings from './pages/Rankings'
 import SignUp from './pages/SignUp'
+import UserRedirect from './pages/UserRedirect'
 import Paths from './utils/constants/navigation'
 import theme from './utils/theme/themeOverride'
 import { CommonSagaActions } from './utils/types'
@@ -36,14 +38,23 @@ const App: React.FC = () => {
           </Layout.Header>
           <Layout.Main>
             <Toaster />
-            {/* // TODO: Change routes depending on login status */}
             <Routes>
-              <Route path={Paths.Root} element={<Root />} />
-              <Route path={Paths.Dashboard} element={<Dashboard />} />
-              <Route path={Paths.Problems} element={<Problems />} />
-              <Route path={Paths.Login} element={<Login />} />
-              <Route path={Paths.SignUp} element={<SignUp />} />
-              {/* TODO: Create a route with path "*" for an Error 404 page */}
+              {isLoggedIn ? (
+                <>
+                  <Route path={Paths.Problems} element={<Problems />} />
+                  <Route path={Paths.Rankings} element={<Rankings />} />
+                  <Route path={Paths.Dashboard} element={<Dashboard />} />
+                  <Route path="*" element={<UserRedirect />} />
+                </>
+              ) : (
+                <>
+                  <Route path={Paths.Problems} element={<Problems />} />
+                  <Route path={Paths.Rankings} element={<Rankings />} />
+                  <Route path={Paths.Login} element={<Login />} />
+                  <Route path={Paths.SignUp} element={<SignUp />} />
+                  <Route path="*" element={<GuestRedirect />} />
+                </>
+              )}
             </Routes>
           </Layout.Main>
         </Layout.Root>
