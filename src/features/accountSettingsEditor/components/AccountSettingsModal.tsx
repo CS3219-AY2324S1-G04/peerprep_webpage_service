@@ -10,6 +10,7 @@ import { AxiosError } from 'axios'
 import React, { useEffect, useState } from 'react'
 
 import { FieldInfo } from '../../../components/Form/FormField'
+import { toast } from '../../../components/Toaster/toast'
 import ConfirmPasswordField from '../../../components/UserForm/ConfirmPasswordField'
 import EmailAddressField from '../../../components/UserForm/EmailAddressField'
 import PasswordField from '../../../components/UserForm/PasswordField'
@@ -75,24 +76,31 @@ const EditProfileSection: React.FC = () => {
         emailAddress: emailAddressFieldInfo.value,
         username: usernameFieldInfo.value,
       })
-      // TODO: Show toast / snackbar containing success message
-      console.log('Profile has been updated.')
+      toast.success('Profile updated.')
     } catch (error) {
       if (isErrorCausedByInvalidParams(error)) {
         updateParamErrorMessages((error as AxiosError).response?.data ?? {})
+        toast.error('Profile update failed: One or more fields are invalid.')
+      } else if (isErrorCausedByAuthentication(error)) {
+        toast.error(
+          `Profile update failed: ${(error as AxiosError).response?.data}.`,
+        )
       } else {
-        // TODO: Show toast / snackbar containing error message
-        console.error('Sorry, please try again later.')
+        toast.error('Profile update failed: Please try again later.')
       }
     }
 
     setIsSubmitting(false)
 
-    dispatch({ type: UserSagaActions.GET_USER_PROFILE })
+    dispatch({ type: UserSagaActions.FETCH_USER_PROFILE })
   }
 
   function isErrorCausedByInvalidParams(error: unknown): boolean {
     return error instanceof AxiosError && error.response?.status === 400
+  }
+
+  function isErrorCausedByAuthentication(error: unknown): boolean {
+    return error instanceof AxiosError && error.response?.status === 401
   }
 
   function updateParamErrorMessages(paramError: UpdateUserProfileParamError) {
@@ -155,31 +163,28 @@ const ChangePasswordSection: React.FC = () => {
         newPassword: newPasswordFieldInfo.value,
       })
 
-      // TODO: Show toast / snackbar containing success message
-      console.log('Password has been changed.')
-
       setCurrentPasswordFieldInfo({ value: '' })
       setNewPasswordFieldInfo({ value: '' })
       setConfirmNewPasswordFieldInfo({ value: '' })
+
+      toast.success('Password changed.')
     } catch (error) {
       // No need to check for HTTP 400 error caused by invalid new password as
       // long as server and client are using the same password validation rules
 
-      if (isErrorCausedByUnauthorisedAccess(error)) {
-        setCurrentPasswordFieldInfo({
-          value: currentPasswordFieldInfo.value,
-          errorMessage: 'Incorrect password.',
-        })
+      if (isErrorCausedByAuthentication(error)) {
+        toast.error(
+          `Password change failed: ${(error as AxiosError).response?.data}.`,
+        )
       } else {
-        // TODO: Show toast / snackbar containing error message
-        console.error('Sorry, please try again later.')
+        toast.error('Password change failed: Please try again later.')
       }
     }
 
     setIsSubmitting(false)
   }
 
-  function isErrorCausedByUnauthorisedAccess(error: unknown): boolean {
+  function isErrorCausedByAuthentication(error: unknown): boolean {
     return error instanceof AxiosError && error.response?.status === 401
   }
 

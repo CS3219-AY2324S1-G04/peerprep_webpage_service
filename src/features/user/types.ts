@@ -10,8 +10,8 @@ export interface UserState {
 }
 
 export const UserSagaActions = {
-  CREATE_SESSION: '@userInfo/CREATE_SESSION',
-  DELETE_SESSION: '@userInfo/DELETE_SESSION',
-  GET_USER_PROFILE: '@userInfo/GET_USER_PROFILE',
+  LOGIN: '@userInfo/LOGIN',
+  LOGOUT: '@userInfo/LOGOUT',
+  FETCH_USER_PROFILE: '@userInfo/FETCH_USER_PROFILE',
   DELETE_USER: '@userInfo/DELETE_USER',
 }

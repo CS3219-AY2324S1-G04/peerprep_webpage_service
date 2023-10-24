@@ -40,7 +40,7 @@ const UserNavigationBar: React.FC = () => {
   }
 
   function logout() {
-    dispatch({ type: UserSagaActions.DELETE_SESSION })
+    dispatch({ type: UserSagaActions.LOGOUT })
   }
 
   return (
