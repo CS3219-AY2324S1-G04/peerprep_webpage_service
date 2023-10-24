@@ -1,4 +1,5 @@
 import { Box, Sheet, Theme } from '@mui/joy'
+import { SxProps } from '@mui/joy/styles/types'
 import React, { PropsWithChildren } from 'react'
 
 const UserFormContainer: React.FC<PropsWithChildren> = ({ children }) => {
@@ -17,8 +18,8 @@ const styles = {
     flexDirection: 'row',
     justifyContent: 'center',
     padding: '3.125rem 0rem',
-  },
-  sheet: (theme: Theme) => {
+  } as SxProps,
+  sheet: ((theme: Theme) => {
     return {
       display: 'flex',
       flexDirection: 'column',
@@ -30,8 +31,9 @@ const styles = {
       },
       boxShadow: { xs: '0rem', sm: 'sm' },
       borderRadius: 'md',
+      width: 'min(32rem, 100%)',
     }
-  },
+  }) as SxProps,
 }
 
 export default UserFormContainer

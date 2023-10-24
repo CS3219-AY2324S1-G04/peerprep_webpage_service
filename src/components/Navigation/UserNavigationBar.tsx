@@ -1,7 +1,6 @@
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
 import { Logout, Settings } from '@mui/icons-material'
 import {
-  Avatar,
   Divider,
   Dropdown,
   ListItemDecorator,
@@ -12,6 +11,7 @@ import {
   Typography,
   Input,
 } from '@mui/joy'
+import { SxProps } from '@mui/joy/styles/types'
 import React, { useState } from 'react'
 
 import AccountSettingsModal from '../../features/accountSettingsEditor/components/AccountSettingsModal'
@@ -20,6 +20,7 @@ import { UserSagaActions } from '../../features/user/types'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { userNavigationList } from '../../utils/constants/navigation'
+import Avatar, { AvatarShape } from '../Avatar'
 import NavigationBar from './NavigationBar'
 import NavigationList from './NavigationList'
 import Logo from '../Logo'
@@ -104,6 +105,9 @@ const UserNavigationBar: React.FC = () => {
 }
 
 const styles = {
+  avatarMenuButton: {
+    padding: 0,
+  } as SxProps,
   userProfileContainer: {
     display: 'flex',
     flexDirection: 'column',

@@ -1,16 +1,8 @@
-import { PersonRounded, Settings } from '@mui/icons-material'
-import {
-  AspectRatio,
-  Box,
-  Button,
-  Card,
-  Sheet,
-  Skeleton,
-  Theme,
-  Typography,
-} from '@mui/joy'
+import { Settings } from '@mui/icons-material'
+import { Box, Button, Card, Sheet, Skeleton, Theme, Typography } from '@mui/joy'
 import { useState } from 'react'
 
+import Avatar, { AvatarShape } from '../components/Avatar'
 import AccountSettingsModal from '../features/accountSettingsEditor/components/AccountSettingsModal'
 import { getUserProfile } from '../features/user/selector'
 import { useAppSelector } from '../hooks/useAppSelector'
@@ -46,13 +38,11 @@ const ProfileCard: React.FC = () => {
   return (
     <Card variant="soft" sx={profileCardStyles.card}>
       <Box sx={profileCardStyles.profileContainer}>
-        <AspectRatio
-          variant="outlined"
-          ratio="1"
-          sx={profileCardStyles.profilePicture}
-        >
-          <PersonRounded />
-        </AspectRatio>
+        <Avatar
+          alt={profile?.username}
+          size={6.25}
+          shape={AvatarShape.squircleMd}
+        />
         <Box sx={profileCardStyles.profileInfo}>
           <Typography noWrap={true} sx={profileCardStyles.username}>
             {profile?.username === undefined ? (
@@ -144,10 +134,6 @@ const profileCardStyles = {
     display: 'flex',
     flexDirection: 'row',
     gap: '1rem',
-  },
-  profilePicture: {
-    width: '6.25rem',
-    borderRadius: 'md',
   },
   profileInfo: {
     display: 'flex',
