@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios'
-import { all, delay, fork, put, takeLatest } from 'redux-saga/effects'
+import { all, call, delay, fork, put, takeLatest } from 'redux-saga/effects'
 
 import { toast } from '../../components/Toaster/toast'
 import { store } from '../../context/store'
@@ -14,6 +14,7 @@ import { setIsLoggedIn, setUserProfile } from './slice'
 import { UserSagaActions, cookieIsLoggedInKey } from './types'
 
 const syncIsLoggedInDelayMillis: number = 1000
+const validateSessionDelayMillis: number = 30000
 
 function* periodicallySyncIsLoggedInCookie() {
   while (true) {
@@ -45,6 +46,21 @@ function* keepSessionAlive() {
       toast.error('Session has been revoked.')
       yield put(setIsLoggedIn(false))
     }
+  }
+}
+
+// Ensures that if the session is revoked from anywhere other than the the
+// browser the app is running in (e.g. revoked by the server), the app will be
+// able to handle it.
+// TODO: Come up with a better way to handle this other than frequent polling.
+function* periodicallyValidateSession() {
+  while (true) {
+    if (!getIsLoggedIn(store.getState())) {
+      return
+    }
+
+    yield call(keepSessionAlive)
+    yield delay(validateSessionDelayMillis)
   }
 }
 
@@ -141,6 +157,13 @@ export function* watchKeepSessionAlive() {
   yield takeLatest([CommonSagaActions.LOGGED_IN_INIT], keepSessionAlive)
 }
 
+export function* watchPeriodicallyValidateSession() {
+  yield takeLatest(
+    [CommonSagaActions.LOGGED_IN_INIT],
+    periodicallyValidateSession,
+  )
+}
+
 export function* watchLogin() {
   yield takeLatest([UserSagaActions.LOGIN], login)
 }
@@ -165,6 +188,7 @@ export function* userSaga() {
     fork(watchPeriodicallySyncIsLoggedInCookie),
     fork(watchInitLoggedInUser),
     fork(watchKeepSessionAlive),
+    fork(watchPeriodicallyValidateSession),
     fork(watchLogin),
     fork(watchLogout),
     fork(watchFetchUserProfile),
