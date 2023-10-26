@@ -20,8 +20,7 @@ function CodeArea({
     <div>
       <CodeMirror
         value={value}
-        width="800px"
-        height="600px"
+        height="auto"
         theme={dracula}
         extensions={editorExtensions}
         onChange={onChange}

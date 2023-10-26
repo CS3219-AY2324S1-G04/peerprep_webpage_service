@@ -7,17 +7,21 @@ import { yCollab } from 'y-codemirror.next'
 import { WebsocketProvider } from 'y-websocket'
 import * as Y from 'yjs'
 
+import { useAppSelector } from '../../../hooks/useAppSelector'
+import { editorServiceBaseUrl } from '../../../utils/config'
+import { getUsername } from '../../user/selector'
 import CodeArea from './CodeArea'
 
 function Editor({ id }: { id: string }) {
   const doc = new Y.Doc()
-  const host = 'ws://localhost:9004'
+  const host = editorServiceBaseUrl
   const wsProvider = new WebsocketProvider(host, id, doc)
 
   const [hasConnect, setHasConnect] = React.useState(false)
+  const username = useAppSelector(getUsername)
 
   const userProperties = {
-    name: 'user1',
+    name: username,
     color: getRandomColor(),
   }
 
@@ -32,22 +36,7 @@ function Editor({ id }: { id: string }) {
     yCollab(text, wsProvider.awareness, { yUndoManager }),
   ]
 
-  function getRandomColor() {
-    const letters = '0123456789ABCDEF'
-    let color = '#'
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)]
-    }
-    return color
-  }
-
-  text.observe((event) => {
-    console.log('text event', event, text.toString())
-  })
-
   wsProvider.on('status', (event) => {
-    console.log('socket event', event.status) // logs "connected" or "disconnected"
-
     if (event.status == 'connected' && !hasConnect) {
       setHasConnect(true)
     }
@@ -62,6 +51,15 @@ function Editor({ id }: { id: string }) {
   } else {
     return <div> Connecting... </div>
   }
+}
+
+function getRandomColor() {
+  const letters = '0123456789ABCDEF'
+  let color = '#'
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)]
+  }
+  return color
 }
 
 export default Editor
