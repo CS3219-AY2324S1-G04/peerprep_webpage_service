@@ -20,17 +20,14 @@ function Editor({ id }: { id: string }) {
   const navigate = useNavigate()
 
   const [hasConnect, setHasConnect] = React.useState(false)
-  const [text, setText] = React.useState<Y.Text | null>(null)
-  const [editorExtensions, setEditorExtensions] = React.useState<
-    Extension[] | null
-  >(null)
-
+  const [doc] = React.useState<Y.Doc>(new Y.Doc())
+  const [wsProvider] = React.useState(
+    new WebsocketProvider(editorServiceBaseUrl, id, doc),
+  )
   const username = useAppSelector(getUsername)
 
   useEffect(() => {
-    const doc = new Y.Doc()
-    const host = editorServiceBaseUrl
-    const wsProvider = new WebsocketProvider(host, id, doc)
+    console.log('use effect')
 
     const userProperties = {
       name: username,
@@ -39,9 +36,15 @@ function Editor({ id }: { id: string }) {
 
     wsProvider.awareness.setLocalStateField('user', userProperties)
 
+    wsProvider.on('sync', (event) => {
+      console.log('sync')
+      setHasConnect(true)
+    })
+
     wsProvider.on('status', (event) => {
-      if (event.status == 'connected' && !hasConnect) {
-        setText(doc.getText())
+      console.log('connect')
+
+      if (event.status == 'connected') {
         setHasConnect(true)
       }
     })
@@ -50,22 +53,22 @@ function Editor({ id }: { id: string }) {
       navigate(Paths.Root)
     })
 
-    const text = doc.getText()
-    const yUndoManager = new Y.UndoManager(text)
-
-    setEditorExtensions([
-      javascript(),
-      vim(),
-      yCollab(text, wsProvider.awareness, { yUndoManager }),
-    ])
-
     return () => {
+      console.log("destroy")
       wsProvider.destroy()
     }
-  }, [hasConnect, id, username, navigate])
+  }, [doc, id, navigate, username, wsProvider])
 
-  if (hasConnect && text && editorExtensions) {
-    return <CodeArea editorExtensions={editorExtensions} text={text} />
+  if (hasConnect) {
+    const yUndoManager = new Y.UndoManager(doc.getText())
+
+    const editorExtensions = [
+      javascript(),
+      vim(),
+      yCollab(doc.getText(), wsProvider.awareness, { yUndoManager }),
+    ]
+
+    return <CodeArea editorExtensions={editorExtensions} text={doc.getText()} />
   } else {
     return <Skeleton> </Skeleton>
   }
