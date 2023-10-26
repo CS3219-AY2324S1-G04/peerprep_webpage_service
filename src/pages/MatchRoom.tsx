@@ -11,9 +11,12 @@ const MatchRoom: React.FC = () => {
     const navigateToRoom = async () => {
       try {
         const room = await getMatchedRoom()
+        if (!room) {
+          throw new Error('room not found')
+        }
         navigate(`${Paths.MatchRoom}/${room.roomId}`)
       } catch (error) {
-        navigate(Paths.Room)
+        navigate(Paths.Root)
       }
     }
 
