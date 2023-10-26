@@ -36,6 +36,7 @@ const NavigationList: React.FC<NavigationListProps> = (
           }
           return (
             <ListItemWithMenu
+              key={`${page.title}-${index}`}
               page={page}
               navigate={navigate}
               isActivePage={isAnySubPageActive}
@@ -127,7 +128,7 @@ const ListItemWithMenu: React.FC<ListItemWithMenuProps> = (
             }}
           >
             {page.subPages?.map((subPage) => (
-              <ListItem>
+              <ListItem key={subPage.title}>
                 <ListItemButton onClick={() => navigate(subPage.url ?? '')}>
                   {subPage.title}
                 </ListItemButton>

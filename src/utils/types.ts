@@ -25,4 +25,5 @@ export const CommonSagaActions = {
 
 export const LoadingKeys = {
   FETCHING_SELECTED_QUESTION: '@loading/FETCHING_SELECTED_QUESTION',
+  CHECKING_QUEUE_STATUS: '@loading/CHECKING_QUEUE_STATUS'
 }

@@ -18,6 +18,9 @@ const userSlice = createSlice({
     setIsLoggedIn: (state, action: PayloadAction<boolean>) => {
       document.cookie = `${cookieIsLoggedInKey}=${action.payload}; expires=${cookieIsLoggedInExpiry}`
       state.isLoggedIn = action.payload
+      if (!action.payload) {
+        state.userProfile = undefined
+      }
     },
     setUserProfile: (state, action: PayloadAction<UserProfile | undefined>) => {
       state.userProfile = action.payload

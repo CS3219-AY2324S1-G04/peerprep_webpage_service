@@ -1,0 +1,4 @@
+export const MatchingSagaActions = {
+  START_CHECK_QUEUE_STATUS: '@matching/START_CHECK_QUEUE_STATUS',
+  STOP_CHECK_QUEUE_STATUS: '@matching/STOP_CHECK_QUEUE_STATUS',
+}

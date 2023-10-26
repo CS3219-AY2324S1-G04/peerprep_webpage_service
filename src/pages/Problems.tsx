@@ -5,10 +5,17 @@ import ProblemsTable from '../features/questionBank/components/ProblemsTable'
 import QuestionDetailsModal from '../features/questionBank/components/QuestionDetailsModal'
 import { getQuestionsList } from '../features/questionBank/selectors'
 import { useAppSelector } from '../hooks/useAppSelector'
+import { Button } from '@mui/joy'
+import { SxProps } from '@mui/joy/styles/types'
+import JoinQueueSettingsModal from '../features/matching/components/JoinQueueSettingsModal'
+import { getIsLoggedIn } from '../features/user/selector'
+import FindingRoomModal from '../features/matching/components/FindingRoomModal'
 
 const Problems: React.FC = () => {
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState<boolean>(false)
+  const [isPrepModalOpen, setIsPrepModalOpen] = useState<boolean>(false)
   const questionsList = useAppSelector(getQuestionsList)
+  const isLoggedIn = useAppSelector(getIsLoggedIn)
 
   return (
     <>
@@ -16,17 +23,34 @@ const Problems: React.FC = () => {
         <TableContainer.Header
           title="Problems"
           chipLabel={`${questionsList.length} questions`}
-        />
+          headerStyles={styles.header}
+        >
+          {isLoggedIn && (
+            <Button size="md" onClick={() => setIsPrepModalOpen(true)}>
+              PeerPrep💪🏼
+            </Button>
+          )}
+        </TableContainer.Header>
         <TableContainer.Body>
-          <ProblemsTable onQuestionClick={() => setIsDialogOpen(true)} />
+          <ProblemsTable onQuestionClick={() => setIsDetailsModalOpen(true)} />
         </TableContainer.Body>
       </TableContainer>
       <QuestionDetailsModal
-        isOpen={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
+        isOpen={isDetailsModalOpen}
+        onClose={() => setIsDetailsModalOpen(false)}
+      />
+      <JoinQueueSettingsModal
+        isOpen={isPrepModalOpen}
+        onClose={() => setIsPrepModalOpen(false)}
       />
     </>
   )
 }
+
+const styles = {
+  header: {
+    justifyContent: 'space-between'
+  } as SxProps
+} as const
 
 export default Problems

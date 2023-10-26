@@ -10,3 +10,10 @@ export const getComplexityColor = (qnsComplexity: QuestionComplexity) => {
       return 'danger'
   }
 }
+
+export const parseStringToComplexityEnum = (value: string) => {
+  if (Object.values(QuestionComplexity).includes(value as QuestionComplexity)) {
+    return value as QuestionComplexity
+  }
+  return QuestionComplexity.Easy
+}

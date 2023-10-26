@@ -1,13 +1,11 @@
 import {
   Box,
-  Button,
   Modal,
   ModalClose,
   ModalDialog,
   Stack,
-  Tooltip,
   Typography,
-  useColorScheme,
+  useColorScheme
 } from '@mui/joy'
 import MDEditor from '@uiw/react-md-editor'
 
@@ -62,9 +60,6 @@ const QuestionDetailsModal: React.FC<Props> = (props: Props) => {
             <MDEditor.Markdown source={currentQuestion.description} />
           </div>
         </Stack>
-        <Tooltip title="Login to attempt" placement="top">
-          <Button>Attempt</Button>
-        </Tooltip>
       </ModalDialog>
     </Modal>
   )

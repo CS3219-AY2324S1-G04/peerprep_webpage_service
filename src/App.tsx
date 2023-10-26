@@ -23,6 +23,7 @@ import { UserRole } from './services/userService'
 import Paths from './utils/constants/navigation'
 import theme from './utils/theme/themeOverride'
 import { CommonSagaActions } from './utils/types'
+import FindingRoomModal from './features/matching/components/FindingRoomModal'
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -80,6 +81,7 @@ const App: React.FC = () => {
                 </>
               )}
             </Routes>
+            <FindingRoomModal />
           </Layout.Main>
         </Layout.Root>
       </CssVarsProvider>
