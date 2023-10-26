@@ -46,7 +46,6 @@ const App: React.FC = () => {
             {isLoggedIn && isAdminOrMaintainer && <AdminNavigationBar />}
             {isLoggedIn && isNormalUser && <UserNavigationBar />}
             {!isLoggedIn && <GuestNavigationBar />}
-            <AdminNavigationBar />
           </Layout.Header>
           <Layout.Main>
             <Toaster />
