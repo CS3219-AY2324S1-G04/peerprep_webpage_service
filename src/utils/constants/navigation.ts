@@ -10,6 +10,8 @@ enum Paths {
   Rankings = '/rankings',
   Login = '/login',
   SignUp = '/signup',
+  MatchRoom = '/room',
+  Room = '/room/:roomId',
 }
 
 const DashboardPage: PageNavigation = {
@@ -24,6 +26,10 @@ const RankingsPage: PageNavigation = {
   url: Paths.Rankings,
   title: 'Rankings',
 }
+const MatchRoomPage: PageNavigation = {
+  url: Paths.MatchRoom,
+  title: 'Room',
+}
 
 export const guestNavigationList: PageNavigation[] = [
   ProblemsPage,
@@ -34,6 +40,7 @@ export const userNavigationList: PageNavigation[] = [
   DashboardPage,
   ProblemsPage,
   RankingsPage,
+  MatchRoomPage,
 ]
 
 export default Paths

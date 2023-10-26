@@ -12,11 +12,15 @@
     "test": "jest"
   },
   "dependencies": {
+    "@codemirror/lang-javascript": "^6.2.1",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.11",
     "@mui/joy": "^5.0.0-beta.8",
     "@reduxjs/toolkit": "^1.9.6",
+    "@replit/codemirror-vim": "^6.0.14",
+    "@uiw/codemirror-theme-dracula": "^4.21.20",
+    "@uiw/react-codemirror": "^4.21.20",
     "@uiw/react-md-editor": "^3.24.0",
     "axios": "^1.5.1",
     "color": "^4.2.3",
@@ -29,7 +33,10 @@
     "react-router-dom": "^6.16.0",
     "redux-logger": "^3.0.6",
     "redux-saga": "^1.2.3",
-    "sonner": "^1.0.3"
+    "sonner": "^1.0.3",
+    "y-codemirror.next": "^0.3.2",
+    "y-websocket": "^1.5.0",
+    "yjs": "^13.6.8"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.1.3",
