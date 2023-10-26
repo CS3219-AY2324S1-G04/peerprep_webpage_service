@@ -1,6 +1,7 @@
 export interface PageNavigation {
-  url: Paths
+  url?: Paths
   title: string
+  subPages?: PageNavigation[]
 }
 
 enum Paths {
@@ -10,6 +11,8 @@ enum Paths {
   Rankings = '/rankings',
   Login = '/login',
   SignUp = '/signup',
+  ManageQuestions = '/manage-questions',
+  ManageUsers = '/manage-users',
 }
 
 const DashboardPage: PageNavigation = {
@@ -25,6 +28,20 @@ const RankingsPage: PageNavigation = {
   title: 'Rankings',
 }
 
+const ManagePages: PageNavigation = {
+  title: 'Manage',
+  subPages: [
+    {
+      url: Paths.ManageQuestions,
+      title: 'Questions'
+    },
+    {
+      url: Paths.ManageUsers,
+      title: 'Users'
+    },
+  ]
+}
+
 export const guestNavigationList: PageNavigation[] = [
   ProblemsPage,
   RankingsPage,
@@ -32,6 +49,13 @@ export const guestNavigationList: PageNavigation[] = [
 
 export const userNavigationList: PageNavigation[] = [
   DashboardPage,
+  ProblemsPage,
+  RankingsPage,
+]
+
+export const adminNavigationList: PageNavigation[] = [
+  DashboardPage,
+  ManagePages,
   ProblemsPage,
   RankingsPage,
 ]

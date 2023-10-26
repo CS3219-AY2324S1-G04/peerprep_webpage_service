@@ -17,6 +17,8 @@ export function useRouteMatch() {
   const isRankingsPage = useMatch(Paths.Rankings)
   const isLoginPage = useMatch(Paths.Login)
   const isSignUpPage = useMatch(Paths.SignUp)
+  const isManageQuestionsPage = useMatch(Paths.ManageQuestions)
+  const isManageUsersPage = useMatch(Paths.ManageUsers)
 
   const getRouteMatch = (path: Paths) => {
     switch (path) {
@@ -28,6 +30,10 @@ export function useRouteMatch() {
         return isRankingsPage
       case Paths.SignUp:
         return isSignUpPage
+      case Paths.ManageQuestions:
+        return isManageQuestionsPage
+      case Paths.ManageUsers:
+        return isManageUsersPage
       default:
         return isLoginPage
     }

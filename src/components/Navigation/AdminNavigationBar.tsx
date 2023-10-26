@@ -1,16 +1,16 @@
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
 import { Logout, Settings } from '@mui/icons-material'
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
 import {
+  Button,
   Divider,
   Dropdown,
+  Input,
   ListItemDecorator,
   Menu,
   MenuButton,
   MenuItem,
   Theme,
   Typography,
-  Input,
-  Button,
 } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
 import React, { useState } from 'react'
@@ -20,14 +20,14 @@ import { getEmailAddress, getUsername } from '../../features/user/selector'
 import { UserSagaActions } from '../../features/user/types'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
-import { userNavigationList } from '../../utils/constants/navigation'
+import { adminNavigationList } from '../../utils/constants/navigation'
 import Avatar, { AvatarShape } from '../Avatar'
+import ColorSchemeToggle from '../ColorSchemeToggle'
+import Logo from '../Logo'
 import NavigationBar from './NavigationBar'
 import NavigationList from './NavigationList'
-import Logo from '../Logo'
-import ColorSchemeToggle from '../ColorSchemeToggle'
 
-const UserNavigationBar: React.FC = () => {
+const AdminNavigationBar: React.FC = () => {
   const dispatch = useAppDispatch()
 
   const username = useAppSelector(getUsername)
@@ -48,7 +48,7 @@ const UserNavigationBar: React.FC = () => {
     <>
       <NavigationBar>
         <NavigationBar.Left>
-          <NavigationList list={userNavigationList} />
+          <NavigationList list={adminNavigationList} />
         </NavigationBar.Left>
         <NavigationBar.Middle>
           <Logo />
@@ -138,4 +138,4 @@ const styles = {
   } as SxProps,
 }
 
-export default UserNavigationBar
+export default AdminNavigationBar

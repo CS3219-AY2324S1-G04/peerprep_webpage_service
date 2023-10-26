@@ -1,8 +1,11 @@
-import { List, ListItem, ListItemButton } from "@mui/joy"
-import { PageNavigation } from "../../utils/constants/navigation"
+import { List, ListDivider, ListItem, ListItemButton } from "@mui/joy"
+import Paths, { PageNavigation } from "../../utils/constants/navigation"
 import { useRouteMatch } from '../../hooks/useRouteMatch'
-import { useNavigate } from "react-router-dom"
+import { NavigateFunction, PathMatch, useNavigate } from "react-router-dom"
 import { SxProps } from "@mui/joy/styles/types"
+import { useState } from "react"
+import { KeyboardArrowDown } from "@mui/icons-material"
+import { ClickAwayListener, Popper } from "@mui/base"
 
 
 export interface NavigationListProps {
@@ -17,14 +20,31 @@ const NavigationList: React.FC<NavigationListProps> = (props: NavigationListProp
   return (
     <List role="menubar" orientation="horizontal" sx={styles.list}>
       {list.map((page, index) => {
-        const isActivePage = routeMatch.getRouteMatch(page.url)
+        const hasSubPages = page.subPages && page.subPages.length > 0
+
+        if (hasSubPages) {
+          let isAnySubPageActive = false
+          for (let subPage of (page.subPages ?? [])) {
+            const isSubPageActive = subPage.url && routeMatch.getRouteMatch(subPage.url)
+            if (isSubPageActive) {
+              isAnySubPageActive = true
+              break
+            }
+          }
+          return (
+            <ListItemWithMenu page={page} navigate={navigate} isActivePage={isAnySubPageActive} />
+          )
+        }
+
+        const isActivePage = page.url && routeMatch.getRouteMatch(page.url)
+
         return (
           <ListItem key={`${page.title}-${index}`}>
             <ListItemButton
               className={isActivePage ? 'active' : ''}
               component="a"
               sx={styles.listItemButton}
-              onClick={() => navigate(page.url)}
+              onClick={() => navigate(page.url ?? '')}
             >
               {page.title}
             </ListItemButton>
@@ -47,5 +67,62 @@ const styles = {
     borderBottom: '2px solid transparent',
   } as SxProps,
 } as const
+
+interface ListItemWithMenuProps {
+  page: PageNavigation
+  navigate: NavigateFunction // passed down from navigation list parent component
+  isActivePage: boolean
+}
+
+const ListItemWithMenu: React.FC<ListItemWithMenuProps> = (props: ListItemWithMenuProps) => {
+  const { page, isActivePage } = props
+  const [anchorEl, setAnchorEl] = useState<HTMLAnchorElement | null>(null)
+  const open = Boolean(anchorEl)
+  const id = open ? 'menu-popper' : undefined
+  const navigate = useNavigate()
+
+  return (
+    <ClickAwayListener onClickAway={() => setAnchorEl(null)}>
+      <div style={{ display: 'flex' }} onMouseLeave={() => setAnchorEl(null)}>
+        <ListItemButton
+          sx={styles.listItemButton}
+          className={isActivePage ? 'active' : ''}
+          onFocus={(event) => setAnchorEl(event.currentTarget)}
+          onMouseEnter={(event) => {
+            setAnchorEl(event.currentTarget);
+          }}
+        >
+          {page.title}&nbsp;<KeyboardArrowDown />
+        </ListItemButton>
+        <Popper id={id} open={open} anchorEl={anchorEl} disablePortal keepMounted>
+          <List
+            role="menu"
+            aria-label="About"
+            variant="outlined"
+            sx={{
+              my: 2,
+              boxShadow: 'md',
+              borderRadius: 'sm',
+              minWidth: 180,
+              backgroundColor: (theme) =>
+                theme.vars.palette.background.body,
+              '--List-radius': '8px',
+              '--List-padding': '4px',
+              '--ListDivider-gap': '4px',
+            }}
+          >
+            {page.subPages?.map((subPage) =>
+              <ListItem>
+                <ListItemButton onClick={() => navigate(subPage.url ?? '')}>
+                  {subPage.title}
+                </ListItemButton>
+              </ListItem>
+            )}
+          </List>
+        </Popper>
+      </div>
+    </ClickAwayListener>
+  )
+}
 
 export default NavigationList
