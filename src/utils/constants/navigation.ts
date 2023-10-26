@@ -26,6 +26,10 @@ const RankingsPage: PageNavigation = {
   url: Paths.Rankings,
   title: 'Rankings',
 }
+const MatchRoomPage: PageNavigation = {
+  url: Paths.MatchRoom,
+  title: 'Room',
+}
 
 export const guestNavigationList: PageNavigation[] = [
   ProblemsPage,
@@ -36,6 +40,7 @@ export const userNavigationList: PageNavigation[] = [
   DashboardPage,
   ProblemsPage,
   RankingsPage,
+  MatchRoomPage,
 ]
 
 export default Paths

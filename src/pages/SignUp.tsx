@@ -3,6 +3,7 @@ import { AxiosError } from 'axios'
 import React, { FormEvent, useState } from 'react'
 
 import { FieldInfo } from '../components/Form/FormField'
+import { toast } from '../components/Toaster/toast'
 import UserForm from '../components/UserForm/UserForm'
 import userService, { CreateUserParamError } from '../services/userService'
 import Paths from '../utils/constants/navigation'
@@ -53,12 +54,14 @@ const SignUp: React.FC = () => {
       })
 
       setSubmissionStatus(SubmissionStatus.succeeded)
+
+      toast.success('Sign up successful.')
     } catch (error) {
       if (isErrorCauseByInvalidParams(error)) {
         updateParamErrorMessages((error as AxiosError).response?.data ?? {})
+        toast.error('Sign up failed: One or more fields are invalid.')
       } else {
-        // TODO: Show toast / snackbar containing error message
-        console.error('Sorry, please try again later.')
+        toast.error('Sign up failed: Please try again later.')
       }
 
       setSubmissionStatus(SubmissionStatus.failed)

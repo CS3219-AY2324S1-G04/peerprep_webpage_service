@@ -19,7 +19,8 @@ export interface SimpleMap<V = string> {
 
 export const CommonSagaActions = {
   APP_INIT: '@common/APP_INIT',
-  LOGGED_IN_INIT: '@common/APP_LOGGED_IN_INIT',
+  LOGGED_IN_INIT: '@common/LOGGED_IN_INIT',
+  LOGGED_OUT_TEARDOWN: '@common/LOGGED_OUT_TEARDOWN',
 }
 
 export const LoadingKeys = {

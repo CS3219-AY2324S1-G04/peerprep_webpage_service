@@ -26,7 +26,7 @@ const MatchRoom: React.FC = () => {
   }
 
   if (isLoggedIn && roomId != 'invalid' && roomId != '') {
-    return <Navigate to={Paths.MatchRoom + `/${roomId}`} />
+    return <Navigate to={`${Paths.MatchRoom}/${roomId}`} />
   } else if (roomId == 'invalid') {
     return <Navigate to={Paths.Root} />
   }
