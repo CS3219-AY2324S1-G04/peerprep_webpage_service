@@ -12,9 +12,12 @@ function CodeArea({
 }) {
   const [value, setValue] = React.useState(text.toString())
 
-  const onChange = React.useCallback((val, viewUpdate) => {
-    setValue(value)
-  }, [])
+  const onChange = React.useCallback(
+    (val) => {
+      setValue(value)
+    },
+    [value],
+  )
 
   return (
     <div>
