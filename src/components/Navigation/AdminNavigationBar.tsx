@@ -61,10 +61,7 @@ const AdminNavigationBar: React.FC = () => {
             startDecorator={<SearchRoundedIcon color="primary" />}
             sx={styles.input}
           />
-          <Button
-            size="md"
-            sx={styles.button}
-          >
+          <Button size="md" sx={styles.button}>
             QuickPrep 🚀
           </Button>
           <ColorSchemeToggle />
@@ -134,7 +131,7 @@ const styles = {
     boxShadow: 'sm',
   } as SxProps,
   button: {
-    textWrap: 'nowrap'
+    textWrap: 'nowrap',
   } as SxProps,
 }
 

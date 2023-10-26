@@ -1,16 +1,16 @@
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
 import { Logout, Settings } from '@mui/icons-material'
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
 import {
+  Button,
   Divider,
   Dropdown,
+  Input,
   ListItemDecorator,
   Menu,
   MenuButton,
   MenuItem,
   Theme,
   Typography,
-  Input,
-  Button,
 } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
 import React, { useState } from 'react'
@@ -22,10 +22,10 @@ import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { userNavigationList } from '../../utils/constants/navigation'
 import Avatar, { AvatarShape } from '../Avatar'
+import ColorSchemeToggle from '../ColorSchemeToggle'
+import Logo from '../Logo'
 import NavigationBar from './NavigationBar'
 import NavigationList from './NavigationList'
-import Logo from '../Logo'
-import ColorSchemeToggle from '../ColorSchemeToggle'
 
 const UserNavigationBar: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -61,10 +61,7 @@ const UserNavigationBar: React.FC = () => {
             startDecorator={<SearchRoundedIcon color="primary" />}
             sx={styles.input}
           />
-          <Button
-            size="md"
-            sx={styles.button}
-          >
+          <Button size="md" sx={styles.button}>
             QuickPrep 🚀
           </Button>
           <ColorSchemeToggle />
@@ -134,7 +131,7 @@ const styles = {
     boxShadow: 'sm',
   } as SxProps,
   button: {
-    textWrap: 'nowrap'
+    textWrap: 'nowrap',
   } as SxProps,
 }
 

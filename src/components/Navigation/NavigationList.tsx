@@ -1,18 +1,20 @@
-import { List, ListDivider, ListItem, ListItemButton } from "@mui/joy"
-import Paths, { PageNavigation } from "../../utils/constants/navigation"
-import { useRouteMatch } from '../../hooks/useRouteMatch'
-import { NavigateFunction, PathMatch, useNavigate } from "react-router-dom"
-import { SxProps } from "@mui/joy/styles/types"
-import { useState } from "react"
-import { KeyboardArrowDown } from "@mui/icons-material"
-import { ClickAwayListener, Popper } from "@mui/base"
+import { ClickAwayListener, Popper } from '@mui/base'
+import { KeyboardArrowDown } from '@mui/icons-material'
+import { List, ListItem, ListItemButton } from '@mui/joy'
+import { SxProps } from '@mui/joy/styles/types'
+import { useState } from 'react'
+import { NavigateFunction, useNavigate } from 'react-router-dom'
 
+import { useRouteMatch } from '../../hooks/useRouteMatch'
+import { PageNavigation } from '../../utils/constants/navigation'
 
 export interface NavigationListProps {
   list: PageNavigation[]
 }
 
-const NavigationList: React.FC<NavigationListProps> = (props: NavigationListProps) => {
+const NavigationList: React.FC<NavigationListProps> = (
+  props: NavigationListProps,
+) => {
   const { list } = props
   const routeMatch = useRouteMatch()
   const navigate = useNavigate()
@@ -24,15 +26,20 @@ const NavigationList: React.FC<NavigationListProps> = (props: NavigationListProp
 
         if (hasSubPages) {
           let isAnySubPageActive = false
-          for (let subPage of (page.subPages ?? [])) {
-            const isSubPageActive = subPage.url && routeMatch.getRouteMatch(subPage.url)
+          for (let subPage of page.subPages ?? []) {
+            const isSubPageActive =
+              subPage.url && routeMatch.getRouteMatch(subPage.url)
             if (isSubPageActive) {
               isAnySubPageActive = true
               break
             }
           }
           return (
-            <ListItemWithMenu page={page} navigate={navigate} isActivePage={isAnySubPageActive} />
+            <ListItemWithMenu
+              page={page}
+              navigate={navigate}
+              isActivePage={isAnySubPageActive}
+            />
           )
         }
 
@@ -74,7 +81,9 @@ interface ListItemWithMenuProps {
   isActivePage: boolean
 }
 
-const ListItemWithMenu: React.FC<ListItemWithMenuProps> = (props: ListItemWithMenuProps) => {
+const ListItemWithMenu: React.FC<ListItemWithMenuProps> = (
+  props: ListItemWithMenuProps,
+) => {
   const { page, isActivePage } = props
   const [anchorEl, setAnchorEl] = useState<HTMLAnchorElement | null>(null)
   const open = Boolean(anchorEl)
@@ -89,12 +98,19 @@ const ListItemWithMenu: React.FC<ListItemWithMenuProps> = (props: ListItemWithMe
           className={isActivePage ? 'active' : ''}
           onFocus={(event) => setAnchorEl(event.currentTarget)}
           onMouseEnter={(event) => {
-            setAnchorEl(event.currentTarget);
+            setAnchorEl(event.currentTarget)
           }}
         >
-          {page.title}&nbsp;<KeyboardArrowDown />
+          {page.title}&nbsp;
+          <KeyboardArrowDown />
         </ListItemButton>
-        <Popper id={id} open={open} anchorEl={anchorEl} disablePortal keepMounted>
+        <Popper
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          disablePortal
+          keepMounted
+        >
           <List
             role="menu"
             aria-label="About"
@@ -104,20 +120,19 @@ const ListItemWithMenu: React.FC<ListItemWithMenuProps> = (props: ListItemWithMe
               boxShadow: 'md',
               borderRadius: 'sm',
               minWidth: 180,
-              backgroundColor: (theme) =>
-                theme.vars.palette.background.body,
+              backgroundColor: (theme) => theme.vars.palette.background.body,
               '--List-radius': '8px',
               '--List-padding': '4px',
               '--ListDivider-gap': '4px',
             }}
           >
-            {page.subPages?.map((subPage) =>
+            {page.subPages?.map((subPage) => (
               <ListItem>
                 <ListItemButton onClick={() => navigate(subPage.url ?? '')}>
                   {subPage.title}
                 </ListItemButton>
               </ListItem>
-            )}
+            ))}
           </List>
         </Popper>
       </div>

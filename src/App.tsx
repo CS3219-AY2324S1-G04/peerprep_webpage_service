@@ -33,7 +33,8 @@ const App: React.FC = () => {
     dispatch({ type: CommonSagaActions.APP_INIT })
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const isAdminOrMaintainer = userRole === UserRole.admin || userRole === UserRole.maintainer
+  const isAdminOrMaintainer =
+    userRole === UserRole.admin || userRole === UserRole.maintainer
   const isNormalUser = userRole === UserRole.user
 
   return (

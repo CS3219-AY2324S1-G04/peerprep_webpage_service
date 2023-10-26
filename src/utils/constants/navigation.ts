@@ -39,13 +39,13 @@ const ManagePages: PageNavigation = {
   subPages: [
     {
       url: Paths.ManageQuestions,
-      title: 'Questions'
+      title: 'Questions',
     },
     {
       url: Paths.ManageUsers,
-      title: 'Users'
+      title: 'Users',
     },
-  ]
+  ],
 }
 
 export const guestNavigationList: PageNavigation[] = [
