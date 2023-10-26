@@ -1,5 +1,4 @@
 import { Grid } from '@mui/joy'
-import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import Editor from '../features/room/components/Editor'

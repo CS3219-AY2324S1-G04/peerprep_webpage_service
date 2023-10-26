@@ -1,7 +1,6 @@
 import { javascript } from '@codemirror/lang-javascript'
-import { Skeleton, Typography } from '@mui/joy'
+import { Skeleton } from '@mui/joy'
 import { vim } from '@replit/codemirror-vim'
-import { Extension } from '@uiw/react-codemirror'
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 // @ts-ignore Waiting for dev to fix their package.json.
