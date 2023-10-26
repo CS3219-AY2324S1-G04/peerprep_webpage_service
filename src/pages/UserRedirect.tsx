@@ -7,7 +7,6 @@ const UserRedirect: React.FC = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    console.log("redirect")
     navigate(Paths.Dashboard)
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
