@@ -19,6 +19,7 @@ function Editor({ id }: { id: string }) {
   const navigate = useNavigate()
 
   const [hasConnect, setHasConnect] = React.useState(false)
+  const [hasSync, setHasSync] = React.useState(false)
   const [doc] = React.useState<Y.Doc>(new Y.Doc())
   const [wsProvider] = React.useState(
     new WebsocketProvider(editorServiceBaseUrl, id, doc),
@@ -33,11 +34,12 @@ function Editor({ id }: { id: string }) {
       color: getRandomColor(),
     }
 
+    wsProvider.connect()
     wsProvider.awareness.setLocalStateField('user', userProperties)
 
     wsProvider.on('sync', (event) => {
       console.log('sync')
-      setHasConnect(true)
+      setHasSync(true)
     })
 
     wsProvider.on('status', (event) => {
@@ -45,6 +47,10 @@ function Editor({ id }: { id: string }) {
 
       if (event.status == 'connected') {
         setHasConnect(true)
+        if (doc.getText().toString() != '') {
+          // TODO: Remove temp workaround
+          setHasSync(true)
+        }
       }
     })
 
@@ -58,7 +64,7 @@ function Editor({ id }: { id: string }) {
     }
   }, [doc, id, navigate, username, wsProvider])
 
-  if (hasConnect) {
+  if (hasConnect && hasSync) {
     const yUndoManager = new Y.UndoManager(doc.getText())
 
     const editorExtensions = [
