@@ -9,7 +9,7 @@ const Room: React.FC = () => {
 
   return (
     <Grid>
-      <Editor id={roomId} />
+      <Editor roomId={roomId} />
     </Grid>
   )
 }

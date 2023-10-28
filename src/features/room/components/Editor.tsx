@@ -15,42 +15,70 @@ import Paths from '../../../utils/constants/navigation'
 import { getUsername } from '../../user/selector'
 import CodeArea from './CodeArea'
 
-function Editor({ id }: { id: string }) {
+function Editor({ roomId }: { roomId: string }) {
   const navigate = useNavigate()
 
   const [hasConnect, setHasConnect] = React.useState(false)
-  const [hasSync, setHasSync] = React.useState(false)
   const [doc] = React.useState<Y.Doc>(new Y.Doc())
-  const [wsProvider] = React.useState(
-    new WebsocketProvider(editorServiceBaseUrl, id, doc),
+  const [wsProvider, setWsProvider] = React.useState<WebsocketProvider | null>(
+    null,
   )
   const username = useAppSelector(getUsername)
 
   useEffect(() => {
-    console.log('use effect')
+    // console.log('\n Setup web socket', roomId)
+
+    const wsOpts = {
+      connect: false,
+    }
+
+    const newWsProvider = new WebsocketProvider(
+      editorServiceBaseUrl,
+      roomId,
+      doc,
+      wsOpts,
+    )
+
+    setWsProvider(newWsProvider)
+    return () => {
+      newWsProvider.destroy()
+      // console.log('Destroy websocket', roomId, newWsProvider.shouldConnect)
+      setWsProvider(null)
+    }
+  }, [doc, roomId])
+
+  useEffect(() => {
+    if (!wsProvider || hasConnect) {
+      return
+    }
+
+    // console.log('\n Register web socket', roomId, wsProvider)
 
     const userProperties = {
       name: username,
       color: getRandomColor(),
     }
 
-    wsProvider.connect()
     wsProvider.awareness.setLocalStateField('user', userProperties)
 
     wsProvider.on('sync', (event) => {
-      console.log('sync')
-      setHasSync(true)
+      if (!wsProvider.shouldConnect) {
+        return
+      }
+
+      // console.log('sync')
+      setHasConnect(true)
     })
 
     wsProvider.on('status', (event) => {
-      console.log('connect')
+      if (!wsProvider.shouldConnect) {
+        return
+      }
 
+      // console.log('status: ', event.status)
       if (event.status == 'connected') {
+        // console.log('connected', doc.getText().toString(), wsProvider.synced)
         setHasConnect(true)
-        if (doc.getText().toString() != '') {
-          // TODO: Remove temp workaround
-          setHasSync(true)
-        }
       }
     })
 
@@ -58,13 +86,11 @@ function Editor({ id }: { id: string }) {
       navigate(Paths.Root)
     })
 
-    return () => {
-      console.log("destroy")
-      wsProvider.destroy()
-    }
-  }, [doc, id, navigate, username, wsProvider])
+    wsProvider.connect()
+    // console.log('\n Connect web socket', roomId)
+  }, [doc, hasConnect, navigate, username, wsProvider, roomId])
 
-  if (hasConnect && hasSync) {
+  if (hasConnect) {
     const yUndoManager = new Y.UndoManager(doc.getText())
 
     const editorExtensions = [
