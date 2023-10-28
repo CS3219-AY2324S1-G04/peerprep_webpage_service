@@ -32,12 +32,13 @@ function Editor({ roomId }: { roomId: string }) {
 
     const wsOpts = {
       connect: false,
+      params: { roomId },
       resyncInterval: RESYNC_INTERVAL,
     }
 
     const newWsProvider = new WebsocketProvider(
       editorServiceBaseUrl,
-      roomId,
+      'room',
       doc,
       wsOpts,
     )
