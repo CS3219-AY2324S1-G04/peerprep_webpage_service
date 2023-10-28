@@ -10,12 +10,10 @@ import { WebsocketProvider } from 'y-websocket'
 import * as Y from 'yjs'
 
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { editorServiceBaseUrl } from '../../../utils/config'
+import { MessageType, initWsProvider } from '../../../services/editorService'
 import Paths from '../../../utils/constants/navigation'
 import { getUsername } from '../../user/selector'
 import CodeArea from './CodeArea'
-
-const RESYNC_INTERVAL = 500
 
 function Editor({ roomId }: { roomId: string }) {
   const navigate = useNavigate()
@@ -28,72 +26,47 @@ function Editor({ roomId }: { roomId: string }) {
   const username = useAppSelector(getUsername) ?? ''
 
   useEffect(() => {
-    // console.log('\n Setup web socket', roomId)
+    console.log('\n Setup web socket', roomId)
 
-    const wsOpts = {
-      connect: false,
-      params: { roomId },
-      resyncInterval: RESYNC_INTERVAL,
+    const messageHandlers: { [id: string]: (event) => void } = {}
+
+    messageHandlers[MessageType.sync] = (event) => {
+      console.log('sync')
+      setHasConnect(true)
     }
 
-    const newWsProvider = new WebsocketProvider(
-      editorServiceBaseUrl,
-      'room',
+    messageHandlers[MessageType.status] = (event) => {
+      console.log('status: ', event.status)
+
+      if (event.status == 'connected') {
+        console.log('connected', doc.getText().toString())
+        setHasConnect(true)
+      }
+    }
+
+    messageHandlers[MessageType.connectionClose] = (event) => {
+      navigate(Paths.Root)
+    }
+
+    const awarenessConfig = {
+      name: username,
+      color: getColorFromUsername(username).hex(),
+    }
+
+    const newWsProvider = initWsProvider(
+      roomId,
       doc,
-      wsOpts,
+      awarenessConfig,
+      messageHandlers,
     )
 
     setWsProvider(newWsProvider)
 
     return () => {
       newWsProvider.destroy()
-      // console.log('Destroy websocket', roomId, newWsProvider.shouldConnect)
+      console.log('Destroy websocket', roomId, newWsProvider.shouldConnect)
     }
-  }, [doc, roomId])
-
-  useEffect(() => {
-    if (!wsProvider || hasConnect) {
-      return
-    }
-
-    // console.log('\n Register web socket', roomId, wsProvider)
-    const color = getColorFromUsername(username)
-
-    const userProperties = {
-      name: username,
-      color: color.hex(),
-    }
-
-    wsProvider.awareness.setLocalStateField('user', userProperties)
-
-    wsProvider.on('sync', (event) => {
-      // console.log('sync', wsProvider)
-      if (!wsProvider.shouldConnect) {
-        return
-      }
-
-      setHasConnect(true)
-    })
-
-    wsProvider.on('status', (event) => {
-      if (!wsProvider.shouldConnect) {
-        return
-      }
-
-      // console.log('status: ', event.status)
-      if (event.status == 'connected') {
-        // console.log('connected', doc.getText().toString(), wsProvider)
-        setHasConnect(true)
-      }
-    })
-
-    wsProvider.on('connection-close', (event) => {
-      navigate(Paths.Root)
-    })
-
-    wsProvider.connect()
-    // console.log('\n Connect web socket', roomId)
-  }, [doc, hasConnect, navigate, username, wsProvider, roomId])
+  }, [doc, navigate, roomId, username])
 
   if (hasConnect) {
     const yUndoManager = new Y.UndoManager(doc.getText())
@@ -108,6 +81,7 @@ function Editor({ roomId }: { roomId: string }) {
   }
 }
 
+// TODO: Extract this functionality to some common module.
 function getColorFromUsername(username: string) {
   const hueRange: [number, number] = [0, 360]
   const saturationRange: [number, number] = [60, 71]
