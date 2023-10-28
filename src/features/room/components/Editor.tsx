@@ -1,4 +1,6 @@
 import { javascript } from '@codemirror/lang-javascript'
+import { Box, Switch, Typography } from '@mui/joy'
+import { SxProps } from '@mui/joy/styles/types'
 import { vim } from '@replit/codemirror-vim'
 import Color from 'color'
 import React, { useEffect } from 'react'
@@ -24,6 +26,7 @@ function Editor({ roomId }: { roomId: string }) {
     null,
   )
   const username = useAppSelector(getUsername) ?? ''
+  const [isVimMode, setIsVimMode] = React.useState(false)
 
   useEffect(() => {
     console.log('\n Setup web socket', roomId)
@@ -68,17 +71,50 @@ function Editor({ roomId }: { roomId: string }) {
     }
   }, [doc, navigate, roomId, username])
 
-  if (hasConnect) {
-    const yUndoManager = new Y.UndoManager(doc.getText())
-
-    const editorExtensions = [
-      javascript(),
-      vim(),
-      yCollab(doc.getText(), wsProvider.awareness, { yUndoManager }),
-    ]
-
-    return <CodeArea editorExtensions={editorExtensions} text={doc.getText()} />
+  if (!hasConnect) {
+    return
   }
+
+  const yUndoManager = new Y.UndoManager(doc.getText())
+
+  const editorExtensions = [
+    javascript(), // TODO: Use match language.
+    yCollab(doc.getText(), wsProvider.awareness, { yUndoManager }),
+  ]
+
+  if (isVimMode) {
+    editorExtensions.push(vim())
+  }
+
+  return (
+    <Box sx={styles.editorBox}>
+      <Box sx={styles.editorControlBar}>
+        <Typography
+          component="label"
+          endDecorator={
+            <Switch
+              variant="soft"
+              checked={isVimMode}
+              onChange={(event) => setIsVimMode(event.target.checked)}
+            />
+          }
+        >
+          Vim Mode
+        </Typography>
+      </Box>
+      <CodeArea editorExtensions={editorExtensions} text={doc.getText()} />
+    </Box>
+  )
+}
+
+const styles = {
+  editorControlBar: {
+    display: 'grid',
+    height: 35,
+  } as SxProps,
+  editorBox: {
+    borderRadius: 25,
+  },
 }
 
 // TODO: Extract this functionality to some common module.
