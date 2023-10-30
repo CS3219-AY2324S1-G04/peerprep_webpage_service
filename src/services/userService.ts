@@ -200,12 +200,6 @@ export interface UpdatePasswordParamError
   extends Partial<UserPasswordUpdateInfo> {}
 
 export default {
-  usernameKey,
-  emailAddressKey,
-  userIdKey,
-  userRoleKey,
-  passwordKey,
-  newPasswordKey,
   accessTokenExpiryKey,
   fetchAccessTokenEndpoint,
   createUser,
