@@ -1,11 +1,13 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import Cookies from 'js-cookie'
 
-import { UserProfile, accessTokenExpiryKey } from '../../services/userService'
+import userService, { UserProfile } from '../../services/userService'
 import { UserState } from './types'
 
 function getAccessTokenExpiryFromCookie(): number | undefined {
-  const rawExpiry: string | undefined = Cookies.get(accessTokenExpiryKey)
+  const rawExpiry: string | undefined = Cookies.get(
+    userService.accessTokenExpiryKey,
+  )
 
   if (rawExpiry === undefined) {
     return undefined
@@ -32,7 +34,7 @@ const userSlice = createSlice({
       state.accessTokenExpiry = getAccessTokenExpiryFromCookie()
     },
     removeAccessTokenExpiry: (state) => {
-      Cookies.remove(accessTokenExpiryKey)
+      Cookies.remove(userService.accessTokenExpiryKey)
       state.accessTokenExpiry = undefined
     },
     setUserProfile: (state, action: PayloadAction<UserProfile | undefined>) => {

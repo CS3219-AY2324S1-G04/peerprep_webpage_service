@@ -45,20 +45,6 @@ function* dispatchLoginStateChangeAction() {
   }
 }
 
-function* fetchAccessToken() {
-  try {
-    yield userService.getAccessToken()
-    yield put(updateAccessTokenExpiry())
-  } catch (error) {
-    if (error instanceof AxiosError && error.response?.status === 401) {
-      toast.error('Fetching access token failed: Session is invalid.')
-      yield put(removeAccessTokenExpiry())
-    } else {
-      toast.error('Fetching access token failed: Please try again later.')
-    }
-  }
-}
-
 function* login(action: Action<UserCredential>) {
   yield put(addLoadingTask(UserSagaActions.LOGIN))
 
@@ -151,10 +137,6 @@ export function* watchDispatchLoginStateChangeAction() {
   )
 }
 
-export function* watchFetchAccessToken() {
-  yield takeLatest([CommonSagaActions.LOGGED_IN_INIT], fetchAccessToken)
-}
-
 export function* watchLogin() {
   yield takeLatest([UserSagaActions.LOGIN], login)
 }
@@ -178,7 +160,6 @@ export function* userSaga() {
   yield all([
     fork(watchPeriodicallySyncLoginStatusWithCookie),
     fork(watchDispatchLoginStateChangeAction),
-    fork(watchFetchAccessToken),
     fork(watchLogin),
     fork(watchLogout),
     fork(watchFetchUserProfile),
