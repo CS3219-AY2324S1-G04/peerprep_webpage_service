@@ -1,23 +1,39 @@
-// TODO: State needs to be updated if the user's info changes or the session
-// gets invalidated
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import Cookies from 'js-cookie'
 
-import { UserProfile } from '../../services/userService'
-import { UserState, cookieIsLoggedInKey } from './types'
+import { UserProfile, accessTokenExpiryKey } from '../../services/userService'
+import { UserState } from './types'
 
-const cookieIsLoggedInExpiry: Date = new Date((Math.pow(2, 31) - 1) * 1000)
+function getAccessTokenExpiryFromCookie(): number | undefined {
+  const rawExpiry: string | undefined = Cookies.get(accessTokenExpiryKey)
+
+  if (rawExpiry === undefined) {
+    return undefined
+  }
+
+  const expiry: number = new Date(rawExpiry).getTime()
+
+  if (isNaN(expiry)) {
+    return undefined
+  }
+
+  return expiry
+}
 
 const initialState: UserState = {
-  isLoggedIn: false,
+  accessTokenExpiry: getAccessTokenExpiryFromCookie(),
 }
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setIsLoggedIn: (state, action: PayloadAction<boolean>) => {
-      document.cookie = `${cookieIsLoggedInKey}=${action.payload}; expires=${cookieIsLoggedInExpiry}`
-      state.isLoggedIn = action.payload
+    updateAccessTokenExpiry: (state) => {
+      state.accessTokenExpiry = getAccessTokenExpiryFromCookie()
+    },
+    removeAccessTokenExpiry: (state) => {
+      Cookies.remove(accessTokenExpiryKey)
+      state.accessTokenExpiry = undefined
     },
     setUserProfile: (state, action: PayloadAction<UserProfile | undefined>) => {
       state.userProfile = action.payload
@@ -25,6 +41,10 @@ const userSlice = createSlice({
   },
 })
 
-export const { setIsLoggedIn, setUserProfile } = userSlice.actions
+export const {
+  updateAccessTokenExpiry,
+  removeAccessTokenExpiry,
+  setUserProfile,
+} = userSlice.actions
 
 export default userSlice.reducer

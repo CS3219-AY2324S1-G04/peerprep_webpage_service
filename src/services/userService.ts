@@ -8,7 +8,7 @@ export const userIdKey: string = 'user-id'
 export const userRoleKey: string = 'user-role'
 export const passwordKey: string = 'password'
 export const newPasswordKey: string = 'new-password'
-export const sessionTokenKey: string = 'session-token'
+export const accessTokenExpiryKey: string = 'access-token-expiry'
 
 export async function createUser(
   info: UserCreationInfo,
@@ -53,8 +53,8 @@ export async function createSession(
   })
 }
 
-export async function keepSessionAlive(controller?: AbortController) {
-  await axios.post(`${userServiceBaseUrl}/session/keep-alive`, undefined, {
+export async function getAccessToken(controller?: AbortController) {
+  await axios.get(`${userServiceBaseUrl}/session/access-token`, {
     signal: controller?.signal,
     withCredentials: isDevEnv,
   })
@@ -200,7 +200,7 @@ export interface UpdatePasswordParamError
 export default {
   createUser,
   createSession,
-  keepSessionAlive,
+  getAccessToken,
   deleteSession,
   fetchUserProfile,
   updateUserProfile,
