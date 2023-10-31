@@ -1,6 +1,12 @@
 import { RootState } from '../../context/store'
 
-export const getIsLoggedIn = (state: RootState) => state.user.isLoggedIn
+export const getIsLoggedIn = (state: RootState) =>
+  state.user.accessTokenExpiry !== undefined
+
+export const getAccessTokenExpiry = (state: RootState) =>
+  state.user.accessTokenExpiry === undefined
+    ? undefined
+    : new Date(state.user.accessTokenExpiry)
 
 export const getUserProfile = (state: RootState) => state.user.userProfile
 
