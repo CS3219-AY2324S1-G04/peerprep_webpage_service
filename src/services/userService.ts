@@ -2,13 +2,15 @@ import axios, { AxiosError } from 'axios'
 
 import { isDevEnv, userServiceBaseUrl } from '../utils/config'
 
-export const usernameKey: string = 'username'
-export const emailAddressKey: string = 'email-address'
-export const userIdKey: string = 'user-id'
-export const userRoleKey: string = 'user-role'
-export const passwordKey: string = 'password'
-export const newPasswordKey: string = 'new-password'
-export const sessionTokenKey: string = 'session-token'
+const usernameKey: string = 'username'
+const emailAddressKey: string = 'email-address'
+const userIdKey: string = 'user-id'
+const userRoleKey: string = 'user-role'
+const passwordKey: string = 'password'
+const newPasswordKey: string = 'new-password'
+const accessTokenExpiryKey: string = 'access-token-expiry'
+
+const fetchAccessTokenEndpoint: string = `${userServiceBaseUrl}/session/access-token`
 
 export async function createUser(
   info: UserCreationInfo,
@@ -53,8 +55,8 @@ export async function createSession(
   })
 }
 
-export async function keepSessionAlive(controller?: AbortController) {
-  await axios.post(`${userServiceBaseUrl}/session/keep-alive`, undefined, {
+export async function fetchAccessToken(controller?: AbortController) {
+  await axios.get(fetchAccessTokenEndpoint, {
     signal: controller?.signal,
     withCredentials: isDevEnv,
   })
@@ -198,9 +200,11 @@ export interface UpdatePasswordParamError
   extends Partial<UserPasswordUpdateInfo> {}
 
 export default {
+  accessTokenExpiryKey,
+  fetchAccessTokenEndpoint,
   createUser,
   createSession,
-  keepSessionAlive,
+  fetchAccessToken,
   deleteSession,
   fetchUserProfile,
   updateUserProfile,

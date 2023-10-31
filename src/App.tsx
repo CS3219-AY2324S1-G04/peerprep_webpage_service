@@ -6,6 +6,7 @@ import { Layout } from './components/Layout'
 import GuestNavigationBar from './components/Navigation/GuestNavigationBar'
 import UserNavigationBar from './components/Navigation/UserNavigationBar'
 import { Toaster } from './components/Toaster/Toaster'
+import { applyAxiosInterceptorForUpdatingAccessToken } from './features/user/accessTokenAxiosInterceptor'
 import { getIsLoggedIn } from './features/user/selector'
 import { useAppDispatch } from './hooks/useAppDispatch'
 import { useAppSelector } from './hooks/useAppSelector'
@@ -21,6 +22,8 @@ import UserRedirect from './pages/UserRedirect'
 import Paths from './utils/constants/navigation'
 import theme from './utils/theme/themeOverride'
 import { CommonSagaActions } from './utils/types'
+
+applyAxiosInterceptorForUpdatingAccessToken()
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch()
