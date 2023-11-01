@@ -1,10 +1,9 @@
 import { javascript } from '@codemirror/lang-javascript'
-import { Box, Switch, Typography } from '@mui/joy'
+import { Box, Card, Switch, Typography } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
 import { vim } from '@replit/codemirror-vim'
 import Color from 'color'
 import React, { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 // @ts-ignore Waiting for dev to fix their package.json.
 import { yCollab } from 'y-codemirror.next'
 // @ts-ignore Waiting for dev to fix their package.json.
@@ -13,13 +12,16 @@ import * as Y from 'yjs'
 
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { MessageType, initWsProvider } from '../../../services/editorService'
-import Paths from '../../../utils/constants/navigation'
 import { getUsername } from '../../user/selector'
 import CodeArea from './CodeArea'
 
-function Editor({ roomId }: { roomId: string }) {
-  const navigate = useNavigate()
-
+function Editor({
+  roomId,
+  onConnectionClose,
+}: {
+  roomId: string
+  onConnectionClose: () => void
+}) {
   const [hasConnect, setHasConnect] = React.useState(false)
   const [doc] = React.useState<Y.Doc>(new Y.Doc())
   const [wsProvider, setWsProvider] = React.useState<WebsocketProvider | null>(
@@ -29,26 +31,25 @@ function Editor({ roomId }: { roomId: string }) {
   const [isVimMode, setIsVimMode] = React.useState(false)
 
   useEffect(() => {
-    console.log('\n Setup web socket', roomId)
+    // console.log('\n Setup web socket', roomId)
 
     const messageHandlers: { [id: string]: (event) => void } = {}
 
     messageHandlers[MessageType.sync] = (event) => {
-      console.log('sync')
+      // console.log('sync')
       setHasConnect(true)
     }
 
     messageHandlers[MessageType.status] = (event) => {
-      console.log('status: ', event.status)
+      // console.log('status: ', event.status)
 
       if (event.status == 'connected') {
-        console.log('connected', doc.getText().toString())
-        setHasConnect(true)
+        // console.log('connected', doc.getText().toString())
       }
     }
 
     messageHandlers[MessageType.connectionClose] = (event) => {
-      navigate(Paths.Root)
+      onConnectionClose()
     }
 
     const awarenessConfig = {
@@ -67,9 +68,9 @@ function Editor({ roomId }: { roomId: string }) {
 
     return () => {
       newWsProvider.destroy()
-      console.log('Destroy websocket', roomId, newWsProvider.shouldConnect)
+      // console.log('Destroy websocket', roomId, newWsProvider.shouldConnect)
     }
-  }, [doc, navigate, roomId, username])
+  }, [doc, onConnectionClose, roomId, username])
 
   if (!hasConnect) {
     return
@@ -82,12 +83,13 @@ function Editor({ roomId }: { roomId: string }) {
     yCollab(doc.getText(), wsProvider.awareness, { yUndoManager }),
   ]
 
+  // TODO: set cookie for vim mode.
   if (isVimMode) {
     editorExtensions.push(vim())
   }
 
   return (
-    <Box sx={styles.editorBox}>
+    <Card>
       <Box sx={styles.editorControlBar}>
         <Typography
           component="label"
@@ -103,18 +105,16 @@ function Editor({ roomId }: { roomId: string }) {
         </Typography>
       </Box>
       <CodeArea editorExtensions={editorExtensions} text={doc.getText()} />
-    </Box>
+    </Card>
   )
 }
 
 const styles = {
   editorControlBar: {
+    borderRadius: 25,
     display: 'grid',
     height: 35,
   } as SxProps,
-  editorBox: {
-    borderRadius: 25,
-  },
 }
 
 // TODO: Extract this functionality to some common module.

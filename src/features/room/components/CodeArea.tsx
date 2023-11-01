@@ -5,6 +5,8 @@ import CodeMirror, { Extension } from '@uiw/react-codemirror'
 import React from 'react'
 import * as Y from 'yjs'
 
+import './CodeArea.css'
+
 function CodeArea({
   text,
   editorExtensions,
