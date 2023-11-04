@@ -7,6 +7,7 @@ import AdminNavigationBar from './components/Navigation/AdminNavigationBar'
 import GuestNavigationBar from './components/Navigation/GuestNavigationBar'
 import UserNavigationBar from './components/Navigation/UserNavigationBar'
 import { Toaster } from './components/Toaster/Toaster'
+import { applyAxiosInterceptorForUpdatingAccessToken } from './features/user/accessTokenAxiosInterceptor'
 import { getIsLoggedIn, getUserRole } from './features/user/selector'
 import { useAppDispatch } from './hooks/useAppDispatch'
 import { useAppSelector } from './hooks/useAppSelector'
@@ -24,6 +25,8 @@ import Paths from './utils/constants/navigation'
 import theme from './utils/theme/themeOverride'
 import { CommonSagaActions } from './utils/types'
 import FindingRoomModal from './features/matching/components/FindingRoomModal'
+
+applyAxiosInterceptorForUpdatingAccessToken()
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch()
