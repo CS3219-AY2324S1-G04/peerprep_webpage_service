@@ -43,6 +43,7 @@ function* loadMatchRoomTask() {
 
       yield getQuestionData(room.questionId)
 
+      toast.success('Successfully connected to room!')
       yield put(openRoom(room))
     } catch (error) {
       console.error(`Match room not found! Retrying...`)
