@@ -4,7 +4,7 @@ import { isDevEnv, roomServiceBaseUrl } from '../utils/config'
 
 export async function getMatchedRoom(): Promise<Room> {
   const data = (
-    await axios.get(`${roomServiceBaseUrl}/room/user`, {
+    await axios.get(`${roomServiceBaseUrl}/room`, {
       withCredentials: isDevEnv,
     })
   ).data.data
