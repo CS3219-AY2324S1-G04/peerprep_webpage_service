@@ -2,20 +2,29 @@ import axios from 'axios'
 
 import { isDevEnv, roomServiceBaseUrl } from '../utils/config'
 
-export async function getMatchedRoom(): Promise<Room> {
-  const data = (
-    await axios.get(`${roomServiceBaseUrl}/room`, {
-      withCredentials: isDevEnv,
-    })
-  ).data.data
+const roomIdKey = 'room-id'
+const questionIdKey = 'question-id'
+
+export async function getMatchedRoom(): Promise<RoomModel> {
+  const res = await axios.get(`${roomServiceBaseUrl}/room`, {
+    withCredentials: isDevEnv,
+  })
+
+  const data = res.data
 
   return {
-    roomId: data['room-id'],
-    questionId: data['questions-id'],
+    roomId: data[roomIdKey],
+    questionId: data[questionIdKey],
   }
 }
 
-export interface Room {
+export async function keepRoomAlive() {
+  await axios.patch(`${roomServiceBaseUrl}/room/keep-alive`, undefined, {
+    withCredentials: isDevEnv,
+  })
+}
+
+export interface RoomModel {
   readonly roomId: string
   readonly questionId: string
 }

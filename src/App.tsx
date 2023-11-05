@@ -13,7 +13,6 @@ import { useAppSelector } from './hooks/useAppSelector'
 import Dashboard from './pages/Dashboard'
 import GuestRedirect from './pages/GuestRedirect'
 import Login from './pages/Login'
-import MatchRoom from './pages/MatchRoom'
 import Problems from './pages/Problems'
 import Rankings from './pages/Rankings'
 import Room from './pages/Room'
@@ -49,7 +48,6 @@ const App: React.FC = () => {
                   <Route path={Paths.Problems} element={<Problems />} />
                   <Route path={Paths.Rankings} element={<Rankings />} />
                   <Route path={Paths.Dashboard} element={<Dashboard />} />
-                  <Route path={Paths.MatchRoom} element={<MatchRoom />} />
                   <Route path={Paths.Room} element={<Room />} />
                   <Route path="*" element={<UserRedirect />} />
                 </>

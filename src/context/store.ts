@@ -4,6 +4,7 @@ import createSagaMiddleware from 'redux-saga'
 
 import commonReducer from '../features/common/slice'
 import questionBankReducer from '../features/questionBank/slice'
+import roomReducer from '../features/room/slice'
 import rootSaga from '../features/rootSaga'
 import userReducer from '../features/user/slice'
 
@@ -20,6 +21,7 @@ export const store = configureStore({
     common: commonReducer,
     questionBank: questionBankReducer,
     user: userReducer,
+    room: roomReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(extraMiddlewares),
