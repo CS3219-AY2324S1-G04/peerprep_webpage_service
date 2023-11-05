@@ -1,41 +1,18 @@
-import { Box, Skeleton, Stack, Typography, useColorScheme } from '@mui/joy'
+import { Box, Stack, Typography, useColorScheme } from '@mui/joy'
 import { Card } from '@mui/joy'
 import MDEditor from '@uiw/react-md-editor'
-import axios from 'axios'
-import { useEffect, useState } from 'react'
 
 import StyledChip from '../../../components/Chip'
-import { getRoom } from '../../../services/roomService'
+import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getComplexityColor } from '../../../utils/uiHelpers'
-import { Question } from '../../questionBank/types'
+import { getQuestionData } from '../selectors'
 
-const RoomQuestion = ({ roomId }: { roomId: string }) => {
+const RoomQuestion = () => {
   const { mode } = useColorScheme()
-  const [question, setQuestion] = useState<Question | null>(null)
-
-  // TODO: Create sagas to handle async logic.
-  useEffect(() => {
-    const getQuestion = async () => {
-      try {
-        const room = await getRoom(roomId)
-        if (!room) {
-          throw new Error('room not found')
-        }
-        const res = await axios.get(
-          `http://localhost:9001/question-service/questions/${room.questionId}`,
-        )
-        const question = res.data.data
-        setQuestion(question)
-      } catch (error) {
-        setQuestion(null)
-      }
-    }
-
-    getQuestion()
-  }, [roomId])
+  const question = useAppSelector(getQuestionData)
 
   if (!question) {
-    return <Skeleton></Skeleton>
+    return <Card> </Card>
   }
 
   return (

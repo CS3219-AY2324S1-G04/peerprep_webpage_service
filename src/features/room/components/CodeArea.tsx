@@ -25,7 +25,7 @@ function CodeArea({
   )
 
   return (
-    <Box sx={styles.codeMirrorBox}>
+    <Box>
       <CodeMirror
         value={value}
         minHeight={'800px'}
@@ -35,10 +35,6 @@ function CodeArea({
       />
     </Box>
   )
-}
-
-const styles = {
-  codeMirrorBox: {},
 }
 
 export default CodeArea

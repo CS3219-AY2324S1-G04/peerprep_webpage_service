@@ -18,7 +18,7 @@ interface AwarenessConfig {
   color: string
 }
 
-export function initWsProvider(
+export function getWsProvider(
   roomId: string,
   doc: Y.Doc,
   config: AwarenessConfig,

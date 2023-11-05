@@ -1,5 +1,5 @@
 import { javascript } from '@codemirror/lang-javascript'
-import { Box, Card, Switch, Typography } from '@mui/joy'
+import { Box, Card, LinearProgress, Switch, Typography } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
 import { vim } from '@replit/codemirror-vim'
 import Color from 'color'
@@ -7,11 +7,10 @@ import React, { useEffect } from 'react'
 // @ts-ignore Waiting for dev to fix their package.json.
 import { yCollab } from 'y-codemirror.next'
 // @ts-ignore Waiting for dev to fix their package.json.
-import { WebsocketProvider } from 'y-websocket'
 import * as Y from 'yjs'
 
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { MessageType, initWsProvider } from '../../../services/editorService'
+import { MessageType, getWsProvider } from '../../../services/editorService'
 import { getUsername } from '../../user/selector'
 import CodeArea from './CodeArea'
 
@@ -20,36 +19,26 @@ function Editor({
   onConnectionClose,
 }: {
   roomId: string
-  onConnectionClose: () => void
+  onConnectionClose?: () => void
 }) {
   const [hasConnect, setHasConnect] = React.useState(false)
   const [doc] = React.useState<Y.Doc>(new Y.Doc())
-  const [wsProvider, setWsProvider] = React.useState<WebsocketProvider | null>(
-    null,
-  )
+  const [awareness, setAwareness] = React.useState(null)
   const username = useAppSelector(getUsername) ?? ''
   const [isVimMode, setIsVimMode] = React.useState(false)
 
   useEffect(() => {
-    // console.log('\n Setup web socket', roomId)
+    const messageHandlers: { [id: string]: () => void } = {}
 
-    const messageHandlers: { [id: string]: (event) => void } = {}
-
-    messageHandlers[MessageType.sync] = (event) => {
-      // console.log('sync')
+    messageHandlers[MessageType.sync] = () => {
       setHasConnect(true)
     }
 
-    messageHandlers[MessageType.status] = (event) => {
-      // console.log('status: ', event.status)
-
-      if (event.status == 'connected') {
-        // console.log('connected', doc.getText().toString())
+    messageHandlers[MessageType.connectionClose] = () => {
+      if (onConnectionClose) {
+        onConnectionClose()
       }
-    }
-
-    messageHandlers[MessageType.connectionClose] = (event) => {
-      onConnectionClose()
+      setHasConnect(false)
     }
 
     const awarenessConfig = {
@@ -57,30 +46,33 @@ function Editor({
       color: getColorFromUsername(username).hex(),
     }
 
-    const newWsProvider = initWsProvider(
+    const wsProvider = getWsProvider(
       roomId,
       doc,
       awarenessConfig,
       messageHandlers,
     )
 
-    setWsProvider(newWsProvider)
+    setAwareness(wsProvider.awareness)
 
     return () => {
-      newWsProvider.destroy()
-      // console.log('Destroy websocket', roomId, newWsProvider.shouldConnect)
+      wsProvider.destroy()
     }
   }, [doc, onConnectionClose, roomId, username])
 
   if (!hasConnect) {
-    return
+    return (
+      <Card>
+        <LinearProgress></LinearProgress>
+      </Card>
+    )
   }
 
   const yUndoManager = new Y.UndoManager(doc.getText())
 
   const editorExtensions = [
     javascript(), // TODO: Use match language.
-    yCollab(doc.getText(), wsProvider.awareness, { yUndoManager }),
+    yCollab(doc.getText(), awareness, { yUndoManager }),
   ]
 
   // TODO: set cookie for vim mode.
