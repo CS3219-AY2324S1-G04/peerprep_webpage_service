@@ -18,19 +18,6 @@ export async function getMatchedRoom(): Promise<RoomModel> {
   }
 }
 
-export async function getRoom(roomId: string): Promise<RoomModel> {
-  const data = (
-    await axios.get(`${roomServiceBaseUrl}/room/${roomId}/info`, {
-      withCredentials: isDevEnv,
-    })
-  ).data.data
-
-  return {
-    roomId: data[roomIdKey],
-    questionId: data[questionIdKey],
-  }
-}
-
 export async function keepRoomAlive() {
   await axios.patch(`${roomServiceBaseUrl}/room/keep-alive`, undefined, {
     withCredentials: isDevEnv,
