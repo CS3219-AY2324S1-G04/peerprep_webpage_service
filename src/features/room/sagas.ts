@@ -1,16 +1,16 @@
 import axios, { AxiosResponse } from 'axios'
-import { Task } from 'redux-saga'
 import {
   all,
   call,
-  cancel,
   delay,
   fork,
   put,
+  race,
   take,
   takeLatest,
 } from 'redux-saga/effects'
 
+import { toast } from '../../components/Toaster/toast'
 import {
   RoomModel,
   getMatchedRoom,
@@ -26,9 +26,10 @@ const keepAliveIntervalInMs = 5000
 const retryFindMatchRoomDelayInMs = 3000
 
 function* startLoadMatchRoom() {
-  const loadRoomTask: Task = yield fork(loadMatchRoomTask)
-  yield take(RoomSagaActions.STOP_LOAD_ROOM)
-  yield cancel(loadRoomTask)
+  yield race({
+    task: call(loadMatchRoomTask),
+    cancel: take(RoomSagaActions.STOP_LOAD_ROOM),
+  })
 }
 
 function* loadMatchRoomTask() {
@@ -45,6 +46,7 @@ function* loadMatchRoomTask() {
       yield put(openRoom(room))
     } catch (error) {
       console.error(`Match room not found! Retrying...`)
+      toast.error('Connecting to room...')
       yield delay(retryFindMatchRoomDelayInMs)
     }
   }
@@ -55,9 +57,10 @@ function* onOpenRoom() {
 }
 
 function* startMaintainRoomLifetime() {
-  const task: Task = yield fork(maintainLifetimeTask)
-  yield take(closeRoom)
-  yield cancel(task)
+  yield race({
+    task: call(maintainLifetimeTask),
+    cancel: take(closeRoom),
+  })
 }
 
 function* maintainLifetimeTask() {
@@ -67,7 +70,7 @@ function* maintainLifetimeTask() {
       yield delay(keepAliveIntervalInMs)
     }
   } catch (error) {
-    console.error('Failed to keep room alive')
+    toast.error('Room was closed.')
     yield delay(keepAliveIntervalInMs)
     yield put(closeRoom())
   }

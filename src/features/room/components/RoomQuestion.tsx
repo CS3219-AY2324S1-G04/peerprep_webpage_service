@@ -1,5 +1,6 @@
 import { Box, Stack, Typography, useColorScheme } from '@mui/joy'
 import { Card } from '@mui/joy'
+import { SxProps } from '@mui/joy/styles/types'
 import MDEditor from '@uiw/react-md-editor'
 
 import StyledChip from '../../../components/Chip'
@@ -48,14 +49,14 @@ const styles = {
   complexityText: {
     ml: 1,
     fontWeight: 'bold',
-  },
+  } as SxProps,
   categoriesBox: {
     display: 'flex',
     flexWrap: 'wrap',
     columnGap: 1,
     rowGap: 1,
     flexDirection: 'row',
-  },
+  } as SxProps,
 } as const
 
 export default RoomQuestion

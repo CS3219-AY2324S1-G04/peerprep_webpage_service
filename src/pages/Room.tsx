@@ -27,7 +27,7 @@ const Room: React.FC = () => {
         dispatch(closeRoom())
       }
     }
-  })
+  }, [dispatch, roomStatus])
 
   if (roomStatus == RoomStatus.Pending) {
     return <LinearProgress></LinearProgress>
