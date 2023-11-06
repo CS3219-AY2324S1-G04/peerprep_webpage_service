@@ -83,7 +83,7 @@ const EditProfileSection: React.FC = () => {
         toast.error('Profile update failed: One or more fields are invalid.')
       } else if (isErrorCausedByAuthentication(error)) {
         toast.error(
-          `Profile update failed: ${(error as AxiosError).response?.data}.`,
+          `Profile update failed: ${(error as AxiosError).response?.data}`,
         )
       } else {
         toast.error('Profile update failed: Please try again later.')
@@ -174,7 +174,7 @@ const ChangePasswordSection: React.FC = () => {
 
       if (isErrorCausedByAuthentication(error)) {
         toast.error(
-          `Password change failed: ${(error as AxiosError).response?.data}.`,
+          `Password change failed: ${(error as AxiosError).response?.data}`,
         )
       } else {
         toast.error('Password change failed: Please try again later.')

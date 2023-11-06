@@ -7,13 +7,14 @@ import AdminNavigationBar from './components/Navigation/AdminNavigationBar'
 import GuestNavigationBar from './components/Navigation/GuestNavigationBar'
 import UserNavigationBar from './components/Navigation/UserNavigationBar'
 import { Toaster } from './components/Toaster/Toaster'
+import FindingRoomModal from './features/matching/components/FindingRoomModal'
+import { applyAxiosInterceptorForUpdatingAccessToken } from './features/user/accessTokenAxiosInterceptor'
 import { getIsLoggedIn, getUserRole } from './features/user/selector'
 import { useAppDispatch } from './hooks/useAppDispatch'
 import { useAppSelector } from './hooks/useAppSelector'
 import Dashboard from './pages/Dashboard'
 import GuestRedirect from './pages/GuestRedirect'
 import Login from './pages/Login'
-import MatchRoom from './pages/MatchRoom'
 import Problems from './pages/Problems'
 import Rankings from './pages/Rankings'
 import Room from './pages/Room'
@@ -23,7 +24,8 @@ import { UserRole } from './services/userService'
 import Paths from './utils/constants/navigation'
 import theme from './utils/theme/themeOverride'
 import { CommonSagaActions } from './utils/types'
-import FindingRoomModal from './features/matching/components/FindingRoomModal'
+
+applyAxiosInterceptorForUpdatingAccessToken()
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -56,7 +58,6 @@ const App: React.FC = () => {
                   <Route path={Paths.Problems} element={<Problems />} />
                   <Route path={Paths.Rankings} element={<Rankings />} />
                   <Route path={Paths.Dashboard} element={<Dashboard />} />
-                  <Route path={Paths.MatchRoom} element={<MatchRoom />} />
                   <Route path={Paths.Room} element={<Room />} />
                   <Route path="*" element={<UserRedirect />} />
                 </>
@@ -66,7 +67,6 @@ const App: React.FC = () => {
                   <Route path={Paths.Problems} element={<Problems />} />
                   <Route path={Paths.Rankings} element={<Rankings />} />
                   <Route path={Paths.Dashboard} element={<Dashboard />} />
-                  <Route path={Paths.MatchRoom} element={<MatchRoom />} />
                   <Route path={Paths.Room} element={<Room />} />
                   <Route path="*" element={<UserRedirect />} />
                 </>
