@@ -9,7 +9,12 @@ import {
 } from '../../utils/types'
 import { addLoadingTask, removeLoadingTask } from '../common/slice'
 import { getFullQuestionMap } from './selectors'
-import { addCachedFullQuestion, setCategories, setQuestionsList } from './slice'
+import {
+  addCachedFullQuestion,
+  setCategories,
+  setLanguages,
+  setQuestionsList,
+} from './slice'
 import { Question, QuestionBankSagaActions } from './types'
 
 function* getAllQuestions() {
@@ -30,6 +35,22 @@ function* getAllCategories() {
       'http://localhost:9001/question-service/categories',
     )
     yield put(setCategories(response.data.data))
+  } catch (error) {
+    // TODO: Handle errors properly (e.g. via toast)
+    console.error(error)
+  }
+}
+
+function* getAllLanguages() {
+  try {
+    const response: AxiosResponse<ServiceResponse> = yield axios.get(
+      'http://localhost:9001/question-service/languages',
+    )
+    const langSlugs = response.data.data.map(
+      (item: { language: string; langSlug: string }) => item.langSlug,
+    )
+
+    yield put(setLanguages(langSlugs))
   } catch (error) {
     // TODO: Handle errors properly (e.g. via toast)
     console.error(error)
@@ -74,6 +95,13 @@ export function* watchGetAllCategories() {
   )
 }
 
+export function* watchGetAllLanguages() {
+  yield takeLatest(
+    [CommonSagaActions.APP_INIT, QuestionBankSagaActions.GET_ALL_LANGUAGES],
+    getAllLanguages,
+  )
+}
+
 export function* watchGetSelectedQuestion() {
   yield takeLatest(
     QuestionBankSagaActions.SET_SELECTED_QUESTION,
@@ -85,6 +113,7 @@ export const questionBankSaga = function* () {
   yield all([
     fork(watchGetAllQuestions),
     fork(watchGetAllCategories),
+    fork(watchGetAllLanguages),
     fork(watchGetSelectedQuestion),
   ])
 }

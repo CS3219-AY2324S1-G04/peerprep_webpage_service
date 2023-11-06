@@ -5,6 +5,8 @@ export const getQuestionsList = (state: RootState) =>
 
 export const getCategories = (state: RootState) => state.questionBank.categories
 
+export const getLanguages = (state: RootState) => state.questionBank.languages
+
 export const getSelectedQuestionId = (state: RootState) =>
   state.questionBank.selectedQuestionId
 

@@ -22,6 +22,7 @@ export interface DraftQuestion extends Omit<Question, '_id'> {
 export interface QuestionBankState {
   questionsList: MinimalQuestion[]
   categories: string[]
+  languages: string[]
   selectedQuestionId: string
   fullQuestionMap: SimpleMap<Question>
 }
@@ -29,5 +30,6 @@ export interface QuestionBankState {
 export const QuestionBankSagaActions = {
   GET_ALL_QUESTIONS: '@questionBank/GET_ALL_QUESTIONS',
   GET_ALL_CATEGORIES: '@questionBank/GET_ALL_CATEGORIES',
+  GET_ALL_LANGUAGES: '@questionBank/GET_ALL_CATEGORIES',
   SET_SELECTED_QUESTION: 'questionBank/setSelectedQuestionId',
 }
