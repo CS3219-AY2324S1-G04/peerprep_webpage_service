@@ -1,13 +1,13 @@
 import axios, { AxiosResponse } from 'axios'
 
-import { isDevEnv, matchingServiceBaseUrl } from '../utils/config'
 import { QuestionComplexity } from '../features/questionBank/types'
+import { isDevEnv, matchingServiceBaseUrl } from '../utils/config'
 
 export const difficultyKey = 'difficulty'
 export const categoriesKey = 'categories'
 
 export async function checkUserQueueStatus(): Promise<AxiosResponse> {
-  const res = await axios.get(`${matchingServiceBaseUrl}/queue`, {
+  const res = await axios.get(`${matchingServiceBaseUrl}/queue/`, {
     withCredentials: isDevEnv,
   })
   return res
@@ -30,5 +30,5 @@ export interface QueueSettings {
 
 export default {
   checkUserQueueStatus,
-  joinQueue
+  joinQueue,
 }

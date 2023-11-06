@@ -39,7 +39,7 @@ const JoinQueueSettingsModal: React.FC<Props> = (props: Props) => {
   const [complexity, setComplexity] = useState<QuestionComplexity>(
     QuestionComplexity.Easy,
   )
-  const [language, setLanguage] = useState<string>('')
+  const [language, setLanguage] = useState<string>('python3')
   const [categories, setCategories] = useState<string[]>([])
   const allCategories = useAppSelector(getCategories)
   const allLanguages = useAppSelector(getLanguages)
@@ -92,8 +92,10 @@ const JoinQueueSettingsModal: React.FC<Props> = (props: Props) => {
             defaultValue={language}
             onChange={(e, newValue) => setLanguage(newValue ?? '')}
           >
-            {allLanguages.map((item, index) => (
-              <Option value={item}>{item}</Option>
+            {allLanguages.map((item) => (
+              <Option value={item} key={item}>
+                {item}
+              </Option>
             ))}
           </Select>
         </FormControl>
