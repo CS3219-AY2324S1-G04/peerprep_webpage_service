@@ -129,8 +129,11 @@ const ListItemWithMenu: React.FC<ListItemWithMenuProps> = (
           >
             {page.subPages?.map((subPage) => (
               <ListItem key={subPage.title}>
-                <ListItemButton onClick={() => navigate(subPage.url ?? '')}>
-                  {subPage.title}
+                <ListItemButton
+                  disabled={subPage.disabled}
+                  onClick={() => navigate(subPage.url ?? '')}
+                >
+                  {subPage.title} {subPage.disabled && '🚧'}
                 </ListItemButton>
               </ListItem>
             ))}

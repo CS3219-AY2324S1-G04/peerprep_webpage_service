@@ -1,10 +1,20 @@
-import { AxiosError, AxiosResponse } from "axios"
-import { all, call, delay, fork, put, race, take, takeLatest } from "redux-saga/effects"
-import { toast } from "../../components/Toaster/toast"
-import matchingService from "../../services/matchingService"
-import { MatchingSagaActions } from "./types"
-import { LoadingKeys } from "../../utils/types"
-import { removeLoadingTask } from "../common/slice"
+import { AxiosError, AxiosResponse } from 'axios'
+import {
+  all,
+  call,
+  delay,
+  fork,
+  put,
+  race,
+  take,
+  takeLatest,
+} from 'redux-saga/effects'
+
+import { toast } from '../../components/Toaster/toast'
+import matchingService from '../../services/matchingService'
+import { LoadingKeys } from '../../utils/types'
+import { removeLoadingTask } from '../common/slice'
+import { MatchingSagaActions } from './types'
 
 const queueStatusCheckDelayMillis: number = 5000
 
@@ -22,7 +32,9 @@ function* checkUserQueueStatus() {
         toast.error(`Queue status error: ${error.response.data.data.message}`)
       }
       if (error.response?.status === 404) {
-        toast.error('Queue error: Unable to find a room at this time. PLease try again later.')
+        toast.error(
+          'Queue error: Unable to find a room at this time. PLease try again later.',
+        )
       }
       if (error.response?.status === 500) {
         toast.error('Queue status error: Server issues')
@@ -50,7 +62,5 @@ function* watchPeriodicallyCheckQueueStatus() {
 }
 
 export function* matchingSaga() {
-  yield all([
-    fork(watchPeriodicallyCheckQueueStatus)
-  ])
+  yield all([fork(watchPeriodicallyCheckQueueStatus)])
 }

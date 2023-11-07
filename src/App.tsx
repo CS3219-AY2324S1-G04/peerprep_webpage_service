@@ -7,6 +7,7 @@ import AdminNavigationBar from './components/Navigation/AdminNavigationBar'
 import GuestNavigationBar from './components/Navigation/GuestNavigationBar'
 import UserNavigationBar from './components/Navigation/UserNavigationBar'
 import { Toaster } from './components/Toaster/Toaster'
+import FindingRoomModal from './features/matching/components/FindingRoomModal'
 import { applyAxiosInterceptorForUpdatingAccessToken } from './features/user/accessTokenAxiosInterceptor'
 import { getIsLoggedIn, getUserRole } from './features/user/selector'
 import { useAppDispatch } from './hooks/useAppDispatch'
@@ -19,11 +20,13 @@ import Rankings from './pages/Rankings'
 import Room from './pages/Room'
 import SignUp from './pages/SignUp'
 import UserRedirect from './pages/UserRedirect'
+import CreateQuestion from './pages/manage/CreateQuestion'
+import EditQuestion from './pages/manage/EditQuestion'
+import Questions from './pages/manage/Questions'
 import { UserRole } from './services/userService'
-import Paths from './utils/constants/navigation'
+import Paths, { SubPaths } from './utils/constants/navigation'
 import theme from './utils/theme/themeOverride'
 import { CommonSagaActions } from './utils/types'
-import FindingRoomModal from './features/matching/components/FindingRoomModal'
 
 applyAxiosInterceptorForUpdatingAccessToken()
 
@@ -59,6 +62,18 @@ const App: React.FC = () => {
                   <Route path={Paths.Rankings} element={<Rankings />} />
                   <Route path={Paths.Dashboard} element={<Dashboard />} />
                   <Route path={Paths.Room} element={<Room />} />
+                  <Route
+                    path={SubPaths.ManageQuestions}
+                    element={<Questions />}
+                  />
+                  <Route
+                    path={SubPaths.CreateQuestion}
+                    element={<CreateQuestion />}
+                  />
+                  <Route
+                    path={SubPaths.EditQuestion}
+                    element={<EditQuestion />}
+                  />
                   <Route path="*" element={<UserRedirect />} />
                 </>
               )}
@@ -67,7 +82,6 @@ const App: React.FC = () => {
                   <Route path={Paths.Problems} element={<Problems />} />
                   <Route path={Paths.Rankings} element={<Rankings />} />
                   <Route path={Paths.Dashboard} element={<Dashboard />} />
-                  <Route path={Paths.MatchRoom} element={<MatchRoom />} />
                   <Route path={Paths.Room} element={<Room />} />
                   <Route path="*" element={<UserRedirect />} />
                 </>

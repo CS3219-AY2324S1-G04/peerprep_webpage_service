@@ -1,20 +1,28 @@
 export interface PageNavigation {
-  url?: Paths
+  url?: Paths | SubPaths
   title: string
+  disabled?: boolean
   subPages?: PageNavigation[]
 }
 
-enum Paths {
+export enum Paths {
   Root = '/',
   Dashboard = '/dashboard',
   Problems = '/problems',
   Rankings = '/rankings',
   Login = '/login',
   SignUp = '/signup',
+  Manage = '/manage',
   Room = '/room/:roomId?',
   ManageQuestions = '/manage-questions',
   ManageUsers = '/manage-users',
   MatchRoom = '/room',
+}
+
+export enum SubPaths {
+  ManageQuestions = `${Paths.Manage}/questions`,
+  CreateQuestion = `${SubPaths.ManageQuestions}/create`,
+  EditQuestion = `${SubPaths.ManageQuestions}/edit/:id`,
 }
 
 const DashboardPage: PageNavigation = {
@@ -38,12 +46,13 @@ const ManagePages: PageNavigation = {
   title: 'Manage',
   subPages: [
     {
-      url: Paths.ManageQuestions,
+      url: SubPaths.ManageQuestions,
       title: 'Questions',
     },
     {
       url: Paths.ManageUsers,
       title: 'Users',
+      disabled: true,
     },
   ],
 }

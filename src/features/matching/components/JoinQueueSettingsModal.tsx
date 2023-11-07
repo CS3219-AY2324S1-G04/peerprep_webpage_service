@@ -1,30 +1,31 @@
-import Done from '@mui/icons-material/Done';
 import {
+  Autocomplete,
   Button,
-  Checkbox,
+  Chip,
+  ChipDelete,
   FormControl,
   FormLabel,
-  List,
-  ListItem,
   Modal,
   ModalClose,
   ModalDialog,
   Option,
   Select,
   Typography
-} from '@mui/joy';
-import { SxProps } from '@mui/joy/styles/types';
-import { useState } from 'react';
-import { parseStringToComplexityEnum } from '../../../utils/uiHelpers';
-import { QuestionComplexity } from '../../questionBank/types';
-import { useAppSelector } from '../../../hooks/useAppSelector';
-import { getCategories } from '../../questionBank/selectors';
-import { useAppDispatch } from '../../../hooks/useAppDispatch';
-import matchingService from '../../../services/matchingService';
-import { toast } from '../../../components/Toaster/toast';
-import { addLoadingTask } from '../../common/slice';
-import { LoadingKeys } from '../../../utils/types';
-import { MatchingSagaActions } from '../types';
+} from '@mui/joy'
+import { SxProps } from '@mui/joy/styles/types'
+import { useState } from 'react'
+
+import GenericField from '../../../components/Form/GenericField'
+import { toast } from '../../../components/Toaster/toast'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
+import { useAppSelector } from '../../../hooks/useAppSelector'
+import matchingService from '../../../services/matchingService'
+import { Language } from '../../../services/questionService'
+import { LoadingKeys } from '../../../utils/types'
+import { addLoadingTask } from '../../common/slice'
+import { getCategories, getLanguages } from '../../questionBank/selectors'
+import { QuestionComplexity } from '../../questionBank/types'
+import { MatchingSagaActions } from '../types'
 
 interface Props {
   isOpen: boolean
@@ -35,21 +36,26 @@ interface Props {
 const JoinQueueSettingsModal: React.FC<Props> = (props: Props) => {
   const { isOpen, onClose } = props
   const dispatch = useAppDispatch()
-  const [complexity, setComplexity] = useState<QuestionComplexity>(QuestionComplexity.Easy)
+  const [complexity, setComplexity] = useState<QuestionComplexity>(
+    QuestionComplexity.Easy,
+  )
   const [categories, setCategories] = useState<string[]>([])
+  const [language, setLanguage] = useState<Language | null>(null)
   const allCategories = useAppSelector(getCategories)
+  const allLanguages = useAppSelector(getLanguages)
 
   async function submit() {
     try {
       await matchingService.joinQueue({
         difficulty: complexity,
-        categories: categories
+        categories: categories,
+        language: language?.langSlug ?? 'java',
       })
       dispatch({ type: MatchingSagaActions.START_CHECK_QUEUE_STATUS })
       dispatch(addLoadingTask(LoadingKeys.CHECKING_QUEUE_STATUS))
       onClose()
     } catch (error) {
-      toast.error("Join Queue failed: Please try again later")
+      toast.error('Join Queue failed: Please try again later')
     }
   }
 
@@ -57,69 +63,82 @@ const JoinQueueSettingsModal: React.FC<Props> = (props: Props) => {
     <Modal open={isOpen} onClose={onClose}>
       <ModalDialog sx={styles.modalDialog}>
         <ModalClose variant="plain" sx={styles.modalClose} />
-        <Typography level="h3">
-          PeerPrep Settings
-        </Typography>
+        <Typography level="h3">PeerPrep Settings</Typography>
         <Typography level="body-sm">
-          We'll use these settings to help you find a suitable problem to tackle together with your peer.
+          We'll use these settings to help you find a suitable problem to tackle
+          together with your peer.
         </Typography>
         <FormControl>
           <FormLabel>Choose Complexity</FormLabel>
-          <Select defaultValue={complexity} onChange={(e, newValue) => setComplexity(parseStringToComplexityEnum(newValue ?? ''))}>
-            <Option value={QuestionComplexity.Easy}>{QuestionComplexity.Easy}</Option>
-            <Option value={QuestionComplexity.Medium}>{QuestionComplexity.Medium}</Option>
-            <Option value={QuestionComplexity.Hard}>{QuestionComplexity.Hard}</Option>
+          <Select
+            defaultValue={complexity}
+            onChange={(e, newValue) =>
+              setComplexity(newValue ?? QuestionComplexity.Easy)
+            }
+          >
+            <Option value={QuestionComplexity.Easy}>
+              {QuestionComplexity.Easy}
+            </Option>
+            <Option value={QuestionComplexity.Medium}>
+              {QuestionComplexity.Medium}
+            </Option>
+            <Option value={QuestionComplexity.Hard}>
+              {QuestionComplexity.Hard}
+            </Option>
           </Select>
         </FormControl>
-        <FormLabel>Choose Categories</FormLabel>
-        <List
-          orientation="horizontal"
-          wrap
-          sx={{
-            '--List-gap': '8px',
-            '--ListItem-radius': '20px',
-            '--ListItem-minHeight': '32px',
-            '--ListItem-gap': '4px',
-          }}
-        >
-          {allCategories.map(
-            (item, index) => (
-              <ListItem key={item}>
-                {categories.includes(item) && (
-                  <Done
+        <GenericField label="Choose Categories">
+          <Autocomplete
+            multiple
+            placeholder="Question Categories"
+            options={allCategories}
+            value={categories}
+            onChange={(_, updatedCategories) => {
+              setCategories(updatedCategories)
+            }}
+            renderTags={(tags, getTagProps) =>
+              tags.map((item, index) => {
+                const { onClick, ...rest } = getTagProps({ index })
+                return (
+                  <Chip
                     color="primary"
-                    sx={{ ml: -0.5, zIndex: 2, pointerEvents: 'none' }}
-                  />
-                )}
-                <Checkbox
-                  size="sm"
-                  disableIcon
-                  overlay
-                  label={item}
-                  checked={categories.includes(item)}
-                  variant={categories.includes(item) ? 'soft' : 'outlined'}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    if (event.target.checked) {
-                      setCategories((val) => [...val, item]);
-                    } else {
-                      setCategories((val) => val.filter((text) => text !== item));
-                    }
-                  }}
-                  slotProps={{
-                    action: ({ checked }) => ({
-                      sx: checked
-                        ? {
-                          border: '1px solid',
-                          borderColor: 'primary.500',
-                        }
-                        : {},
-                    }),
-                  }}
-                />
-              </ListItem>
-            ),
-          )}
-        </List>
+                    endDecorator={<ChipDelete onDelete={onClick} />}
+                    {...rest}
+                  >
+                    {item}
+                  </Chip>
+                )
+              })
+            }
+          />
+        </GenericField>
+        <GenericField label="Choose Languages">
+          <Autocomplete
+            placeholder="Language Templates"
+            options={allLanguages}
+            value={language}
+            onChange={(_, updatedLanguage) => {
+              setLanguage(updatedLanguage)
+            }}
+            getOptionLabel={(option) => option.language}
+            renderTags={(tags, getTagProps) =>
+              tags.map((item, index) => {
+                const { onClick, ...rest } = getTagProps({ index })
+                return (
+                  <Chip
+                    color="primary"
+                    variant="outlined"
+                    endDecorator={<ChipDelete onDelete={onClick} />}
+                    {...rest}
+                  >
+                    {item.language}
+                  </Chip>
+                )
+              })
+            }
+          />
+        </GenericField>
+
         <Button disabled={categories.length === 0} onClick={() => submit()}>
           Join Queue
         </Button>

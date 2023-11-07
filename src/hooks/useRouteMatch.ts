@@ -1,6 +1,6 @@
 import { useMatch } from 'react-router-dom'
 
-import Paths from '../utils/constants/navigation'
+import { Paths, SubPaths } from '../utils/constants/navigation'
 
 export interface RouteMatches {
   isDashboardPage: boolean
@@ -17,10 +17,10 @@ export function useRouteMatch() {
   const isRankingsPage = useMatch(Paths.Rankings)
   const isLoginPage = useMatch(Paths.Login)
   const isSignUpPage = useMatch(Paths.SignUp)
-  const isManageQuestionsPage = useMatch(Paths.ManageQuestions)
+  const isManageQuestionsPage = useMatch(SubPaths.ManageQuestions)
   const isManageUsersPage = useMatch(Paths.ManageUsers)
 
-  const getRouteMatch = (path: Paths) => {
+  const getRouteMatch = (path: Paths | SubPaths) => {
     switch (path) {
       case Paths.Dashboard:
         return isDashboardPage
@@ -30,7 +30,7 @@ export function useRouteMatch() {
         return isRankingsPage
       case Paths.SignUp:
         return isSignUpPage
-      case Paths.ManageQuestions:
+      case SubPaths.ManageQuestions:
         return isManageQuestionsPage
       case Paths.ManageUsers:
         return isManageUsersPage

@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/joy'
+import { SxProps } from '@mui/joy/styles/types'
 
 import Chip from '../Chip'
-import { SxProps } from '@mui/joy/styles/types'
 
 export interface HeaderProps {
   title: string

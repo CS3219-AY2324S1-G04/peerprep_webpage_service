@@ -75,7 +75,7 @@ interface TableColumnHeadProps {
   sortDir?: SortDirection
   onSort?: (newSortKey: string) => void
   cellProps?: React.ThHTMLAttributes<HTMLTableCellElement>
-  children: React.ReactNode
+  children?: React.ReactNode
 }
 
 export const TableColumnHead: React.FC<TableColumnHeadProps> = (

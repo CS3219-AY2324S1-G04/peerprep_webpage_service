@@ -1,12 +1,14 @@
 import {
   Box,
+  Chip as JoyChip,
   Modal,
   ModalClose,
   ModalDialog,
   Stack,
   Typography,
-  useColorScheme
+  useColorScheme,
 } from '@mui/joy'
+import { current } from '@reduxjs/toolkit'
 import MDEditor from '@uiw/react-md-editor'
 
 import Chip from '../../../components/Chip'
@@ -53,12 +55,22 @@ const QuestionDetailsModal: React.FC<Props> = (props: Props) => {
         <Stack spacing={2}>
           <Box sx={styles.categoriesBox}>
             {currentQuestion.categories.map((category: string) => (
-              <Chip>{category}</Chip>
+              <Chip key={category}>{category}</Chip>
             ))}
           </Box>
           <div data-color-mode={mode}>
             <MDEditor.Markdown source={currentQuestion.description} />
           </div>
+          <Typography fontWeight="bold" fontStyle="italic" level="body-sm">
+            Language Templates
+          </Typography>
+          <Box sx={styles.categoriesBox}>
+            {currentQuestion.template.map((temp) => (
+              <JoyChip variant="outlined" color="primary" key={temp.langSlug}>
+                {temp.language}
+              </JoyChip>
+            ))}
+          </Box>
         </Stack>
       </ModalDialog>
     </Modal>

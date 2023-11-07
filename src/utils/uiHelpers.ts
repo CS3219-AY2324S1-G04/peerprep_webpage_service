@@ -11,9 +11,14 @@ export const getComplexityColor = (qnsComplexity: QuestionComplexity) => {
   }
 }
 
-export const parseStringToComplexityEnum = (value: string) => {
-  if (Object.values(QuestionComplexity).includes(value as QuestionComplexity)) {
-    return value as QuestionComplexity
+export const validateStringInput = (
+  value: string,
+  inputLabel: string,
+  customErrorMessage?: string,
+): string | undefined => {
+  if (value === '' || value.length < 1) {
+    if (customErrorMessage) return customErrorMessage
+    return `${inputLabel} is required`
   }
-  return QuestionComplexity.Easy
+  return
 }
