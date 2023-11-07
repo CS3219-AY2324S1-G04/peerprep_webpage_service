@@ -47,7 +47,7 @@ function shouldRefreshToken() {
     store.getState(),
   )?.getTime()
   const minRefreshDateTime: number =
-    Date.now() - accessTokenExpiryToleranceMillis
+    Date.now() + accessTokenExpiryToleranceMillis
 
   return (
     accessTokenExpiry !== undefined && accessTokenExpiry <= minRefreshDateTime
