@@ -47,8 +47,9 @@ const JoinQueueSettingsModal: React.FC<Props> = (props: Props) => {
   async function submit() {
     try {
       await matchingService.joinQueue({
-        difficulty: complexity,
+        complexity: complexity,
         categories: categories,
+        language: language,
       })
       dispatch({ type: MatchingSagaActions.START_CHECK_QUEUE_STATUS })
       dispatch(addLoadingTask(LoadingKeys.CHECKING_QUEUE_STATUS))
