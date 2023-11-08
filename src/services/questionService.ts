@@ -4,7 +4,7 @@ import { DraftQuestion, Question } from '../features/questionBank/types'
 import { isDevEnv, questionServiceBaseUrl } from '../utils/config'
 
 export const titleKey = 'title'
-export const descriptionKey = 'decription'
+export const descriptionKey = 'description'
 export const complexityKey = 'complexity'
 export const categoriesKey = 'categories'
 export const templateKey = 'template'
@@ -16,14 +16,13 @@ export async function fetchLanguages(): Promise<Language[]> {
 }
 
 export async function createQuestion(question: DraftQuestion): Promise<void> {
-  await axios.post(`${questionServiceBaseUrl}/questions`, undefined, {
-    data: {
-      [titleKey]: question.title,
-      [descriptionKey]: question.description,
-      [complexityKey]: question.complexity,
-      [categoriesKey]: question.categories,
-      [templateKey]: question.template,
-    },
+  await axios.post(`${questionServiceBaseUrl}/questions`,  {
+    [titleKey]: question.title,
+    [descriptionKey]: question.description,
+    [complexityKey]: question.complexity,
+    [categoriesKey]: question.categories,
+    [templateKey]: question.template,
+  }, {
     withCredentials: isDevEnv,
   })
 }

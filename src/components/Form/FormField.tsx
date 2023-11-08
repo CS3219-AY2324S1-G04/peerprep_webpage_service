@@ -21,7 +21,7 @@ const FormField: React.FC<{
   size,
 }) => {
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
-    const newValue: string = event.target.value.trim()
+    const newValue: string = event.target.value
     const newErrorMessage: string | undefined = validate(newValue)
 
     setInfo({ value: newValue, errorMessage: newErrorMessage })
