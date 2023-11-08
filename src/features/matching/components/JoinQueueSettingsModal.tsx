@@ -47,7 +47,7 @@ const JoinQueueSettingsModal: React.FC<Props> = (props: Props) => {
   async function submit() {
     try {
       await matchingService.joinQueue({
-        difficulty: complexity,
+        complexity: complexity,
         categories: categories,
         language: language?.langSlug ?? 'java',
       })

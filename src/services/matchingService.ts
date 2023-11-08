@@ -3,7 +3,7 @@ import axios, { AxiosResponse } from 'axios'
 import { QuestionComplexity } from '../features/questionBank/types'
 import { isDevEnv, matchingServiceBaseUrl } from '../utils/config'
 
-export const difficultyKey = 'difficulty'
+export const complexityKey = 'complexity'
 export const categoriesKey = 'categories'
 export const languageKey = 'language'
 
@@ -17,7 +17,7 @@ export async function checkUserQueueStatus(): Promise<AxiosResponse> {
 export async function joinQueue(settings: QueueSettings) {
   await axios.post(`${matchingServiceBaseUrl}/queue/join`, undefined, {
     params: {
-      [difficultyKey]: settings.difficulty,
+      [complexityKey]: settings.complexity,
       [categoriesKey]: settings.categories,
       [languageKey]: settings.language,
     },
@@ -26,7 +26,7 @@ export async function joinQueue(settings: QueueSettings) {
 }
 
 export interface QueueSettings {
-  readonly difficulty: QuestionComplexity
+  readonly complexity: QuestionComplexity
   readonly categories: string[]
   readonly language: string
 }
