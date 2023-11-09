@@ -1,6 +1,6 @@
 import { ClickAwayListener, Popper } from '@mui/base'
 import { KeyboardArrowDown } from '@mui/icons-material'
-import { List, ListItem, ListItemButton } from '@mui/joy'
+import { List, ListItem, ListItemButton, Theme } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
 import { useState } from 'react'
 import { NavigateFunction, useNavigate } from 'react-router-dom'
@@ -116,16 +116,7 @@ const ListItemWithMenu: React.FC<ListItemWithMenuProps> = (
             role="menu"
             aria-label="About"
             variant="outlined"
-            sx={{
-              my: 2,
-              boxShadow: 'md',
-              borderRadius: 'sm',
-              minWidth: 180,
-              backgroundColor: (theme) => theme.vars.palette.background.body,
-              '--List-radius': '8px',
-              '--List-padding': '4px',
-              '--ListDivider-gap': '4px',
-            }}
+            sx={listItemStyles.list}
           >
             {page.subPages?.map((subPage) => (
               <ListItem key={subPage.title}>
@@ -143,5 +134,20 @@ const ListItemWithMenu: React.FC<ListItemWithMenuProps> = (
     </ClickAwayListener>
   )
 }
+
+const listItemStyles = {
+  list: ((theme: Theme) => {
+    return {
+      my: 2,
+      boxShadow: 'md',
+      borderRadius: 'sm',
+      minWidth: 180,
+      backgroundColor: theme.vars.palette.background.body,
+      '--List-radius': '8px',
+      '--List-padding': '4px',
+      '--ListDivider-gap': '4px',
+    }
+  }) as SxProps
+} as const
 
 export default NavigationList
