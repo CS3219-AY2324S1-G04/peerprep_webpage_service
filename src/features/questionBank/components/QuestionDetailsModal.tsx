@@ -8,7 +8,6 @@ import {
   Typography,
   useColorScheme,
 } from '@mui/joy'
-import { current } from '@reduxjs/toolkit'
 import MDEditor from '@uiw/react-md-editor'
 
 import Chip from '../../../components/Chip'

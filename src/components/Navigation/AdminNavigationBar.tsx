@@ -21,11 +21,12 @@ import { UserSagaActions } from '../../features/user/types'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { adminNavigationList } from '../../utils/constants/navigation'
-import Avatar, { AvatarShape } from '../Avatar'
+import Avatar from '../Avatar'
 import ColorSchemeToggle from '../ColorSchemeToggle'
 import Logo from '../Logo'
 import NavigationBar from './NavigationBar'
 import NavigationList from './NavigationList'
+import { AvatarShape } from '../../utils/types'
 
 const AdminNavigationBar: React.FC = () => {
   const dispatch = useAppDispatch()

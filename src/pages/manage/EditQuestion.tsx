@@ -1,7 +1,7 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { Button, Sheet, Stack, Typography, useTheme } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { toast } from '../../components/Toaster/toast'
@@ -9,7 +9,6 @@ import QuestionForm from '../../features/questionBank/components/QuestionForm'
 import { getFullQuestionMap } from '../../features/questionBank/selectors'
 import { setSelectedQuestionId } from '../../features/questionBank/slice'
 import {
-  DraftQuestion,
   Question,
   QuestionBankSagaActions,
 } from '../../features/questionBank/types'
@@ -17,7 +16,7 @@ import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import useAsyncTask from '../../hooks/useAsyncTask'
 import questionService from '../../services/questionService'
-import { Paths, SubPaths } from '../../utils/constants/navigation'
+import { SubPaths } from '../../utils/constants/navigation'
 
 // TODO: Add error state ui if question cant be found
 
@@ -39,6 +38,7 @@ const EditQuestion: React.FC = () => {
     if (!currentQuestion && id && id !== '') {
       dispatch(setSelectedQuestionId(id ?? ''))
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentQuestion, id])
 
   const onEdit = (question: Question) => {

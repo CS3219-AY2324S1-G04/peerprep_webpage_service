@@ -39,6 +39,7 @@ const LanguageTemplateModal: React.FC<Props> = (props: Props) => {
     (val: string) => {
       setValue(val)
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [value],
   )
 

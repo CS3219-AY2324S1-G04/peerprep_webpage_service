@@ -7,12 +7,10 @@ import {
   FormHelperText,
   Stack,
   useColorScheme,
-  useTheme,
 } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
 import MDEditor from '@uiw/react-md-editor'
 import { useEffect, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import rehypeSanitize from 'rehype-sanitize'
 
 import FormField, { FieldInfo } from '../../../components/Form/FormField'
@@ -23,7 +21,7 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { Language, Template } from '../../../services/questionService'
 import { validateStringInput } from '../../../utils/uiHelpers'
 import { getCategories, getLanguages } from '../selectors'
-import { DraftQuestion, Question, QuestionComplexity } from '../types'
+import { Question, QuestionComplexity } from '../types'
 import LanguageTemplateModal from './LanguageTemplateModal'
 import SelectComplexity from './SelectComplexity'
 
@@ -119,7 +117,7 @@ const QuestionForm: React.FC<QuestionFormProps> = (
                 })
               }
             }}
-            onBlur={(_) => {
+            onBlur={() => {
               if (categoriesFieldInfo.value.length === 0) {
                 setCategoriesFieldInfo({
                   value: [],

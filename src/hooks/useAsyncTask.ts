@@ -4,6 +4,7 @@ import { getLoadingTasks } from '../features/common/selectors'
 import { useAppSelector } from './useAppSelector'
 import useStatefulTask from './useStatefulTask'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ErrorHandler = (error: any) => void
 export type AsyncTaskOutput<T> = [
   (task: () => Promise<T>) => Promise<void>,
@@ -13,7 +14,7 @@ export type AsyncTaskOutput<T> = [
 ]
 
 const parseError = (original: Error): Error => {
-  let error = original
+  const error = original
   return error
 }
 
@@ -36,6 +37,7 @@ const useAsyncTask = <T>(
       await statefulTask(task, taskname)
     } catch (rawError) {
       console.error('async task error', rawError)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const error = parseError(rawError as any)
       errorHandler?.(error)
       setError(error)

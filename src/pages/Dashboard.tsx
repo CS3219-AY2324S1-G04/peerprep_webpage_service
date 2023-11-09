@@ -2,11 +2,12 @@ import { Settings } from '@mui/icons-material'
 import { Box, Button, Card, Sheet, Skeleton, Theme, Typography } from '@mui/joy'
 import { useState } from 'react'
 
-import Avatar, { AvatarShape } from '../components/Avatar'
+import Avatar from '../components/Avatar'
 import AccountSettingsModal from '../features/accountSettingsEditor/components/AccountSettingsModal'
 import { getUserProfile } from '../features/user/selector'
 import { useAppSelector } from '../hooks/useAppSelector'
 import { UserProfile, UserRole } from '../services/userService'
+import { AvatarShape } from '../utils/types'
 
 const Dashboard: React.FC = () => {
   return (

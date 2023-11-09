@@ -26,7 +26,7 @@ const NavigationList: React.FC<NavigationListProps> = (
 
         if (hasSubPages) {
           let isAnySubPageActive = false
-          for (let subPage of page.subPages ?? []) {
+          for (const subPage of page.subPages ?? []) {
             const isSubPageActive =
               subPage.url && routeMatch.getRouteMatch(subPage.url)
             if (isSubPageActive) {
@@ -78,7 +78,7 @@ const styles = {
 
 interface ListItemWithMenuProps {
   page: PageNavigation
-  navigate: NavigateFunction // passed down from navigation list parent component
+  navigate: NavigateFunction
   isActivePage: boolean
 }
 

@@ -16,15 +16,19 @@ export async function fetchLanguages(): Promise<Language[]> {
 }
 
 export async function createQuestion(question: DraftQuestion): Promise<void> {
-  await axios.post(`${questionServiceBaseUrl}/questions`,  {
-    [titleKey]: question.title,
-    [descriptionKey]: question.description,
-    [complexityKey]: question.complexity,
-    [categoriesKey]: question.categories,
-    [templateKey]: question.template,
-  }, {
-    withCredentials: isDevEnv,
-  })
+  await axios.post(
+    `${questionServiceBaseUrl}/questions`,
+    {
+      [titleKey]: question.title,
+      [descriptionKey]: question.description,
+      [complexityKey]: question.complexity,
+      [categoriesKey]: question.categories,
+      [templateKey]: question.template,
+    },
+    {
+      withCredentials: isDevEnv,
+    },
+  )
 }
 
 export async function deleteQuestion(id: string): Promise<void> {
@@ -34,15 +38,19 @@ export async function deleteQuestion(id: string): Promise<void> {
 }
 
 export async function updateQuestion(question: Question): Promise<void> {
-  await axios.put(`${questionServiceBaseUrl}/questions/${question._id}`,  {
-    [titleKey]: question.title,
-    [descriptionKey]: question.description,
-    [complexityKey]: question.complexity,
-    [categoriesKey]: question.categories,
-    [templateKey]: question.template,
-  }, {
-    withCredentials: isDevEnv,
-  })
+  await axios.put(
+    `${questionServiceBaseUrl}/questions/${question._id}`,
+    {
+      [titleKey]: question.title,
+      [descriptionKey]: question.description,
+      [complexityKey]: question.complexity,
+      [categoriesKey]: question.categories,
+      [templateKey]: question.template,
+    },
+    {
+      withCredentials: isDevEnv,
+    },
+  )
 }
 
 export interface Language {

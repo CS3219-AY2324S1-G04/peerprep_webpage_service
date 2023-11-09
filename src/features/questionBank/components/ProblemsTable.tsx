@@ -67,7 +67,8 @@ export default function ProblemsTable(props: ProblemsTableProps) {
   )
 
   const getCategoriesToDisplay = (categories: string[]) => {
-    const categoriesToDisplay = categories.slice(0, MAX_CATEGORIES_TO_DISPLAY) // first 2 categories
+    // first 2 categories
+    const categoriesToDisplay = categories.slice(0, MAX_CATEGORIES_TO_DISPLAY)
     const remainingCatgoriesCount =
       categories.length - categoriesToDisplay.length
     if (remainingCatgoriesCount > 0) {

@@ -18,9 +18,10 @@ function CodeArea({
   const [value, setValue] = React.useState(text.toString())
 
   const onChange = React.useCallback(
-    (val) => {
-      setValue(value)
+    (val: string) => {
+      setValue(val)
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [value],
   )
 

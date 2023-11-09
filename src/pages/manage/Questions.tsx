@@ -5,7 +5,6 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import TableContainer from '../../components/TableContainer/TableContainer'
-import CreateQuestionModal from '../../features/questionBank/components/LanguageTemplateModal'
 import ProblemsTable from '../../features/questionBank/components/ProblemsTable'
 import QuestionDetailsModal from '../../features/questionBank/components/QuestionDetailsModal'
 import { getQuestionsList } from '../../features/questionBank/selectors'
@@ -17,7 +16,6 @@ const Questions: React.FC = () => {
   const questionsList = useAppSelector(getQuestionsList)
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState<boolean>(false)
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false)
 
   return (
     <>

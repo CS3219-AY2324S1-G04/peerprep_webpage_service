@@ -18,6 +18,7 @@ const FindingRoomModal: React.FC = () => {
     if (isRedirectToRoom) {
       navigate(Paths.MatchRoom)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRedirectToRoom])
 
   return (
