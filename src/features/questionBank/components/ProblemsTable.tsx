@@ -266,6 +266,7 @@ export default function ProblemsTable(props: ProblemsTableProps) {
                         if (isExtraCategoriesCount) {
                           return (
                             <Tooltip
+                              key={`${category}-${index}`}
                               sx={styles.tooltip}
                               title={
                                 <Box sx={styles.nestedCategoriesBox}>

@@ -228,7 +228,7 @@ const QuestionForm: React.FC<QuestionFormProps> = (
           loading={submitLoading}
           onClick={() => {
             const questionToSubmit: Question = {
-              _id: '',
+              _id: question?._id ?? '',
               title: titleFieldInfo.value,
               description: descriptionFieldInfo.value,
               complexity: complexity,

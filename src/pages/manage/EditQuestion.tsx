@@ -45,7 +45,7 @@ const EditQuestion: React.FC = () => {
     runEditQns(async () => {
       await questionService.updateQuestion(question)
       toast.success('Question successfully updated!')
-      navigate(Paths.ManageQuestions)
+      navigate(SubPaths.ManageQuestions)
       dispatch({ type: QuestionBankSagaActions.GET_ALL_QUESTIONS })
     })
   }

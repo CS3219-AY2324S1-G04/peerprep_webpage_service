@@ -28,24 +28,21 @@ export async function createQuestion(question: DraftQuestion): Promise<void> {
 }
 
 export async function deleteQuestion(id: string): Promise<void> {
-  await axios.delete(`${questionServiceBaseUrl}/questions/${id}`)
+  await axios.delete(`${questionServiceBaseUrl}/questions/${id}`, {
+    withCredentials: isDevEnv,
+  })
 }
 
 export async function updateQuestion(question: Question): Promise<void> {
-  await axios.post(
-    `${questionServiceBaseUrl}/questions/${question._id}`,
-    undefined,
-    {
-      data: {
-        [titleKey]: question.title,
-        [descriptionKey]: question.description,
-        [complexityKey]: question.complexity,
-        [categoriesKey]: question.categories,
-        [templateKey]: question.template,
-      },
-      withCredentials: isDevEnv,
-    },
-  )
+  await axios.put(`${questionServiceBaseUrl}/questions/${question._id}`,  {
+    [titleKey]: question.title,
+    [descriptionKey]: question.description,
+    [complexityKey]: question.complexity,
+    [categoriesKey]: question.categories,
+    [templateKey]: question.template,
+  }, {
+    withCredentials: isDevEnv,
+  })
 }
 
 export interface Language {
