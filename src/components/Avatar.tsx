@@ -2,13 +2,7 @@ import { Box, BoxProps, Theme, Typography } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
 import Color from 'color'
 
-export enum AvatarShape {
-  square,
-  circle,
-  squircleSm,
-  squircleMd,
-  squircleLg,
-}
+import { AvatarShape } from '../utils/types'
 
 const Avatar: React.FC<
   BoxProps<

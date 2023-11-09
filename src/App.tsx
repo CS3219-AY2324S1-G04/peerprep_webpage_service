@@ -3,11 +3,13 @@ import { useEffect } from 'react'
 import { Route, Routes } from 'react-router-dom'
 
 import { Layout } from './components/Layout'
+import AdminNavigationBar from './components/Navigation/AdminNavigationBar'
 import GuestNavigationBar from './components/Navigation/GuestNavigationBar'
 import UserNavigationBar from './components/Navigation/UserNavigationBar'
 import { Toaster } from './components/Toaster/Toaster'
+import FindingRoomModal from './features/matching/components/FindingRoomModal'
 import { applyAxiosInterceptorForUpdatingAccessToken } from './features/user/accessTokenAxiosInterceptor'
-import { getIsLoggedIn } from './features/user/selector'
+import { getIsLoggedIn, getUserRole } from './features/user/selector'
 import { useAppDispatch } from './hooks/useAppDispatch'
 import { useAppSelector } from './hooks/useAppSelector'
 import Dashboard from './pages/Dashboard'
@@ -18,7 +20,11 @@ import Rankings from './pages/Rankings'
 import Room from './pages/Room'
 import SignUp from './pages/SignUp'
 import UserRedirect from './pages/UserRedirect'
-import Paths from './utils/constants/navigation'
+import CreateQuestion from './pages/manage/CreateQuestion'
+import EditQuestion from './pages/manage/EditQuestion'
+import Questions from './pages/manage/Questions'
+import { UserRole } from './services/userService'
+import Paths, { SubPaths } from './utils/constants/navigation'
 import theme from './utils/theme/themeOverride'
 import { CommonSagaActions } from './utils/types'
 
@@ -27,10 +33,15 @@ applyAxiosInterceptorForUpdatingAccessToken()
 const App: React.FC = () => {
   const dispatch = useAppDispatch()
   const isLoggedIn = useAppSelector(getIsLoggedIn)
+  const userRole = useAppSelector(getUserRole)
 
   useEffect(() => {
     dispatch({ type: CommonSagaActions.APP_INIT })
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const isAdminOrMaintainer =
+    userRole === UserRole.admin || userRole === UserRole.maintainer
+  const isNormalUser = userRole === UserRole.user
 
   return (
     <div className="App" style={{ height: '100%' }}>
@@ -38,12 +49,35 @@ const App: React.FC = () => {
         <CssBaseline />
         <Layout.Root>
           <Layout.Header>
-            {isLoggedIn ? <UserNavigationBar /> : <GuestNavigationBar />}
+            {isLoggedIn && isAdminOrMaintainer && <AdminNavigationBar />}
+            {isLoggedIn && isNormalUser && <UserNavigationBar />}
+            {!isLoggedIn && <GuestNavigationBar />}
           </Layout.Header>
           <Layout.Main>
             <Toaster />
             <Routes>
-              {isLoggedIn ? (
+              {isLoggedIn && isAdminOrMaintainer && (
+                <>
+                  <Route path={Paths.Problems} element={<Problems />} />
+                  <Route path={Paths.Rankings} element={<Rankings />} />
+                  <Route path={Paths.Dashboard} element={<Dashboard />} />
+                  <Route path={Paths.Room} element={<Room />} />
+                  <Route
+                    path={SubPaths.ManageQuestions}
+                    element={<Questions />}
+                  />
+                  <Route
+                    path={SubPaths.CreateQuestion}
+                    element={<CreateQuestion />}
+                  />
+                  <Route
+                    path={SubPaths.EditQuestion}
+                    element={<EditQuestion />}
+                  />
+                  <Route path="*" element={<UserRedirect />} />
+                </>
+              )}
+              {isLoggedIn && isNormalUser && (
                 <>
                   <Route path={Paths.Problems} element={<Problems />} />
                   <Route path={Paths.Rankings} element={<Rankings />} />
@@ -51,7 +85,8 @@ const App: React.FC = () => {
                   <Route path={Paths.Room} element={<Room />} />
                   <Route path="*" element={<UserRedirect />} />
                 </>
-              ) : (
+              )}
+              {!isLoggedIn && (
                 <>
                   <Route path={Paths.Problems} element={<Problems />} />
                   <Route path={Paths.Rankings} element={<Rankings />} />
@@ -61,6 +96,7 @@ const App: React.FC = () => {
                 </>
               )}
             </Routes>
+            <FindingRoomModal />
           </Layout.Main>
         </Layout.Root>
       </CssVarsProvider>

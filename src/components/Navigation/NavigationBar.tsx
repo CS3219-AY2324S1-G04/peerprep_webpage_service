@@ -1,13 +1,14 @@
 import { Box } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
 import { Fragment, PropsWithChildren } from 'react'
+
 import { combineStyles } from '../../utils/theme/styles'
 
 interface NavigationBarProps {
   children: React.ReactNode
 }
 
-interface NavBarRightColumnProps extends PropsWithChildren{
+interface NavBarRightColumnProps extends PropsWithChildren {
   wrapperClass?: SxProps
 }
 
@@ -16,30 +17,22 @@ const NavigationBar = (props: NavigationBarProps) => {
 
   return (
     <Fragment>
-      <Box sx={styles.root}>
-        {children}
-      </Box>
+      <Box sx={styles.root}>{children}</Box>
     </Fragment>
   )
 }
 
 NavigationBar.Left = function NavBarLeftColumn(props: PropsWithChildren) {
-  return (
-    <Box sx={styles.leftColumn}>
-      {props.children}
-    </Box>
-  )
+  return <Box sx={styles.leftColumn}>{props.children}</Box>
 }
 
 NavigationBar.Middle = function NavBarMiddleColumn(props: PropsWithChildren) {
-  return (
-    <Box sx={styles.middleColumn}>
-      {props.children}
-    </Box>
-  )
+  return <Box sx={styles.middleColumn}>{props.children}</Box>
 }
 
-NavigationBar.Right = function NavBarRightColumn(props: NavBarRightColumnProps) {
+NavigationBar.Right = function NavBarRightColumn(
+  props: NavBarRightColumnProps,
+) {
   return (
     <Box sx={styles.rightColumn}>
       <Box sx={combineStyles(styles.rightColumnWrapper, props.wrapperClass)}>
@@ -83,7 +76,7 @@ const styles = {
     display: 'flex',
     height: '80%',
     columnGap: '8px',
-  } as SxProps
+  } as SxProps,
 } as const
 
 export default NavigationBar

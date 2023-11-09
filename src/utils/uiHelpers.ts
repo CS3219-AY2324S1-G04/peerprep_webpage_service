@@ -10,3 +10,15 @@ export const getComplexityColor = (qnsComplexity: QuestionComplexity) => {
       return 'danger'
   }
 }
+
+export const validateStringInput = (
+  value: string,
+  inputLabel: string,
+  customErrorMessage?: string,
+): string | undefined => {
+  if (value === '' || value.length < 1) {
+    if (customErrorMessage) return customErrorMessage
+    return `${inputLabel} is required`
+  }
+  return
+}

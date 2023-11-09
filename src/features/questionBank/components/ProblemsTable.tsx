@@ -1,30 +1,39 @@
 import ArrowDropDown from '@mui/icons-material/ArrowDropDown'
+import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
 import ReplayIcon from '@mui/icons-material/Replay'
 import {
   Box,
   Button,
   Dropdown,
+  IconButton,
   Chip as JoyChip,
   Menu,
   MenuButton,
   MenuItem,
+  Tooltip,
   Typography,
   useTheme,
 } from '@mui/joy'
+import { SxProps } from '@mui/joy/styles/types'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import Chip from '../../../components/Chip'
 import ChipDelete from '../../../components/ChipDelete'
 import { CommonTable as Table } from '../../../components/Table/Table'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
+import { SubPaths } from '../../../utils/constants/navigation'
 import { SortDirection } from '../../../utils/types'
 import { getComplexityColor } from '../../../utils/uiHelpers'
 import { getCategories, getQuestionsList } from '../selectors'
 import { setSelectedQuestionId } from '../slice'
 import { MinimalQuestion, QuestionComplexity } from '../types'
+import ConfirmDeleteModal from './ConfirmDeleteModal'
 
 interface ProblemsTableProps {
+  adminMode?: boolean
   onQuestionClick: () => void
 }
 interface Filter {
@@ -32,12 +41,16 @@ interface Filter {
   value: string
 }
 
+const MAX_CATEGORIES_TO_DISPLAY = 2
+
 // TODO: Add status column when necessary services are ready
 // Status column should only be added for logged in users
 export default function ProblemsTable(props: ProblemsTableProps) {
-  const { onQuestionClick } = props
+  const { adminMode, onQuestionClick } = props
   const theme = useTheme()
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false)
   const [filters, setFilters] = useState<Filter[]>([])
 
   const questionsList = useAppSelector(getQuestionsList)
@@ -54,13 +67,18 @@ export default function ProblemsTable(props: ProblemsTableProps) {
   )
 
   const getCategoriesToDisplay = (categories: string[]) => {
-    const categoriesToDisplay = categories.slice(0, 2) // first 2 categories
+    // first 2 categories
+    const categoriesToDisplay = categories.slice(0, MAX_CATEGORIES_TO_DISPLAY)
     const remainingCatgoriesCount =
       categories.length - categoriesToDisplay.length
     if (remainingCatgoriesCount > 0) {
       categoriesToDisplay.push(`+${remainingCatgoriesCount.toString()}`)
     }
     return categoriesToDisplay
+  }
+
+  const getExtraCategories = (categories: string[]) => {
+    return categories.slice(MAX_CATEGORIES_TO_DISPLAY)
   }
 
   const onClickComplexityFilter = (complexityValue: string) => {
@@ -214,7 +232,10 @@ export default function ProblemsTable(props: ProblemsTableProps) {
             Categories
           </Table.ColumnHead>
           <Table.ColumnHead id="complexity">Complexity</Table.ColumnHead>
-          <Table.ColumnHead id="successRate">Success Rate</Table.ColumnHead>
+          {!adminMode && (
+            <Table.ColumnHead id="successRate">Success Rate</Table.ColumnHead>
+          )}
+          {adminMode && <Table.ColumnHead id="manageActions" />}
         </Table.Header>
         <Table.Body>
           {items.length > 0 &&
@@ -241,17 +262,35 @@ export default function ProblemsTable(props: ProblemsTableProps) {
                 <Table.Cell>
                   <Box sx={styles.problemCategoriesBox}>
                     {getCategoriesToDisplay(item.categories).map(
-                      (category: string) => {
-                        const isExtraCategoriesCount =
-                          category.substring(0, 1) === '+'
-                        const ChipComponent = isExtraCategoriesCount
-                          ? JoyChip
-                          : Chip
-                        return (
-                          <ChipComponent key={category}>
-                            {category}
-                          </ChipComponent>
-                        )
+                      (category: string, index: number) => {
+                        const isExtraCategoriesCount = index === 2
+                        if (isExtraCategoriesCount) {
+                          return (
+                            <Tooltip
+                              key={`${category}-${index}`}
+                              sx={styles.tooltip}
+                              title={
+                                <Box sx={styles.nestedCategoriesBox}>
+                                  {getExtraCategories(item.categories).map(
+                                    (nestedCategory, nestedIndex) => (
+                                      <Chip
+                                        key={`${nestedCategory}-${nestedIndex}`}
+                                      >
+                                        {nestedCategory}
+                                      </Chip>
+                                    ),
+                                  )}
+                                </Box>
+                              }
+                              variant="outlined"
+                              placement="top"
+                            >
+                              <JoyChip key={category}>{category}</JoyChip>
+                            </Tooltip>
+                          )
+                        }
+
+                        return <Chip key={category}>{category}</Chip>
                       },
                     )}
                   </Box>
@@ -264,7 +303,31 @@ export default function ProblemsTable(props: ProblemsTableProps) {
                     {item.complexity}
                   </Typography>
                 </Table.Cell>
-                <Table.Cell>0.00%</Table.Cell>
+                {!adminMode && <Table.Cell>0.00%</Table.Cell>}
+                {adminMode && (
+                  <Table.Cell>
+                    <Box sx={styles.actionsBox}>
+                      <IconButton variant="plain">
+                        <DeleteIcon
+                          onClick={() => {
+                            dispatch(setSelectedQuestionId(item._id))
+                            setIsDeleteModalOpen(true)
+                          }}
+                        />
+                      </IconButton>
+                      <IconButton variant="plain">
+                        <EditIcon
+                          onClick={() => {
+                            dispatch(setSelectedQuestionId(item._id))
+                            navigate(
+                              SubPaths.EditQuestion.replace(':id', item._id),
+                            )
+                          }}
+                        />
+                      </IconButton>
+                    </Box>
+                  </Table.Cell>
+                )}
               </Table.Row>
             ))}
         </Table.Body>
@@ -275,6 +338,10 @@ export default function ProblemsTable(props: ProblemsTableProps) {
         onPageChange={paging.goTo}
         maxLength={7}
       />
+      <ConfirmDeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+      />
     </div>
   )
 }
@@ -283,48 +350,61 @@ const styles = {
   filterDropdownsWrapper: {
     display: 'flex',
     columnGap: 1,
-  },
+  } as SxProps,
   complexityMenu: {
     minWidth: 130,
-  },
+  } as SxProps,
   categoriesMenu: {
     minWidth: 130,
     maxHeight: 200,
     overflowY: 'auto',
-  },
+  } as SxProps,
   subheaderRow: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     mt: 1,
     mb: 2,
-  },
+  } as SxProps,
   filtersRow: {
     justifyContent: 'space-between',
     mb: 2,
     alignItems: 'center',
-  },
+  } as SxProps,
   filtersBox: {
     display: 'flex',
     flexWrap: 'wrap',
     columnGap: 1,
     rowGap: 1,
-  },
+  } as SxProps,
   filterChip: {
     height: 'fit-content',
-  },
+  } as SxProps,
   widerColumnHead: {
     width: '35%',
   },
   titleText: {
     width: 'fit-content',
     transition: 'color .3s',
-  },
+  } as SxProps,
   problemCategoriesBox: {
     display: 'flex',
     columnGap: 1,
     rowGap: 1,
     flexWrap: 'wrap',
     flexDirection: 'row',
-  },
+  } as SxProps,
+  nestedCategoriesBox: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    maxWidth: '200px',
+    gap: '8px',
+  } as SxProps,
+  tooltip: {
+    cursor: 'help',
+  } as SxProps,
+  actionsBox: {
+    display: 'flex',
+    columnGap: '8px',
+  } as SxProps,
 } as const

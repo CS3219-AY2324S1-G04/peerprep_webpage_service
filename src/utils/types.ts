@@ -25,4 +25,14 @@ export const CommonSagaActions = {
 
 export const LoadingKeys = {
   FETCHING_SELECTED_QUESTION: '@loading/FETCHING_SELECTED_QUESTION',
+  CHECKING_QUEUE_STATUS: '@loading/CHECKING_QUEUE_STATUS',
+  REDIRECT_TO_ROOM: '@loading/redirect/REDIRECT_TO_ROOM',
+}
+
+export enum AvatarShape {
+  square,
+  circle,
+  squircleSm,
+  squircleMd,
+  squircleLg,
 }

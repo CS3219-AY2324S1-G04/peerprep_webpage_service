@@ -1,11 +1,10 @@
 import {
   Box,
-  Button,
+  Chip as JoyChip,
   Modal,
   ModalClose,
   ModalDialog,
   Stack,
-  Tooltip,
   Typography,
   useColorScheme,
 } from '@mui/joy'
@@ -55,16 +54,23 @@ const QuestionDetailsModal: React.FC<Props> = (props: Props) => {
         <Stack spacing={2}>
           <Box sx={styles.categoriesBox}>
             {currentQuestion.categories.map((category: string) => (
-              <Chip>{category}</Chip>
+              <Chip key={category}>{category}</Chip>
             ))}
           </Box>
           <div data-color-mode={mode}>
             <MDEditor.Markdown source={currentQuestion.description} />
           </div>
+          <Typography fontWeight="bold" fontStyle="italic" level="body-sm">
+            Language Templates
+          </Typography>
+          <Box sx={styles.categoriesBox}>
+            {currentQuestion.template.map((temp) => (
+              <JoyChip variant="outlined" color="primary" key={temp.langSlug}>
+                {temp.language}
+              </JoyChip>
+            ))}
+          </Box>
         </Stack>
-        <Tooltip title="Login to attempt" placement="top">
-          <Button>Attempt</Button>
-        </Tooltip>
       </ModalDialog>
     </Modal>
   )

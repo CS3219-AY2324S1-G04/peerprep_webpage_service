@@ -1,5 +1,5 @@
 import { FormControl, FormHelperText, FormLabel, Input } from '@mui/joy'
-import { ChangeEvent } from 'react'
+import { ChangeEvent, FocusEvent } from 'react'
 
 const FormField: React.FC<{
   label: string
@@ -8,6 +8,8 @@ const FormField: React.FC<{
   placeholder?: string
   validate?: (value: string) => string | undefined
   inputType?: string
+  validateOnBlur?: boolean
+  size?: 'sm' | 'md' | 'lg' // JoyUI input size type
 }> = ({
   label,
   info,
@@ -15,12 +17,21 @@ const FormField: React.FC<{
   placeholder = '',
   validate = () => undefined,
   inputType = 'text',
+  validateOnBlur,
+  size,
 }) => {
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     const newValue: string = event.target.value
     const newErrorMessage: string | undefined = validate(newValue)
 
     setInfo({ value: newValue, errorMessage: newErrorMessage })
+  }
+
+  function handleOnBlur(event: FocusEvent<HTMLInputElement>) {
+    const newValue: string = event.target.value.trim()
+    const newErrorMessage: string | undefined = validate(newValue)
+
+    setInfo({ value: info.value, errorMessage: newErrorMessage })
   }
 
   return (
@@ -32,10 +43,10 @@ const FormField: React.FC<{
         type={inputType}
         value={info.value}
         onChange={handleChange}
+        size={size}
+        onBlur={validateOnBlur ? handleOnBlur : undefined}
       />
-      {info.errorMessage === undefined ? (
-        <></>
-      ) : (
+      {info.errorMessage !== undefined && (
         <FormHelperText>{info.errorMessage}</FormHelperText>
       )}
     </FormControl>

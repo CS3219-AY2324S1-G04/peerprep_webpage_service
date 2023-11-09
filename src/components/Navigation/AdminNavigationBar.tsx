@@ -20,15 +20,15 @@ import { getEmailAddress, getUsername } from '../../features/user/selector'
 import { UserSagaActions } from '../../features/user/types'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
-import { userNavigationList } from '../../utils/constants/navigation'
-import { AvatarShape } from '../../utils/types'
+import { adminNavigationList } from '../../utils/constants/navigation'
 import Avatar from '../Avatar'
 import ColorSchemeToggle from '../ColorSchemeToggle'
 import Logo from '../Logo'
 import NavigationBar from './NavigationBar'
 import NavigationList from './NavigationList'
+import { AvatarShape } from '../../utils/types'
 
-const UserNavigationBar: React.FC = () => {
+const AdminNavigationBar: React.FC = () => {
   const dispatch = useAppDispatch()
 
   const username = useAppSelector(getUsername)
@@ -49,7 +49,7 @@ const UserNavigationBar: React.FC = () => {
     <>
       <NavigationBar>
         <NavigationBar.Left>
-          <NavigationList list={userNavigationList} />
+          <NavigationList list={adminNavigationList} />
         </NavigationBar.Left>
         <NavigationBar.Middle>
           <Logo />
@@ -136,4 +136,4 @@ const styles = {
   } as SxProps,
 }
 
-export default UserNavigationBar
+export default AdminNavigationBar
