@@ -23,7 +23,7 @@ import { Question, QuestionBankSagaActions } from './types'
 function* getAllQuestions() {
   try {
     const response: AxiosResponse<ServiceResponse> = yield axios.get(
-      `${questionServiceBaseUrl}/question-service/questions`,
+      `${questionServiceBaseUrl}/questions`,
     )
     yield put(setQuestionsList(response.data.data))
   } catch (error) {
@@ -35,7 +35,7 @@ function* getAllQuestions() {
 function* getAllCategories() {
   try {
     const response: AxiosResponse<ServiceResponse> = yield axios.get(
-      `${questionServiceBaseUrl}/question-service/categories`,
+      `${questionServiceBaseUrl}/categories`,
     )
     yield put(setCategories(response.data.data))
   } catch (error) {
@@ -64,7 +64,7 @@ function* getSelectedQuestion(action: Action<string>) {
     }
 
     const response: AxiosResponse<ServiceResponse> = yield axios.get(
-      `${questionServiceBaseUrl}/question-service/questions/${action.payload}`,
+      `${questionServiceBaseUrl}/questions/${action.payload}`,
     )
     const responseQns: Question | null = response.data.data
     if (responseQns) {
