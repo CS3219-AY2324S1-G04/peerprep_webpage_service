@@ -3,6 +3,7 @@ import { all, fork, put, select, takeLatest } from 'redux-saga/effects'
 
 import { toast } from '../../components/Toaster/toast'
 import questionService, { Language } from '../../services/questionService'
+import { questionServiceBaseUrl } from '../../utils/config'
 import {
   Action,
   CommonSagaActions,
@@ -22,7 +23,7 @@ import { Question, QuestionBankSagaActions } from './types'
 function* getAllQuestions() {
   try {
     const response: AxiosResponse<ServiceResponse> = yield axios.get(
-      'http://localhost:9001/question-service/questions',
+      `${questionServiceBaseUrl}/question-service/questions`,
     )
     yield put(setQuestionsList(response.data.data))
   } catch (error) {
@@ -34,7 +35,7 @@ function* getAllQuestions() {
 function* getAllCategories() {
   try {
     const response: AxiosResponse<ServiceResponse> = yield axios.get(
-      'http://localhost:9001/question-service/categories',
+      `${questionServiceBaseUrl}/question-service/categories`,
     )
     yield put(setCategories(response.data.data))
   } catch (error) {
@@ -63,7 +64,7 @@ function* getSelectedQuestion(action: Action<string>) {
     }
 
     const response: AxiosResponse<ServiceResponse> = yield axios.get(
-      `http://localhost:9001/question-service/questions/${action.payload}`,
+      `${questionServiceBaseUrl}/question-service/questions/${action.payload}`,
     )
     const responseQns: Question | null = response.data.data
     if (responseQns) {
