@@ -1,12 +1,14 @@
 import { Box, Typography } from '@mui/joy'
 
+import logo from '../../assets/logo.png'
+
 const UserFormHeader: React.FC<{ title: string; message: string[] }> = ({
   title,
   message,
 }) => {
   return (
     <Box sx={styles.container}>
-      <Box component="img" src="/logo.png" sx={styles.logo} />
+      <Box component="img" src={logo} sx={styles.logo} />
       <Typography sx={styles.title}>{title}</Typography>
       <Typography level="body-md" color="neutral" sx={styles.messageBody}>
         {message

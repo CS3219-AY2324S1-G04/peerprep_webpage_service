@@ -72,7 +72,7 @@ const JoinQueueSettingsModal: React.FC<Props> = (props: Props) => {
           <FormLabel>Choose Complexity</FormLabel>
           <Select
             defaultValue={complexity}
-            onChange={(e, newValue) =>
+            onChange={(_e, newValue) =>
               setComplexity(newValue ?? QuestionComplexity.Easy)
             }
           >
