@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build --config vite.build.config.ts",
+    "build:docker": "tsc && vite build --config vite.build.config.ts --mode docker --outDir dist_docker",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "format": "prettier --config .prettierrc.cjs --write './src/**/*.{ts,tsx}'",
