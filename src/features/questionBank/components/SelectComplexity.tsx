@@ -20,7 +20,7 @@ const SelectComplexity: React.FC<SelectComplexityProps> = (
       <Select
         color={getComplexityColor(value)}
         value={value}
-        onChange={(e, newValue) =>
+        onChange={(_e, newValue) =>
           setValue(newValue ?? QuestionComplexity.Easy)
         }
       >

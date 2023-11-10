@@ -22,7 +22,7 @@ export function getWsProvider(
   roomId: string,
   doc: Y.Doc,
   config: AwarenessConfig,
-  messageHandlers: { [id: string]: (event) => void } = {},
+  messageHandlers: { [id: string]: (event: unknown) => void } = {},
 ) {
   const wsOpts = {
     connect: false,

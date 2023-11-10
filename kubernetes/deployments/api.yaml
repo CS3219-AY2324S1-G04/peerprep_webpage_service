@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webpage-service-api-deployment
+  namespace: peerprep
+  labels:
+    app: webpage-service-api
+spec:
+  selector:
+    matchLabels:
+      app: webpage-service-api
+  template:
+    metadata:
+      namespace: peerprep
+      labels:
+        app: webpage-service-api
+    spec:
+      containers:
+        - name: webpage-service-api
+          image: ghcr.io/cs3219-ay2324s1-g04/peerprep_webpage_service_api
+          ports:
+            - containerPort: 9010
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: 100m
+            limits:
+              memory: 256Mi
+              cpu: 500m

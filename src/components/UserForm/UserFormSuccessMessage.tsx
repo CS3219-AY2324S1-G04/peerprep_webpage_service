@@ -1,6 +1,7 @@
 import { Box, Link, Typography } from '@mui/joy'
 import { Link as RouterLink } from 'react-router-dom'
 
+import logo from '../../assets/logo.png'
 import Paths from '../../utils/constants/navigation'
 
 const UserFormSuccessMessage: React.FC<{
@@ -11,7 +12,7 @@ const UserFormSuccessMessage: React.FC<{
 }> = ({ title, linkLeadingMessage, linkMessage, linkPath }) => {
   return (
     <Box sx={styles.container}>
-      <Box component="img" src="/logo.png" sx={styles.logo} />
+      <Box component="img" src={logo} sx={styles.logo} />
       <Typography sx={styles.title}>{title}</Typography>
       <Typography level="body-md" color="neutral" sx={styles.messageBody}>
         {linkLeadingMessage} <span />
