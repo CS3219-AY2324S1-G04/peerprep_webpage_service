@@ -7,6 +7,7 @@ import questionBankReducer from '../features/questionBank/slice'
 import roomReducer from '../features/room/slice'
 import rootSaga from '../features/rootSaga'
 import userReducer from '../features/user/slice'
+import chatReducer from '../features/chat/slice'
 
 const extraMiddlewares: Middleware[] = []
 
@@ -22,6 +23,7 @@ export const store = configureStore({
     questionBank: questionBankReducer,
     user: userReducer,
     room: roomReducer,
+    chat: chatReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(extraMiddlewares),
