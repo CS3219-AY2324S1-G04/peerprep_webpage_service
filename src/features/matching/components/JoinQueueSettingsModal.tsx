@@ -3,6 +3,7 @@ import {
   Button,
   Chip,
   ChipDelete,
+  Divider,
   FormControl,
   FormLabel,
   Modal,
@@ -23,6 +24,7 @@ import matchingService from '../../../services/matchingService'
 import { Language } from '../../../services/questionService'
 import { LoadingKeys } from '../../../utils/types'
 import { addLoadingTask } from '../../common/slice'
+import SelectComplexity from '../../questionBank/components/SelectComplexity'
 import { getCategories, getLanguages } from '../../questionBank/selectors'
 import { QuestionComplexity } from '../../questionBank/types'
 import { MatchingSagaActions } from '../types'
@@ -68,25 +70,11 @@ const JoinQueueSettingsModal: React.FC<Props> = (props: Props) => {
           We'll use these settings to help you find a suitable problem to tackle
           together with your peer.
         </Typography>
-        <FormControl>
-          <FormLabel>Choose Complexity</FormLabel>
-          <Select
-            defaultValue={complexity}
-            onChange={(_e, newValue) =>
-              setComplexity(newValue ?? QuestionComplexity.Easy)
-            }
-          >
-            <Option value={QuestionComplexity.Easy}>
-              {QuestionComplexity.Easy}
-            </Option>
-            <Option value={QuestionComplexity.Medium}>
-              {QuestionComplexity.Medium}
-            </Option>
-            <Option value={QuestionComplexity.Hard}>
-              {QuestionComplexity.Hard}
-            </Option>
-          </Select>
-        </FormControl>
+        <Typography level="body-sm">
+          ⚠️ If we can't spot a perfect problem with your settings, we'll do our
+          best to hook you up with the next best thing.
+        </Typography>
+        <SelectComplexity value={complexity} setValue={setComplexity} />
         <GenericField label="Choose Categories">
           <Autocomplete
             multiple
@@ -112,7 +100,7 @@ const JoinQueueSettingsModal: React.FC<Props> = (props: Props) => {
             }
           />
         </GenericField>
-        <GenericField label="Choose Languages">
+        <GenericField label="Choose Language">
           <Autocomplete
             placeholder="Language Templates"
             options={allLanguages}
