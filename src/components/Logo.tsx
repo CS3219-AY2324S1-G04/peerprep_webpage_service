@@ -5,24 +5,65 @@ import { getUserRole } from '../features/user/selector'
 import { useAppSelector } from '../hooks/useAppSelector'
 import { UserRole } from '../services/userService'
 
-const Logo: React.FC = () => {
+interface LogoProps {
+  variant?: 'row' | 'full'
+}
+
+const Logo: React.FC<LogoProps> = (props: LogoProps) => {
+  const { variant = 'full' } = props
   const userRole = useAppSelector(getUserRole)
+  const isRowVersion = variant === 'row'
 
   return (
-    <Box sx={styles.wrapper}>
-      <img src={logo} alt="mainLogo" style={styles.logoImg} />
-      <Box sx={styles.textWrapper}>
-        <Typography level="logo" color="primary">
-          Peer
-        </Typography>
-        <Typography component="span" level="logo">
-          Prep
-        </Typography>
-      </Box>
-      {userRole === UserRole.admin && (
-        <Typography level="body-xs" fontWeight="bold" color="danger">
-          Admin
-        </Typography>
+    <Box sx={styles.wrapper} flexDirection={isRowVersion ? 'row' : 'column'}>
+      {!isRowVersion ? (
+        <>
+          <img src={logo} alt="mainLogo" style={styles.logoImg} />
+          <Box sx={styles.textWrapper}>
+            <Typography level="logo" color="primary">
+              Peer
+            </Typography>
+            <Typography component="span" level="logo">
+              Prep
+            </Typography>
+          </Box>
+          {userRole === UserRole.admin && (
+            <Typography
+              level="body-xs"
+              fontWeight="bold"
+              color="danger"
+              mt="-5px"
+            >
+              Admin
+            </Typography>
+          )}
+        </>
+      ) : (
+        <>
+          <Box sx={styles.textWrapper} alignItems="center">
+            <img src={logo} alt="mainLogo" style={styles.logoImg} />
+            <Box flexDirection="column">
+              <Box sx={styles.textWrapper}>
+                <Typography level="logo" color="primary">
+                  Peer
+                </Typography>
+                <Typography component="span" level="logo">
+                  Prep
+                </Typography>
+              </Box>
+              {userRole === UserRole.admin && (
+                <Typography
+                  level="body-xs"
+                  fontWeight="bold"
+                  color="danger"
+                  mt="-5px"
+                >
+                  Admin
+                </Typography>
+              )}
+            </Box>
+          </Box>
+        </>
       )}
     </Box>
   )
@@ -31,7 +72,6 @@ const Logo: React.FC = () => {
 const styles = {
   wrapper: {
     display: 'flex',
-    flexDirection: 'column',
     alignItems: 'center',
   },
   logoImg: {
@@ -40,10 +80,6 @@ const styles = {
   textWrapper: {
     display: 'inline-flex',
     lineHeight: '1',
-  },
-  adminFlag: {
-    border: '1px solid',
-    borderRadius: '4px',
   },
 } as const
 
