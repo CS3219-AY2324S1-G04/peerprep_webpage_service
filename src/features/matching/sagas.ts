@@ -13,7 +13,7 @@ import {
 import { toast } from '../../components/Toaster/toast'
 import matchingService from '../../services/matchingService'
 import { LoadingKeys } from '../../utils/types'
-import { removeLoadingTask } from '../common/slice'
+import { addLoadingTask, removeLoadingTask } from '../common/slice'
 import { MatchingSagaActions } from './types'
 
 const queueStatusCheckDelayMillis: number = 5000
@@ -24,7 +24,7 @@ function* checkUserQueueStatus() {
   } catch (error) {
     if (error instanceof AxiosError) {
       if (error.response?.status === 303) {
-        toast.success('user in room')
+        yield put(addLoadingTask(LoadingKeys.REDIRECT_TO_ROOM))
         yield put(removeLoadingTask(LoadingKeys.CHECKING_QUEUE_STATUS))
         yield put({ type: MatchingSagaActions.STOP_CHECK_QUEUE_STATUS })
       }
