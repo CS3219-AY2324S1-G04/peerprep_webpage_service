@@ -1,6 +1,6 @@
-import { io } from "socket.io-client";
+import { io } from 'socket.io-client'
 
-const SOCKET_SERVER_URL = 'http://localhost:3000';
+const SOCKET_SERVER_URL = 'http://localhost:3000'
 
 function connect(roomId: string) {
   const socket = io(SOCKET_SERVER_URL, {
@@ -19,7 +19,7 @@ function disconnect() {
   const socket = io(SOCKET_SERVER_URL)
   return new Promise((resolve) => {
     socket.on('disconnect', () => {
-      resolve(socket);
+      resolve(socket)
     })
   })
 }
@@ -28,7 +28,7 @@ function reconnect() {
   const socket = io(SOCKET_SERVER_URL)
   return new Promise((resolve) => {
     socket.on('reconnect', () => {
-      resolve(socket);
+      resolve(socket)
     })
   })
 }

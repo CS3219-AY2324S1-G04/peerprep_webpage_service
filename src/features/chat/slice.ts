@@ -1,5 +1,6 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { ChatState, Message, MessageType } from "./types";
+import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+
+import { ChatState, Message, MessageType } from './types'
 
 const initialState: ChatState = {
   messages: [],
@@ -30,11 +31,17 @@ const chatSlice = createSlice({
     },
     resetMessages: (state) => {
       state.messages = []
-    }
-  }
+    },
+  },
 })
 
-
-export const { setChannelOn, setChannelOff, setServerOn, setServerOff, pushMessage, resetMessages } = chatSlice.actions
+export const {
+  setChannelOn,
+  setChannelOff,
+  setServerOn,
+  setServerOff,
+  pushMessage,
+  resetMessages,
+} = chatSlice.actions
 
 export default chatSlice.reducer

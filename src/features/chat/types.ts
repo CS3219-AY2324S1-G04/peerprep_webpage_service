@@ -11,14 +11,14 @@ export interface Message {
   timestamp: string
 }
 
-export interface DraftMessage extends Omit<Message, 'type'> { 
+export interface DraftMessage extends Omit<Message, 'type'> {
   // No need to specify additional properties, 'type' is excluded
 }
 
 export enum MessageType {
   Sent = 'sent',
   Received = 'received',
-  System = 'system'
+  System = 'system',
 }
 
 export const ChatSagaActions = {
@@ -36,7 +36,7 @@ export enum EmittedEvent {
   ReceivedMessage = 'receiveMessage',
   JoinedChat = 'joinRoom',
   LeftChat = 'leftRoom',
-} 
+}
 
 export interface WsEvent<T> {
   type: EmittedEvent

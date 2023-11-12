@@ -17,7 +17,8 @@ const Main: React.FC<BoxProps> = (props: BoxProps) => {
             height: 'unset',
           },
           p: 2,
-          bgcolor: mode === 'light'
+          bgcolor:
+            mode === 'light'
               ? theme.vars.palette.background.level1
               : theme.vars.palette.background.body,
         },

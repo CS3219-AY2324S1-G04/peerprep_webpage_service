@@ -3,10 +3,11 @@ import ChatIcon from '@mui/icons-material/Chat'
 import { Badge, Box, IconButton, Theme } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
 import { useEffect, useRef, useState } from 'react'
+
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getMessages } from '../selectors'
-import ChatPane from './ChatPane'
 import { MessageType } from '../types'
+import ChatPane from './ChatPane'
 
 interface ChatProps {
   onSendMessage: (value: string) => void
@@ -18,7 +19,7 @@ const Chat: React.FC<ChatProps> = (props: ChatProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const messages = useAppSelector(getMessages)
   const [unreadMessages, setUnreadMessages] = useState<boolean>(false)
-  const open = Boolean(anchorEl);
+  const open = Boolean(anchorEl)
 
   useEffect(() => {
     if (!open && messages.length > 0) {
@@ -30,25 +31,33 @@ const Chat: React.FC<ChatProps> = (props: ChatProps) => {
   }, [messages])
 
   useEffect(() => {
-    if(unreadMessages && open) {
+    if (unreadMessages && open) {
       setUnreadMessages(false)
     }
   }, [open])
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(anchorEl ? null : event.currentTarget);
+    setAnchorEl(anchorEl ? null : event.currentTarget)
   }
 
   return (
     <>
-      <IconButton sx={styles.chatButton} size='lg' variant='solid' color='primary' onClick={handleClick}>
+      <IconButton
+        sx={styles.chatButton}
+        size="lg"
+        variant="solid"
+        color="primary"
+        onClick={handleClick}
+      >
         {unreadMessages ? (
           <Badge size="sm" color="danger">
             <ChatIcon />
           </Badge>
-        ) : (<ChatIcon />)}
+        ) : (
+          <ChatIcon />
+        )}
       </IconButton>
-      <Popper open={open} anchorEl={anchorEl} placement='top-end'>
+      <Popper open={open} anchorEl={anchorEl} placement="top-end">
         <ChatPane title="Room Chat" onClose={() => setAnchorEl(null)}>
           <ChatPane.Messages messages={messages} introLabel={introLabel} />
           <ChatPane.Input onSendMessage={onSendMessage} />
@@ -83,8 +92,8 @@ const styles = {
   }) as SxProps,
   messageContent: {
     fontSize: '0.875rem',
-    fontWeight: 400
-  } as SxProps
+    fontWeight: 400,
+  } as SxProps,
 } as const
 
 const AlwaysScrollToBottom = () => {
@@ -95,6 +104,6 @@ const AlwaysScrollToBottom = () => {
     }
   }, [elementRef])
   return <Box ref={elementRef} />
-};
+}
 
 export default Chat

@@ -8,7 +8,7 @@ import {
   MenuButton,
   MenuItem,
   Theme,
-  Typography
+  Typography,
 } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
 import React, { useState } from 'react'

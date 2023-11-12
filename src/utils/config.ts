@@ -67,5 +67,5 @@ export const {
   matchingServiceBaseUrl,
   roomServiceBaseUrl,
   editorServiceBaseUrl,
-  chatServiceBaseUrl
+  chatServiceBaseUrl,
 } = config

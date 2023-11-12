@@ -1,16 +1,16 @@
-import { Grid, LinearProgress, Box, Input, Button } from '@mui/joy'
+import { Box, Button, Grid, Input, LinearProgress } from '@mui/joy'
 import { useEffect, useState } from 'react'
 
+import Chat from '../features/chat/components/Chat'
+import { ChatSagaActions, Message } from '../features/chat/types'
 import Editor from '../features/room/components/Editor'
 import RoomQuestion from '../features/room/components/RoomQuestion'
 import { getRoomData, getRoomStatus } from '../features/room/selectors'
 import { closeRoom } from '../features/room/slice'
 import { RoomSagaActions, RoomStatus } from '../features/room/types'
+import { getUserId, getUsername } from '../features/user/selector'
 import { useAppDispatch } from '../hooks/useAppDispatch'
 import { useAppSelector } from '../hooks/useAppSelector'
-import { ChatSagaActions, Message } from '../features/chat/types'
-import { getUserId, getUsername } from '../features/user/selector'
-import Chat from '../features/chat/components/Chat'
 
 const Room: React.FC = () => {
   // TODO: If room id params provided, load room of roomId.
@@ -38,22 +38,24 @@ const Room: React.FC = () => {
   useEffect(() => {
     if (roomData && roomData.roomId !== '') {
       dispatch({
-        type: ChatSagaActions.START_ROOM_CHAT_WS, payload: {
+        type: ChatSagaActions.START_ROOM_CHAT_WS,
+        payload: {
           roomId: roomData.roomId,
           userId: userId,
-          username: username
-        }
+          username: username,
+        },
       })
     }
   }, [roomData])
 
   const sendMessage = (value: string) => {
     dispatch({
-      type: ChatSagaActions.SEND_MESSAGE, payload: {
+      type: ChatSagaActions.SEND_MESSAGE,
+      payload: {
         username: username ?? '',
         content: value,
-        timestamp: (new Date()).toISOString(),
-      }
+        timestamp: new Date().toISOString(),
+      },
     })
   }
 
@@ -70,7 +72,10 @@ const Room: React.FC = () => {
             <Editor roomId={roomData.roomId} />
           </Grid>
         </Grid>
-        <Chat onSendMessage={sendMessage} introLabel="Chat with your peer here! 😬" />
+        <Chat
+          onSendMessage={sendMessage}
+          introLabel="Chat with your peer here! 😬"
+        />
       </>
     )
   }

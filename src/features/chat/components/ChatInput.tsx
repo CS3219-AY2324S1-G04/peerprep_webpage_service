@@ -1,10 +1,22 @@
-import CloseIcon from '@mui/icons-material/Close';
-import { Divider, IconButton, Sheet, Stack, Theme, Typography, Box, Button, Textarea, TextareaProps } from '@mui/joy';
-import { SxProps } from '@mui/joy/styles/types';
-import { Message } from '../types';
-import ChatMessages from './ChatMessages';
-import { PropsWithChildren, useState } from 'react';
-import SendRoundedIcon from '@mui/icons-material/SendRounded';
+import CloseIcon from '@mui/icons-material/Close'
+import SendRoundedIcon from '@mui/icons-material/SendRounded'
+import {
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  Sheet,
+  Stack,
+  Textarea,
+  TextareaProps,
+  Theme,
+  Typography,
+} from '@mui/joy'
+import { SxProps } from '@mui/joy/styles/types'
+import { PropsWithChildren, useState } from 'react'
+
+import { Message } from '../types'
+import ChatMessages from './ChatMessages'
 
 interface ChatInputProps extends TextareaProps {
   onSendMessage: (value: string) => void
@@ -14,7 +26,7 @@ const ChatInput = (props: ChatInputProps) => {
   const { onSendMessage } = props
   const [value, setValue] = useState<string>('')
 
-  const addEmoji = (emoji: string) => () => setValue(`${value}${emoji}`);
+  const addEmoji = (emoji: string) => () => setValue(`${value}${emoji}`)
 
   return (
     <Textarea
@@ -28,17 +40,32 @@ const ChatInput = (props: ChatInputProps) => {
       endDecorator={
         <Box sx={styles.sendBox}>
           <Box sx={styles.emojiBox}>
-            <IconButton variant="outlined" color="neutral" onClick={addEmoji('👍')}>
+            <IconButton
+              variant="outlined"
+              color="neutral"
+              onClick={addEmoji('👍')}
+            >
               👍
             </IconButton>
-            <IconButton variant="outlined" color="neutral" onClick={addEmoji('🔥')}>
+            <IconButton
+              variant="outlined"
+              color="neutral"
+              onClick={addEmoji('🔥')}
+            >
               🔥
             </IconButton>
-            <IconButton variant="outlined" color="neutral" onClick={addEmoji('😭')}>
+            <IconButton
+              variant="outlined"
+              color="neutral"
+              onClick={addEmoji('😭')}
+            >
               😭
             </IconButton>
           </Box>
-          <Button endDecorator={<SendRoundedIcon />} onClick={() => onSendMessage(value)}>
+          <Button
+            endDecorator={<SendRoundedIcon />}
+            onClick={() => onSendMessage(value)}
+          >
             Send
           </Button>
         </Box>
@@ -54,7 +81,7 @@ const styles = {
     py: 1,
     borderTop: '1px solid',
     borderColor: 'divider',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   } as SxProps,
   emojiBox: {
     display: 'flex',

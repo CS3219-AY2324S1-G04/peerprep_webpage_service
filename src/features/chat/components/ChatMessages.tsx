@@ -1,39 +1,42 @@
-import { Box, Stack, Typography, Divider } from '@mui/joy';
-import { SxProps } from '@mui/joy/styles/types';
-import { useEffect, useRef } from 'react';
-import { Message, MessageType } from "../types";
-import ChatBubble from "./ChatBubble";
+import { Box, Divider, Stack, Typography } from '@mui/joy'
+import { SxProps } from '@mui/joy/styles/types'
+import { useEffect, useRef } from 'react'
+
+import { Message, MessageType } from '../types'
+import ChatBubble from './ChatBubble'
 
 interface ChatMessagesProps {
   messages: Message[]
   introLabel?: string
 }
 
-const ChatMessages: React.FC<ChatMessagesProps> = (props: ChatMessagesProps) => {
+const ChatMessages: React.FC<ChatMessagesProps> = (
+  props: ChatMessagesProps,
+) => {
   const { messages, introLabel } = props
 
   return (
     <Stack sx={styles.root} direction="column">
-      <Typography p={1.5} pt={0} level='body-xs' textAlign="center" mt={1}>
-        ⚠️  Note that leaving or refreshing this page will clear the chat history
+      <Typography p={1.5} pt={0} level="body-xs" textAlign="center" mt={1}>
+        ⚠️ Note that leaving or refreshing this page will clear the chat history
       </Typography>
       <Divider />
       {introLabel && (
-        <Typography level='body-xs' textAlign="center" mt={1}>
+        <Typography level="body-xs" textAlign="center" mt={1}>
           {introLabel}
         </Typography>
       )}
       <Box sx={styles.messagesBox}>
         {messages.map((message, index, array) => {
-          const prevMessage = index > 0 ? array[index - 1] : null;
+          const prevMessage = index > 0 ? array[index - 1] : null
           if (message.type === MessageType.System) {
             return (
-              <Typography level='body-xs' textAlign='center'>
+              <Typography level="body-xs" textAlign="center">
                 {message.content}
               </Typography>
             )
           }
-          return (<ChatBubble message={message} prevMessage={prevMessage} />)
+          return <ChatBubble message={message} prevMessage={prevMessage} />
         })}
       </Box>
       <AlwaysScrollToBottom />

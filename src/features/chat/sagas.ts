@@ -1,14 +1,38 @@
 import { NotUndefined } from '@redux-saga/types'
 import { EventChannel, eventChannel } from 'redux-saga'
-import { all, call, cancelled, fork, put, race, take, takeLatest } from 'redux-saga/effects'
+import {
+  all,
+  call,
+  cancelled,
+  fork,
+  put,
+  race,
+  take,
+  takeLatest,
+} from 'redux-saga/effects'
 import { Socket, io } from 'socket.io-client'
+
 import { chatServiceBaseUrl } from '../../utils/config'
 import { Action } from '../../utils/types'
-import { pushMessage, resetMessages, setChannelOff, setChannelOn, setServerOff, setServerOn } from './slice'
-import { ChatSagaActions, ReceivedMessageResponse, DraftMessage, Message, MessageType, EmittedEvent, WsEvent } from './types'
+import {
+  pushMessage,
+  resetMessages,
+  setChannelOff,
+  setChannelOn,
+  setServerOff,
+  setServerOn,
+} from './slice'
+import {
+  ChatSagaActions,
+  DraftMessage,
+  EmittedEvent,
+  Message,
+  MessageType,
+  ReceivedMessageResponse,
+  WsEvent,
+} from './types'
 
 let socket: Socket | undefined
-
 
 // Wrapper functions for socket events (connect, disconnect, reconnect)
 function connect(roomId: string, userId: string, username: string) {
@@ -16,7 +40,7 @@ function connect(roomId: string, userId: string, username: string) {
     query: {
       roomId: roomId,
       userId: userId,
-      userName: username
+      userName: username,
     },
   })
   console.log(socket)
@@ -29,11 +53,11 @@ function connect(roomId: string, userId: string, username: string) {
 }
 
 function createSocketChannel(socket: Socket | undefined) {
-  return eventChannel(emit => {
+  return eventChannel((emit) => {
     const receivedMessageHandler = (payload: ReceivedMessageResponse) => {
       const wsEvent: WsEvent<ReceivedMessageResponse> = {
         type: EmittedEvent.ReceivedMessage,
-        payload
+        payload,
       }
       emit(wsEvent)
     }
@@ -41,7 +65,7 @@ function createSocketChannel(socket: Socket | undefined) {
     const joinedChatHandler = (payload: string) => {
       const wsEvent: WsEvent<string> = {
         type: EmittedEvent.JoinedChat,
-        payload
+        payload,
       }
       emit(wsEvent)
     }
@@ -49,7 +73,7 @@ function createSocketChannel(socket: Socket | undefined) {
     const leftChatHandler = (payload: string) => {
       const wsEvent: WsEvent<string> = {
         type: EmittedEvent.LeftChat,
-        payload
+        payload,
       }
       emit(wsEvent)
     }
@@ -75,9 +99,16 @@ function createSocketChannel(socket: Socket | undefined) {
   })
 }
 
-function* watchIncomingMessages(roomId: string, userId: string, username: string) {
+function* watchIncomingMessages(
+  roomId: string,
+  userId: string,
+  username: string,
+) {
   const connected: Socket = yield call(connect, roomId, userId, username)
-  const socketChannel: EventChannel<NotUndefined> = yield call(createSocketChannel, connected)
+  const socketChannel: EventChannel<NotUndefined> = yield call(
+    createSocketChannel,
+    connected,
+  )
   yield put(setChannelOn())
   yield put(setServerOn())
 
@@ -94,7 +125,7 @@ function* watchIncomingMessages(roomId: string, userId: string, username: string
             username: payload.userName,
             content: payload.message,
             type: MessageType.Received,
-            timestamp: (new Date()).toISOString()
+            timestamp: new Date().toISOString(),
           }
           break
         }
@@ -105,13 +136,13 @@ function* watchIncomingMessages(roomId: string, userId: string, username: string
             username: 'System',
             content: payload,
             type: MessageType.System,
-            timestamp: (new Date()).toISOString()
+            timestamp: new Date().toISOString(),
           }
           break
         }
       }
 
-      if(messageToPush) {
+      if (messageToPush) {
         yield put(pushMessage(messageToPush))
       }
     } catch (err) {
@@ -132,22 +163,31 @@ function* watchIncomingMessages(roomId: string, userId: string, username: string
 function* handleSendMessage(action: Action<DraftMessage>) {
   const message = action.payload
   socket?.emit('sendMessage', message.content)
-  yield put(pushMessage({
-    username: message.username,
-    content: message.content,
-    timestamp: message.timestamp,
-    type: MessageType.Sent,
-  }))
+  yield put(
+    pushMessage({
+      username: message.username,
+      content: message.content,
+      timestamp: message.timestamp,
+      type: MessageType.Sent,
+    }),
+  )
 }
 
 function* handleStopChatWsSideEffects() {
   yield put(resetMessages())
 }
 
-function* handleStartStopChatWs(action: Action<{ roomId: string, userId: string, username: string }>) {
+function* handleStartStopChatWs(
+  action: Action<{ roomId: string; userId: string; username: string }>,
+) {
   yield race({
-    task: call(watchIncomingMessages, action.payload.roomId, action.payload.userId, action.payload.username),
-    cancel: take(ChatSagaActions.STOP_ROOM_CHAT_WS)
+    task: call(
+      watchIncomingMessages,
+      action.payload.roomId,
+      action.payload.userId,
+      action.payload.username,
+    ),
+    cancel: take(ChatSagaActions.STOP_ROOM_CHAT_WS),
   })
 }
 
@@ -160,9 +200,16 @@ function* watchSendMessage() {
 }
 
 function* watchStopChatWs() {
-  yield takeLatest(ChatSagaActions.STOP_ROOM_CHAT_WS, handleStopChatWsSideEffects)
+  yield takeLatest(
+    ChatSagaActions.STOP_ROOM_CHAT_WS,
+    handleStopChatWsSideEffects,
+  )
 }
 
 export const chatSaga = function* () {
-  yield all([fork(watchStartStopChatWs), fork(watchSendMessage), fork(watchStopChatWs)])
+  yield all([
+    fork(watchStartStopChatWs),
+    fork(watchSendMessage),
+    fork(watchStopChatWs),
+  ])
 }

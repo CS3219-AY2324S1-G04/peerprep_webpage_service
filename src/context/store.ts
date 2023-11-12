@@ -2,12 +2,12 @@ import { Middleware, configureStore } from '@reduxjs/toolkit'
 import { createLogger } from 'redux-logger'
 import createSagaMiddleware from 'redux-saga'
 
+import chatReducer from '../features/chat/slice'
 import commonReducer from '../features/common/slice'
 import questionBankReducer from '../features/questionBank/slice'
 import roomReducer from '../features/room/slice'
 import rootSaga from '../features/rootSaga'
 import userReducer from '../features/user/slice'
-import chatReducer from '../features/chat/slice'
 
 const extraMiddlewares: Middleware[] = []
 
