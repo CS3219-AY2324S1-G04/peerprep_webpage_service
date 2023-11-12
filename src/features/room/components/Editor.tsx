@@ -82,7 +82,7 @@ function Editor({
   }
 
   return (
-    <Card>
+    <Card sx={{ height: '100%' }}>
       <Box sx={styles.editorControlBar}>
         <Typography
           component="label"
