@@ -4,7 +4,6 @@ import * as Y from 'yjs'
 
 import { editorServiceBaseUrl } from '../utils/config'
 
-const RESYNC_INTERVAL = 1
 const ROOM_NAME = 'room'
 
 export enum MessageType {
@@ -27,7 +26,6 @@ export function getWsProvider(
   const wsOpts = {
     connect: false,
     params: { roomId },
-    resyncInterval: RESYNC_INTERVAL,
   }
 
   const wsProvider = new WebsocketProvider(
