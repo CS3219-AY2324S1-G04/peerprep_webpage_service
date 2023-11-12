@@ -22,7 +22,7 @@ function Editor({
   onConnectionClose?: () => void
 }) {
   const [hasConnect, setHasConnect] = React.useState(false)
-  const [doc] = React.useState<Y.Doc>(new Y.Doc())
+  const [doc, setDoc] = React.useState<Y.Doc>(new Y.Doc())
   const [awareness, setAwareness] = React.useState(null)
   const username = useAppSelector(getUsername) ?? ''
   const [isVimMode, setIsVimMode] = React.useState(false)
@@ -57,6 +57,7 @@ function Editor({
 
     return () => {
       wsProvider.destroy()
+      setDoc(new Y.Doc())
     }
   }, [doc, onConnectionClose, roomId, username])
 
