@@ -1,16 +1,14 @@
 import { Logout, Settings } from '@mui/icons-material'
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
 import {
   Button,
   Divider,
   Dropdown,
-  Input,
   ListItemDecorator,
   Menu,
   MenuButton,
   MenuItem,
   Theme,
-  Typography,
+  Typography
 } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
 import React, { useState } from 'react'
@@ -55,13 +53,6 @@ const UserNavigationBar: React.FC = () => {
           <Logo />
         </NavigationBar.Middle>
         <NavigationBar.Right wrapperClass={styles.rightColumnOverride}>
-          <Input
-            size="md"
-            variant="outlined"
-            placeholder="Search"
-            startDecorator={<SearchRoundedIcon color="primary" />}
-            sx={styles.input}
-          />
           <Button size="md" sx={styles.button}>
             QuickPrep 🚀
           </Button>
@@ -122,14 +113,6 @@ const styles = {
   emailAddress: { width: 0, minWidth: '100%', fontSize: '0.8rem' },
   rightColumnOverride: {
     justifyContent: 'flex-end',
-  } as SxProps,
-  input: {
-    flexBasis: '500px',
-    display: {
-      xs: 'none',
-      md: 'flex',
-    },
-    boxShadow: 'sm',
   } as SxProps,
   button: {
     textWrap: 'nowrap',

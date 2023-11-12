@@ -1,5 +1,4 @@
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
-import { Button, Input } from '@mui/joy'
+import { Button } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
 import { useNavigate } from 'react-router-dom'
 
@@ -21,13 +20,6 @@ const GuestNavigationBar: React.FC = () => {
         <Logo />
       </NavigationBar.Middle>
       <NavigationBar.Right>
-        <Input
-          size="md"
-          variant="outlined"
-          placeholder="Search"
-          startDecorator={<SearchRoundedIcon color="primary" />}
-          sx={styles.input}
-        />
         <ColorSchemeToggle />
         <Button
           variant="plain"
@@ -49,14 +41,6 @@ const GuestNavigationBar: React.FC = () => {
 }
 
 const styles = {
-  input: {
-    flexBasis: '500px',
-    display: {
-      xs: 'none',
-      md: 'flex',
-    },
-    boxShadow: 'sm',
-  },
   button: {
     width: '40%',
   } as SxProps,
