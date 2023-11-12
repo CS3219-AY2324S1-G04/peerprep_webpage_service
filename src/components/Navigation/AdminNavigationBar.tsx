@@ -1,18 +1,20 @@
 import { Logout, Settings } from '@mui/icons-material'
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
+import MenuIcon from '@mui/icons-material/Menu'
 import {
   Button,
   Divider,
   Dropdown,
-  Input,
+  IconButton,
   ListItemDecorator,
   Menu,
   MenuButton,
   MenuItem,
   Theme,
   Typography,
+  useTheme,
 } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
+import useMediaQuery from '@mui/material/useMediaQuery'
 import React, { useState } from 'react'
 
 import AccountSettingsModal from '../../features/accountSettingsEditor/components/AccountSettingsModal'
@@ -21,21 +23,25 @@ import { UserSagaActions } from '../../features/user/types'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { adminNavigationList } from '../../utils/constants/navigation'
+import { AvatarShape } from '../../utils/types'
 import Avatar from '../Avatar'
 import ColorSchemeToggle from '../ColorSchemeToggle'
 import Logo from '../Logo'
+import MobileNavigationDrawer from './MobileNavigationDrawer'
 import NavigationBar from './NavigationBar'
 import NavigationList from './NavigationList'
-import { AvatarShape } from '../../utils/types'
 
 const AdminNavigationBar: React.FC = () => {
   const dispatch = useAppDispatch()
+  const theme = useTheme()
+  const isTabletOrMobile = useMediaQuery(theme.breakpoints.down('md'))
 
   const username = useAppSelector(getUsername)
   const emailAddress = useAppSelector(getEmailAddress)
 
   const [isAccountSettingsModalOpen, setIsAccountSettingsModalOpen] =
-    useState(false)
+    useState<boolean>(false)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   function openEditAccountSettings() {
     setIsAccountSettingsModalOpen(true)
@@ -45,23 +51,32 @@ const AdminNavigationBar: React.FC = () => {
     dispatch({ type: UserSagaActions.LOGOUT })
   }
 
+  function toggleDrawer(inOpen: boolean) {
+    setIsDrawerOpen(inOpen)
+  }
+
   return (
     <>
       <NavigationBar>
-        <NavigationBar.Left>
-          <NavigationList list={adminNavigationList} />
+        <NavigationBar.Left
+          wrapperClass={
+            isTabletOrMobile ? styles.leftColumnOverride : undefined
+          }
+        >
+          {isTabletOrMobile && (
+            <>
+              <IconButton onClick={() => toggleDrawer(true)}>
+                <MenuIcon />
+              </IconButton>
+              <Logo variant="row" />
+            </>
+          )}
+          {!isTabletOrMobile && <NavigationList list={adminNavigationList} />}
         </NavigationBar.Left>
         <NavigationBar.Middle>
-          <Logo />
+          {!isTabletOrMobile && <Logo />}
         </NavigationBar.Middle>
         <NavigationBar.Right wrapperClass={styles.rightColumnOverride}>
-          <Input
-            size="md"
-            variant="outlined"
-            placeholder="Search"
-            startDecorator={<SearchRoundedIcon color="primary" />}
-            sx={styles.input}
-          />
           <Button size="md" sx={styles.button}>
             QuickPrep 🚀
           </Button>
@@ -105,6 +120,12 @@ const AdminNavigationBar: React.FC = () => {
         isOpen={isAccountSettingsModalOpen}
         setIsOpen={setIsAccountSettingsModalOpen}
       />
+
+      <MobileNavigationDrawer
+        isOpen={isDrawerOpen}
+        toggleDrawer={toggleDrawer}
+        list={adminNavigationList}
+      />
     </>
   )
 }
@@ -123,13 +144,8 @@ const styles = {
   rightColumnOverride: {
     justifyContent: 'flex-end',
   } as SxProps,
-  input: {
-    flexBasis: '500px',
-    display: {
-      xs: 'none',
-      md: 'flex',
-    },
-    boxShadow: 'sm',
+  leftColumnOverride: {
+    display: 'flex',
   } as SxProps,
   button: {
     textWrap: 'nowrap',

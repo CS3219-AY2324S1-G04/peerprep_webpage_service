@@ -1,4 +1,4 @@
-import { Box } from '@mui/joy'
+import { Box, BoxProps } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
 import { Fragment, PropsWithChildren } from 'react'
 
@@ -12,6 +12,11 @@ interface NavBarRightColumnProps extends PropsWithChildren {
   wrapperClass?: SxProps
 }
 
+interface NavBarLeftColumnProps extends BoxProps {
+  wrapperClass?: SxProps
+  children: React.ReactNode
+}
+
 const NavigationBar = (props: NavigationBarProps) => {
   const { children } = props
 
@@ -22,8 +27,13 @@ const NavigationBar = (props: NavigationBarProps) => {
   )
 }
 
-NavigationBar.Left = function NavBarLeftColumn(props: PropsWithChildren) {
-  return <Box sx={styles.leftColumn}>{props.children}</Box>
+NavigationBar.Left = function NavBarLeftColumn(props: NavBarLeftColumnProps) {
+  const { children, wrapperClass, ...rest } = props
+  return (
+    <Box sx={combineStyles(styles.leftColumn, wrapperClass)} {...rest}>
+      {children}
+    </Box>
+  )
 }
 
 NavigationBar.Middle = function NavBarMiddleColumn(props: PropsWithChildren) {
@@ -50,10 +60,10 @@ const styles = {
   } as SxProps,
   leftColumn: {
     gridColumn: '1 / 2',
-    display: {
-      xs: 'none',
-      sm: 'flex',
-    },
+    // display: {
+    //   xs: 'none',
+    //   sm: 'flex',
+    // },
   } as SxProps,
   middleColumn: {
     gridColumn: '2 / 3',
@@ -66,10 +76,10 @@ const styles = {
     paddingBottom: 2,
     alignItems: 'center',
     justifyContent: 'flex-end',
-    display: {
-      xs: 'none',
-      sm: 'flex',
-    },
+    // display: {
+    //   xs: 'none',
+    //   sm: 'flex',
+    // },
   } as SxProps,
   rightColumnWrapper: {
     width: '100%',

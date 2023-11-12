@@ -3,12 +3,15 @@ import { SxProps } from '@mui/joy/styles/types'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import useTaskSubscriber from '../../../hooks/useTaskSubscriber'
 import Paths from '../../../utils/constants/navigation'
 import { LoadingKeys } from '../../../utils/types'
+import { removeLoadingTask } from '../../common/slice'
 
 const FindingRoomModal: React.FC = () => {
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
   const [isCheckingStatus] = useTaskSubscriber(
     LoadingKeys.CHECKING_QUEUE_STATUS,
   )
@@ -16,6 +19,7 @@ const FindingRoomModal: React.FC = () => {
 
   useEffect(() => {
     if (isRedirectToRoom) {
+      dispatch(removeLoadingTask(LoadingKeys.REDIRECT_TO_ROOM))
       navigate(Paths.MatchRoom)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

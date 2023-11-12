@@ -24,13 +24,10 @@ const styles = {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'stretch',
-      padding: { xs: '0rem', sm: '3rem 4.5rem' },
-      backgroundColor: {
-        xs: 'rgba(0,0,0,0)',
-        sm: theme.palette.background.surface,
-      },
-      boxShadow: { xs: '0rem', sm: 'sm' },
-      borderRadius: 'md',
+      padding: 5,
+      backgroundColor: theme.palette.background.surface,
+      boxShadow: 'sm',
+      borderRadius: '10px',
       width: 'min(32rem, 100%)',
     }
   }) as SxProps,

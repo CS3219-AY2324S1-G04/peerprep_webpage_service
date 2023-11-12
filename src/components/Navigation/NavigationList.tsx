@@ -147,7 +147,7 @@ const listItemStyles = {
       '--List-padding': '4px',
       '--ListDivider-gap': '4px',
     }
-  }) as SxProps
+  }) as SxProps,
 } as const
 
 export default NavigationList

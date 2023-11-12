@@ -1,18 +1,20 @@
 import { Logout, Settings } from '@mui/icons-material'
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
+import MenuIcon from '@mui/icons-material/Menu'
 import {
   Button,
   Divider,
   Dropdown,
-  Input,
+  IconButton,
   ListItemDecorator,
   Menu,
   MenuButton,
   MenuItem,
   Theme,
   Typography,
+  useTheme,
 } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
+import useMediaQuery from '@mui/material/useMediaQuery'
 import React, { useState } from 'react'
 
 import AccountSettingsModal from '../../features/accountSettingsEditor/components/AccountSettingsModal'
@@ -25,14 +27,19 @@ import { AvatarShape } from '../../utils/types'
 import Avatar from '../Avatar'
 import ColorSchemeToggle from '../ColorSchemeToggle'
 import Logo from '../Logo'
+import MobileNavigationDrawer from './MobileNavigationDrawer'
 import NavigationBar from './NavigationBar'
 import NavigationList from './NavigationList'
 
 const UserNavigationBar: React.FC = () => {
   const dispatch = useAppDispatch()
+  const theme = useTheme()
+  const isTabletOrMobile = useMediaQuery(theme.breakpoints.down('md'))
 
   const username = useAppSelector(getUsername)
   const emailAddress = useAppSelector(getEmailAddress)
+
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   const [isAccountSettingsModalOpen, setIsAccountSettingsModalOpen] =
     useState(false)
@@ -45,23 +52,32 @@ const UserNavigationBar: React.FC = () => {
     dispatch({ type: UserSagaActions.LOGOUT })
   }
 
+  function toggleDrawer(inOpen: boolean) {
+    setIsDrawerOpen(inOpen)
+  }
+
   return (
     <>
       <NavigationBar>
-        <NavigationBar.Left>
-          <NavigationList list={userNavigationList} />
+        <NavigationBar.Left
+          wrapperClass={
+            isTabletOrMobile ? styles.leftColumnOverride : undefined
+          }
+        >
+          {isTabletOrMobile && (
+            <>
+              <IconButton onClick={() => toggleDrawer(true)}>
+                <MenuIcon />
+              </IconButton>
+              <Logo variant="row" />
+            </>
+          )}
+          {!isTabletOrMobile && <NavigationList list={userNavigationList} />}
         </NavigationBar.Left>
         <NavigationBar.Middle>
-          <Logo />
+          {!isTabletOrMobile && <Logo />}
         </NavigationBar.Middle>
         <NavigationBar.Right wrapperClass={styles.rightColumnOverride}>
-          <Input
-            size="md"
-            variant="outlined"
-            placeholder="Search"
-            startDecorator={<SearchRoundedIcon color="primary" />}
-            sx={styles.input}
-          />
           <Button size="md" sx={styles.button}>
             QuickPrep 🚀
           </Button>
@@ -105,6 +121,12 @@ const UserNavigationBar: React.FC = () => {
         isOpen={isAccountSettingsModalOpen}
         setIsOpen={setIsAccountSettingsModalOpen}
       />
+
+      <MobileNavigationDrawer
+        isOpen={isDrawerOpen}
+        toggleDrawer={toggleDrawer}
+        list={userNavigationList}
+      />
     </>
   )
 }
@@ -123,13 +145,8 @@ const styles = {
   rightColumnOverride: {
     justifyContent: 'flex-end',
   } as SxProps,
-  input: {
-    flexBasis: '500px',
-    display: {
-      xs: 'none',
-      md: 'flex',
-    },
-    boxShadow: 'sm',
+  leftColumnOverride: {
+    display: 'flex',
   } as SxProps,
   button: {
     textWrap: 'nowrap',

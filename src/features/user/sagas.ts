@@ -73,6 +73,7 @@ function* logout() {
   try {
     yield userService.deleteSession()
     yield put(updateAccessTokenExpiry())
+    yield put(setUserProfile(undefined)) // reset profile in store
 
     toast.success('Logout successful.')
   } catch (error) {

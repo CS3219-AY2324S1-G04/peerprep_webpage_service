@@ -2,6 +2,7 @@ import { Middleware, configureStore } from '@reduxjs/toolkit'
 import { createLogger } from 'redux-logger'
 import createSagaMiddleware from 'redux-saga'
 
+import chatReducer from '../features/chat/slice'
 import commonReducer from '../features/common/slice'
 import questionBankReducer from '../features/questionBank/slice'
 import roomReducer from '../features/room/slice'
@@ -22,6 +23,7 @@ export const store = configureStore({
     questionBank: questionBankReducer,
     user: userReducer,
     room: roomReducer,
+    chat: chatReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(extraMiddlewares),

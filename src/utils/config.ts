@@ -10,6 +10,8 @@ class Config {
     'VITE_ROOM_SERVICE_ROOT_URL'
   private static _editorServiceRootUrlEnvVar: string =
     'VITE_EDITOR_SERVICE_ROOT_URL'
+  private static _chatServiceRootUrlEnvVar: string =
+    'VITE_CHAT_SERVICE_ROOT_URL'
 
   public readonly isDevEnv: boolean
   public readonly userServiceBaseUrl: string
@@ -17,6 +19,7 @@ class Config {
   public readonly matchingServiceBaseUrl: string
   public readonly roomServiceBaseUrl: string
   public readonly editorServiceBaseUrl: string
+  public readonly chatServiceBaseUrl: string
 
   public constructor(env: ImportMetaEnv = import.meta.env) {
     this.isDevEnv = env[Config._appModeEnvVar] === 'development'
@@ -27,6 +30,7 @@ class Config {
       env[Config._matchingServiceRootUrlEnvVar] ?? ''
     this.roomServiceBaseUrl = env[Config._roomServiceRootUrlEnvVar] ?? ''
     this.editorServiceBaseUrl = env[Config._editorServiceRootUrlEnvVar] ?? ''
+    this.chatServiceBaseUrl = env[Config._chatServiceRootUrlEnvVar] ?? ''
 
     if (this.isDevEnv) {
       console.warn('Running in development mode.')
@@ -47,6 +51,9 @@ class Config {
     if (this.editorServiceBaseUrl === '') {
       console.warn('Editor service base URL was not specified.')
     }
+    if (this.chatServiceBaseUrl === '') {
+      console.warn('Chat service base URL was not specified.')
+    }
   }
 }
 
@@ -60,4 +67,5 @@ export const {
   matchingServiceBaseUrl,
   roomServiceBaseUrl,
   editorServiceBaseUrl,
+  chatServiceBaseUrl,
 } = config

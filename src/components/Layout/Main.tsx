@@ -1,7 +1,8 @@
-import { useColorScheme } from '@mui/joy'
+import { useColorScheme, useTheme } from '@mui/joy'
 import Box, { BoxProps } from '@mui/joy/Box'
 
 const Main: React.FC<BoxProps> = (props: BoxProps) => {
+  const theme = useTheme()
   const { mode } = useColorScheme()
   return (
     <Box
@@ -11,9 +12,12 @@ const Main: React.FC<BoxProps> = (props: BoxProps) => {
       {...props}
       sx={[
         {
-          height: 'fit-content',
+          height: '100%',
+          [theme.breakpoints.down('md')]: {
+            height: 'unset',
+          },
           p: 2,
-          bgcolor: (theme) =>
+          bgcolor:
             mode === 'light'
               ? theme.vars.palette.background.level1
               : theme.vars.palette.background.body,
