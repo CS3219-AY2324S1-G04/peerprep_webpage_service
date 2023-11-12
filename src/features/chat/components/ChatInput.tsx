@@ -1,22 +1,7 @@
-import CloseIcon from '@mui/icons-material/Close'
 import SendRoundedIcon from '@mui/icons-material/SendRounded'
-import {
-  Box,
-  Button,
-  Divider,
-  IconButton,
-  Sheet,
-  Stack,
-  Textarea,
-  TextareaProps,
-  Theme,
-  Typography,
-} from '@mui/joy'
+import { Box, Button, IconButton, Textarea, TextareaProps } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
-import { PropsWithChildren, useState } from 'react'
-
-import { Message } from '../types'
-import ChatMessages from './ChatMessages'
+import { useState } from 'react'
 
 interface ChatInputProps extends TextareaProps {
   onSendMessage: (value: string) => void

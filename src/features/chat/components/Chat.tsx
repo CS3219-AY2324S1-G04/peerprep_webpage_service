@@ -1,8 +1,8 @@
 import { Popper } from '@mui/base'
 import ChatIcon from '@mui/icons-material/Chat'
-import { Badge, Box, IconButton, Theme } from '@mui/joy'
+import { Badge, IconButton } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getMessages } from '../selectors'
@@ -28,12 +28,14 @@ const Chat: React.FC<ChatProps> = (props: ChatProps) => {
         setUnreadMessages(true)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages])
 
   useEffect(() => {
     if (unreadMessages && open) {
       setUnreadMessages(false)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -68,42 +70,28 @@ const Chat: React.FC<ChatProps> = (props: ChatProps) => {
 }
 
 const styles = {
-  sheet: ((theme: Theme) => {
-    return {
-      borderRadius: '10px',
-      width: '350px',
-      marginBottom: '1rem',
-    }
-  }) as SxProps,
+  sheet: {
+    borderRadius: '10px',
+    width: '350px',
+    marginBottom: '1rem',
+  } as SxProps,
   messagesStack: {
     overflow: 'auto',
     height: '350px',
     maxHeight: '450px',
   } as SxProps,
-  chatButton: ((theme: Theme) => {
-    return {
-      position: 'fixed',
-      right: '20px',
-      bottom: '20px',
-      height: '50px',
-      width: '50px',
-      borderRadius: '100%',
-    }
-  }) as SxProps,
+  chatButton: {
+    position: 'fixed',
+    right: '20px',
+    bottom: '20px',
+    height: '50px',
+    width: '50px',
+    borderRadius: '100%',
+  } as SxProps,
   messageContent: {
     fontSize: '0.875rem',
     fontWeight: 400,
   } as SxProps,
 } as const
-
-const AlwaysScrollToBottom = () => {
-  const elementRef = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    if (elementRef && elementRef.current) {
-      elementRef.current.scrollIntoView()
-    }
-  }, [elementRef])
-  return <Box ref={elementRef} />
-}
 
 export default Chat

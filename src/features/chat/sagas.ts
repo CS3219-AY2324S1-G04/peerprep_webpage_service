@@ -43,11 +43,9 @@ function connect(roomId: string, userId: string, username: string) {
       userName: username,
     },
   })
-  console.log(socket)
   return new Promise((resolve) => {
     socket?.on('connect', () => {
       resolve(socket)
-      console.log(socket)
     })
   })
 }
@@ -115,6 +113,7 @@ function* watchIncomingMessages(
   while (true) {
     try {
       // An error from socketChannel will cause the saga jump to the catch block
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const event: WsEvent<any> = yield take(socketChannel)
       let messageToPush: Message | undefined
 

@@ -1,8 +1,8 @@
-import { Box, Button, Grid, Input, LinearProgress } from '@mui/joy'
-import { useEffect, useState } from 'react'
+import { Grid, LinearProgress } from '@mui/joy'
+import { useEffect } from 'react'
 
 import Chat from '../features/chat/components/Chat'
-import { ChatSagaActions, Message } from '../features/chat/types'
+import { ChatSagaActions } from '../features/chat/types'
 import Editor from '../features/room/components/Editor'
 import RoomQuestion from '../features/room/components/RoomQuestion'
 import { getRoomData, getRoomStatus } from '../features/room/selectors'
@@ -46,6 +46,7 @@ const Room: React.FC = () => {
         },
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomData])
 
   const sendMessage = (value: string) => {
