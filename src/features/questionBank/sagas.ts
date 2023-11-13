@@ -14,6 +14,7 @@ import { addLoadingTask, removeLoadingTask } from '../common/slice'
 import { getFullQuestionMap } from './selectors'
 import {
   addCachedFullQuestion,
+  resetCachedFullQuestions,
   setCategories,
   setLanguages,
   setQuestionsList,
@@ -26,6 +27,7 @@ function* getAllQuestions() {
       `${questionServiceBaseUrl}/questions`,
     )
     yield put(setQuestionsList(response.data.data))
+    yield put(resetCachedFullQuestions())
   } catch (error) {
     // TODO: Handle errors properly (e.g. via toast)
     console.error(error)
