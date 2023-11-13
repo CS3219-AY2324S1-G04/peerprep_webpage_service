@@ -14,6 +14,8 @@ import { MessageType, getWsProvider } from '../../../services/editorService'
 import { getUsername } from '../../user/selector'
 import CodeArea from './CodeArea'
 
+const defaultLanguage = 'javascript'
+
 function Editor({
   roomId,
   langSlug,
@@ -77,8 +79,7 @@ function Editor({
     (l) => langSlug === l,
   )
 
-  const lang = langIdx > -1 ? langNames[langIdx] : 'javascript'
-  console.log('lang', lang)
+  const lang = langIdx > -1 ? langNames[langIdx] : defaultLanguage
 
   const editorExtensions = [
     loadLanguage(lang), // TODO: Use match language.
