@@ -48,6 +48,9 @@ const questionBankSlice = createSlice({
 
       state.fullQuestionMap = existingMap
     },
+    resetCachedFullQuestions: (state) => {
+      state.fullQuestionMap = {}
+    }
   },
 })
 
@@ -57,6 +60,7 @@ export const {
   setLanguages,
   setSelectedQuestionId,
   addCachedFullQuestion,
+  resetCachedFullQuestions,
 } = questionBankSlice.actions
 
 export default questionBankSlice.reducer

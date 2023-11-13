@@ -2,6 +2,7 @@ import {
   Button,
   Divider,
   Modal,
+  ModalClose,
   ModalDialog,
   ModalOverflow,
   Typography,
@@ -34,6 +35,7 @@ const AccountSettingsModal: React.FC<{
     <Modal open={isOpen} onClose={() => setIsOpen(false)} {...rest}>
       <ModalOverflow>
         <ModalDialog sx={styles.modalDialog}>
+          <ModalClose variant="plain" sx={styles.modelClose} />
           <EditProfileSection />
           <Divider sx={styles.divider} />
           <ChangePasswordSection />
@@ -299,6 +301,9 @@ const styles = {
   },
   sectionTitle: { textAlign: 'center', fontWeight: 'bold', fontSize: '1.5rem' },
   divider: { margin: 0 },
+  modelClose: {
+    m: 1,
+  },
 }
 
 export default AccountSettingsModal

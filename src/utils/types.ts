@@ -3,6 +3,12 @@ export enum SortDirection {
   Descending = 'desc',
 }
 
+export type SortFunction<T> = (
+  items: T[],
+  key: string,
+  dir: SortDirection,
+) => T[]
+
 export interface ServiceResponse {
   status: string
   data: any // eslint-disable-line
