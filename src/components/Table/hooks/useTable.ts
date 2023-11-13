@@ -1,7 +1,7 @@
 import { useFilteredItems } from '../../../hooks/useFilteredItems'
 import { usePagedItems } from '../../../hooks/usePagination'
 import { useSortedItems } from '../../../hooks/useSorting'
-import { SortDirection } from '../../../utils/types'
+import { SortDirection, SortFunction } from '../../../utils/types'
 
 export function useTable<T>(
   allItems: T[],
@@ -11,12 +11,14 @@ export function useTable<T>(
     sortKey,
     sortDir,
     pageSize,
+    sortFunctions,
   }: {
     searchFilterKeys: string[]
     columnFilterKeys: string[]
     sortKey: string
     sortDir: SortDirection
     pageSize: number
+    sortFunctions?: Record<string, SortFunction<T>>
   },
 ) {
   pageSize = pageSize || allItems.length
@@ -25,10 +27,14 @@ export function useTable<T>(
     searchFilterKeys,
     columnFilterKeys,
   )
-  const { sortedItems, ...sorting } = useSortedItems(filteredItems, {
-    sortKey,
-    sortDir,
-  })
+  const { sortedItems, ...sorting } = useSortedItems(
+    filteredItems,
+    {
+      sortKey,
+      sortDir,
+    },
+    sortFunctions,
+  )
 
   const { items, paging } = usePagedItems(sortedItems, pageSize)
 

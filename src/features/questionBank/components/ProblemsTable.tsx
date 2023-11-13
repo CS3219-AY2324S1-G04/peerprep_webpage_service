@@ -25,6 +25,7 @@ import { CommonTable as Table } from '../../../components/Table/Table'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { SubPaths } from '../../../utils/constants/navigation'
+import sortByComplexity from '../../../utils/sortComplexity'
 import { SortDirection } from '../../../utils/types'
 import { getComplexityColor } from '../../../utils/uiHelpers'
 import { getCategories, getQuestionsList } from '../selectors'
@@ -42,6 +43,9 @@ interface Filter {
 }
 
 const MAX_CATEGORIES_TO_DISPLAY = 2
+const TITLE_COLUMN_KEY = 'title'
+const CATEGORIES_COLUMN_KEY = 'categories'
+const COMPLEXITY_COLUMN_KEY = 'complexity'
 
 // TODO: Add status column when necessary services are ready
 // Status column should only be added for logged in users
@@ -58,11 +62,18 @@ export default function ProblemsTable(props: ProblemsTableProps) {
   const { items, sorting, paging, filtering } = Table.useTable<MinimalQuestion>(
     questionsList,
     {
-      sortKey: 'title',
+      sortKey: TITLE_COLUMN_KEY,
       sortDir: SortDirection.Ascending,
-      searchFilterKeys: ['title', 'categories', 'complexity'],
-      columnFilterKeys: ['categories', 'complexity'],
+      searchFilterKeys: [
+        TITLE_COLUMN_KEY,
+        CATEGORIES_COLUMN_KEY,
+        COMPLEXITY_COLUMN_KEY,
+      ],
+      columnFilterKeys: [CATEGORIES_COLUMN_KEY, COMPLEXITY_COLUMN_KEY],
       pageSize: 10,
+      sortFunctions: {
+        [COMPLEXITY_COLUMN_KEY]: sortByComplexity,
+      },
     },
   )
 
@@ -84,21 +95,21 @@ export default function ProblemsTable(props: ProblemsTableProps) {
   const onClickComplexityFilter = (complexityValue: string) => {
     const filterValues = [complexityValue]
     filtering.setFilterColumns(
-      new Map(filtering.filterColumns.set('complexity', filterValues)),
+      new Map(filtering.filterColumns.set(COMPLEXITY_COLUMN_KEY, filterValues)),
     )
 
     const updatedFilters = filters
     const currentFilterIdx = filters.findIndex(
-      (f) => f.columnFilterKey === 'complexity',
+      (f) => f.columnFilterKey === COMPLEXITY_COLUMN_KEY,
     )
     if (currentFilterIdx !== -1) {
       updatedFilters[currentFilterIdx] = {
-        columnFilterKey: 'complexity',
+        columnFilterKey: COMPLEXITY_COLUMN_KEY,
         value: complexityValue,
       }
     } else {
       updatedFilters.push({
-        columnFilterKey: 'complexity',
+        columnFilterKey: COMPLEXITY_COLUMN_KEY,
         value: complexityValue,
       })
     }
@@ -106,15 +117,21 @@ export default function ProblemsTable(props: ProblemsTableProps) {
   }
 
   const onClickCategoryFilter = (category: string) => {
-    const filterValues = filtering.filterColumns.get('categories') ?? []
+    const filterValues =
+      filtering.filterColumns.get(CATEGORIES_COLUMN_KEY) ?? []
     if (!filterValues.includes(category)) {
       filterValues.push(category)
       filtering.setFilterColumns(
-        new Map(filtering.filterColumns.set('categories', filterValues)),
+        new Map(
+          filtering.filterColumns.set(CATEGORIES_COLUMN_KEY, filterValues),
+        ),
       )
 
       const updatedFilters = filters
-      updatedFilters.push({ columnFilterKey: 'categories', value: category })
+      updatedFilters.push({
+        columnFilterKey: CATEGORIES_COLUMN_KEY,
+        value: category,
+      })
       setFilters(updatedFilters)
     }
   }
