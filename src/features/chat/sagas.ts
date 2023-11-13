@@ -37,6 +37,7 @@ let socket: Socket | undefined
 // Wrapper functions for socket events (connect, disconnect, reconnect)
 function connect(roomId: string, userId: string, username: string) {
   socket = io(chatServiceBaseUrl, {
+    path: '/chat-service/socket.io',
     query: {
       roomId: roomId,
       userId: userId,
