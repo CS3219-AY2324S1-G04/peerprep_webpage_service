@@ -70,7 +70,7 @@ const Room: React.FC = () => {
             <RoomQuestion />
           </Grid>
           <Grid xs={12} md={8}>
-            <Editor roomId={roomData.roomId} />
+            <Editor roomId={roomData.roomId} langSlug={roomData.langSlug} />
           </Grid>
         </Grid>
         <Chat
