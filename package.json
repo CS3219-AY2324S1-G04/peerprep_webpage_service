@@ -13,7 +13,6 @@
     "test": "jest"
   },
   "dependencies": {
-    "@codemirror/lang-javascript": "^6.2.1",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/base": "^5.0.0-beta.21",
@@ -22,6 +21,7 @@
     "@reduxjs/toolkit": "^1.9.6",
     "@replit/codemirror-vim": "^6.0.14",
     "@types/socket.io-client": "^3.0.0",
+    "@uiw/codemirror-extensions-langs": "^4.21.20",
     "@uiw/codemirror-theme-noctis-lilac": "^4.21.20",
     "@uiw/codemirror-theme-tokyo-night": "^4.21.20",
     "@uiw/react-codemirror": "^4.21.20",

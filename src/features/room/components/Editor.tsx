@@ -1,7 +1,7 @@
-import { javascript } from '@codemirror/lang-javascript'
 import { Box, Card, LinearProgress, Switch, Typography } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
 import { vim } from '@replit/codemirror-vim'
+import { langNames, loadLanguage } from '@uiw/codemirror-extensions-langs'
 import Color from 'color'
 import React, { useEffect } from 'react'
 // @ts-ignore Waiting for dev to fix their package.json.
@@ -16,9 +16,11 @@ import CodeArea from './CodeArea'
 
 function Editor({
   roomId,
+  langSlug,
   onConnectionClose,
 }: {
   roomId: string
+  langSlug: string
   onConnectionClose?: () => void
 }) {
   const [hasConnect, setHasConnect] = React.useState(false)
@@ -71,8 +73,15 @@ function Editor({
 
   const yUndoManager = new Y.UndoManager(doc.getText())
 
+  const langIdx: number = (langNames as string[]).findIndex(
+    (l) => langSlug === l,
+  )
+
+  const lang = langIdx > -1 ? langNames[langIdx] : 'javascript'
+  console.log('lang', lang)
+
   const editorExtensions = [
-    javascript(), // TODO: Use match language.
+    loadLanguage(lang), // TODO: Use match language.
     yCollab(doc.getText(), awareness, { yUndoManager }),
   ]
 
