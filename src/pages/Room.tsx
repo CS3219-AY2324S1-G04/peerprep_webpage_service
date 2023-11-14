@@ -1,7 +1,8 @@
-import { Grid, LinearProgress } from '@mui/joy'
+import { Grid, LinearProgress, useTheme } from '@mui/joy'
+import useMediaQuery from '@mui/material/useMediaQuery'
 import { useEffect } from 'react'
 
-import Chat from '../features/chat/components/Chat'
+import ChatIconButton from '../features/chat/components/ChatIconButton'
 import { ChatSagaActions } from '../features/chat/types'
 import Editor from '../features/room/components/Editor'
 import RoomQuestion from '../features/room/components/RoomQuestion'
@@ -14,11 +15,13 @@ import { useAppSelector } from '../hooks/useAppSelector'
 const Room: React.FC = () => {
   // TODO: If room id params provided, load room of roomId.
 
+  const theme = useTheme()
+  const dispatch = useAppDispatch()
   const roomStatus = useAppSelector(getRoomStatus)
   const roomData = useAppSelector(getRoomData)
   const userId = useAppSelector(getUserId)
   const username = useAppSelector(getUsername)
-  const dispatch = useAppDispatch()
+  const isTabletOrMobile = useMediaQuery(theme.breakpoints.down('md'))
 
   useEffect(() => {
     if (roomStatus == RoomStatus.Open) {
@@ -67,18 +70,24 @@ const Room: React.FC = () => {
   } else if (roomStatus == RoomStatus.Open && roomData) {
     return (
       <>
-        <Grid container spacing={2} sx={{ height: '100%' }}>
-          <Grid xs={12} md={4}>
+        <Grid
+          container
+          spacing={2}
+          sx={{ height: isTabletOrMobile ? '100%' : '88vh' }}
+        >
+          <Grid xs={12} md={4} sx={{ height: '100%' }}>
             <RoomQuestion />
           </Grid>
-          <Grid xs={12} md={8}>
+          <Grid xs={12} md={8} sx={{ height: '100%' }}>
             <Editor roomId={roomData.roomId} langSlug={roomData.langSlug} />
           </Grid>
         </Grid>
-        <Chat
-          onSendMessage={sendMessage}
-          introLabel="Chat with your peer here! 😬"
-        />
+        {isTabletOrMobile && (
+          <ChatIconButton
+            onSendMessage={sendMessage}
+            introLabel="ChatIconButton with your peer here! 😬"
+          />
+        )}
       </>
     )
   }

@@ -7,6 +7,8 @@ import JoinQueueSettingsModal from '../features/matching/components/JoinQueueSet
 import ProblemsTable from '../features/questionBank/components/ProblemsTable'
 import QuestionDetailsModal from '../features/questionBank/components/QuestionDetailsModal'
 import { getQuestionsList } from '../features/questionBank/selectors'
+import { getRoomStatus } from '../features/room/selectors'
+import { RoomStatus } from '../features/room/types'
 import { getIsLoggedIn } from '../features/user/selector'
 import { useAppSelector } from '../hooks/useAppSelector'
 
@@ -15,6 +17,7 @@ const Problems: React.FC = () => {
   const [isPrepModalOpen, setIsPrepModalOpen] = useState<boolean>(false)
   const questionsList = useAppSelector(getQuestionsList)
   const isLoggedIn = useAppSelector(getIsLoggedIn)
+  const roomStatus = useAppSelector(getRoomStatus)
 
   return (
     <>
@@ -25,7 +28,11 @@ const Problems: React.FC = () => {
           headerStyles={styles.header}
         >
           {isLoggedIn && (
-            <Button size="md" onClick={() => setIsPrepModalOpen(true)}>
+            <Button
+              size="md"
+              onClick={() => setIsPrepModalOpen(true)}
+              disabled={roomStatus === RoomStatus.Open}
+            >
               PeerPrep💪🏼
             </Button>
           )}

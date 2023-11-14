@@ -12,18 +12,16 @@ export interface RouteMatches {
 }
 
 export function useRouteMatch() {
-  const isDashboardPage = useMatch(Paths.Dashboard)
   const isProblemsPage = useMatch(Paths.Problems)
   const isRankingsPage = useMatch(Paths.Rankings)
   const isLoginPage = useMatch(Paths.Login)
   const isSignUpPage = useMatch(Paths.SignUp)
   const isManageQuestionsPage = useMatch(SubPaths.ManageQuestions)
   const isManageUsersPage = useMatch(Paths.ManageUsers)
+  const isAttemptsPage = useMatch(Paths.Attempts)
 
   const getRouteMatch = (path: Paths | SubPaths) => {
     switch (path) {
-      case Paths.Dashboard:
-        return isDashboardPage
       case Paths.Problems:
         return isProblemsPage
       case Paths.Rankings:
@@ -34,6 +32,8 @@ export function useRouteMatch() {
         return isManageQuestionsPage
       case Paths.ManageUsers:
         return isManageUsersPage
+      case Paths.Attempts:
+        return isAttemptsPage
       default:
         return isLoginPage
     }

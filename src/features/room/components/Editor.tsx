@@ -92,7 +92,7 @@ function Editor({
   }
 
   return (
-    <Card sx={{ height: '100%' }}>
+    <Card sx={{ height: '100%', overflow: 'auto' }}>
       <Box sx={styles.editorControlBar}>
         <Typography
           component="label"
@@ -115,7 +115,7 @@ function Editor({
 const styles = {
   editorControlBar: {
     borderRadius: 25,
-    display: 'grid',
+    display: 'flex',
     height: 35,
   } as SxProps,
 }

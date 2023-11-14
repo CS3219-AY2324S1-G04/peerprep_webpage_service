@@ -9,6 +9,7 @@ import {
   CommonSagaActions,
   LoadingKeys,
   ServiceResponse,
+  SimpleMap,
 } from '../../utils/types'
 import { addLoadingTask, removeLoadingTask } from '../common/slice'
 import { getFullQuestionMap } from './selectors'
@@ -18,6 +19,7 @@ import {
   setCategories,
   setLanguages,
   setQuestionsList,
+  setQuestionsMap,
 } from './slice'
 import { Question, QuestionBankSagaActions } from './types'
 
@@ -26,8 +28,16 @@ function* getAllQuestions() {
     const response: AxiosResponse<ServiceResponse> = yield axios.get(
       `${questionServiceBaseUrl}/questions`,
     )
-    yield put(setQuestionsList(response.data.data))
+    const questions: Question[] = response.data.data as Question[]
+    yield put(setQuestionsList(questions))
     yield put(resetCachedFullQuestions())
+
+    // set up question map (mainly for history components to access)
+    const questionsMap: SimpleMap<Question> = {}
+    questions.forEach((q) => {
+      questionsMap[q._id] = q
+    })
+    yield put(setQuestionsMap(questionsMap))
   } catch (error) {
     // TODO: Handle errors properly (e.g. via toast)
     console.error(error)

@@ -17,7 +17,7 @@ const RoomQuestion = () => {
   }
 
   return (
-    <Card sx={{ height: '100%' }}>
+    <Card sx={{ height: '100%', overflow: 'auto' }}>
       <Box display="flex" alignItems="baseline">
         <Typography level="h2">
           {question.title}

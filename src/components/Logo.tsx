@@ -6,7 +6,7 @@ import { useAppSelector } from '../hooks/useAppSelector'
 import { UserRole } from '../services/userService'
 
 interface LogoProps {
-  variant?: 'row' | 'full'
+  variant?: 'row' | 'full' | 'logo'
 }
 
 const Logo: React.FC<LogoProps> = (props: LogoProps) => {
@@ -16,7 +16,7 @@ const Logo: React.FC<LogoProps> = (props: LogoProps) => {
 
   return (
     <Box sx={styles.wrapper} flexDirection={isRowVersion ? 'row' : 'column'}>
-      {!isRowVersion ? (
+      {variant === 'full' && (
         <>
           <img src={logo} alt="mainLogo" style={styles.logoImg} />
           <Box sx={styles.textWrapper}>
@@ -38,7 +38,9 @@ const Logo: React.FC<LogoProps> = (props: LogoProps) => {
             </Typography>
           )}
         </>
-      ) : (
+      )}
+
+      {variant === 'row' && (
         <>
           <Box sx={styles.textWrapper} alignItems="center">
             <img src={logo} alt="mainLogo" style={styles.logoImg} />
@@ -62,6 +64,24 @@ const Logo: React.FC<LogoProps> = (props: LogoProps) => {
                 </Typography>
               )}
             </Box>
+          </Box>
+        </>
+      )}
+
+      {variant === 'logo' && (
+        <>
+          <Box display="block" alignItems="center">
+            <img src={logo} alt="mainLogo" style={styles.logoImg} />
+            {userRole === UserRole.admin && (
+              <Typography
+                level="body-xs"
+                fontWeight="bold"
+                color="danger"
+                mt="-5px"
+              >
+                Admin
+              </Typography>
+            )}
           </Box>
         </>
       )}

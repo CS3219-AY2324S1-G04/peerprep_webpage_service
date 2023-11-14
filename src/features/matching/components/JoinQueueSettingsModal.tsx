@@ -29,7 +29,6 @@ interface Props {
   onClose: () => void
 }
 
-// TODO: Retrieve/Store values in local storage
 const JoinQueueSettingsModal: React.FC<Props> = (props: Props) => {
   const { isOpen, onClose } = props
   const dispatch = useAppDispatch()
