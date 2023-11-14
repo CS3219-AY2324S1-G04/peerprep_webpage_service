@@ -18,10 +18,16 @@ const roomSlice = createSlice({
       state: RoomState,
       { payload: room }: PayloadAction<RoomModel>,
     ) => {
+      if (state.status == RoomStatus.Open) {
+        return
+      }
       state.status = RoomStatus.Open
       state.roomData = room
     },
     closeRoom: (state: RoomState) => {
+      if (state.status == RoomStatus.Pending) {
+        return
+      }
       state.status = RoomStatus.Pending
       state.roomData = undefined
       state.questionData = undefined

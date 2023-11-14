@@ -6,7 +6,6 @@ import { ChatSagaActions } from '../features/chat/types'
 import Editor from '../features/room/components/Editor'
 import RoomQuestion from '../features/room/components/RoomQuestion'
 import { getRoomData, getRoomStatus } from '../features/room/selectors'
-import { closeRoom } from '../features/room/slice'
 import { RoomSagaActions, RoomStatus } from '../features/room/types'
 import { getUserId, getUsername } from '../features/user/selector'
 import { useAppDispatch } from '../hooks/useAppDispatch'
@@ -22,15 +21,9 @@ const Room: React.FC = () => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    if (roomStatus == RoomStatus.Pending) {
-      dispatch({ type: RoomSagaActions.START_POLL_MATCH_ROOM })
-      return () => {
-        dispatch({ type: RoomSagaActions.STOP_POLL_MATCH_ROOM })
-      }
-    } else if (roomStatus == RoomStatus.Open) {
+    if (roomStatus == RoomStatus.Open) {
       dispatch({ type: RoomSagaActions.START_KEEP_ALIVE })
       return () => {
-        dispatch(closeRoom())
         dispatch({ type: ChatSagaActions.STOP_ROOM_CHAT_WS })
         dispatch({ type: RoomSagaActions.STOP_KEEP_ALIVE })
       }

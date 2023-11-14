@@ -6,6 +6,7 @@ import {
   fork,
   put,
   race,
+  select,
   take,
   takeLatest,
 } from 'redux-saga/effects'
@@ -17,12 +18,13 @@ import {
   keepAlive,
 } from '../../services/roomService'
 import config from '../../utils/config'
-import { ServiceResponse } from '../../utils/types'
+import { CommonSagaActions, ServiceResponse } from '../../utils/types'
 import { Question } from '../questionBank/types'
+import { getRoomStatus } from './selectors'
 import { closeRoom, openRoom, setQuestionData, setRoomExpiry } from './slice'
-import { RoomSagaActions } from './types'
+import { RoomSagaActions, RoomStatus } from './types'
 
-const retryFindMatchRoomDelayInMs = 3000
+const pollRoomIntervalInMs = 3000
 
 function* startPollMatchRoom() {
   yield race({
@@ -40,20 +42,31 @@ function* pollMatchRoom() {
         throw new Error('Room not found!')
       }
 
-      yield getQuestionData(room.questionId)
+      const roomStatus: RoomStatus = yield select(getRoomStatus)
 
-      toast.success('Successfully connected to room!')
-      yield put(openRoom(room))
+      if (roomStatus == RoomStatus.Pending) {
+        yield getQuestionData(room.questionId)
+        yield put(openRoom(room))
+      }
+
+      yield delay(pollRoomIntervalInMs)
     } catch (error) {
-      console.error(`Match room not found! Retrying...`)
-      toast.error('Connecting to room...')
-      yield delay(retryFindMatchRoomDelayInMs)
+      const roomStatus: RoomStatus = yield select(getRoomStatus)
+
+      if (roomStatus == RoomStatus.Open) {
+        console.error(`Room closed.`)
+        yield put(closeRoom())
+      }
+
+      yield delay(pollRoomIntervalInMs)
     }
   }
 }
 
 function* onOpenRoom() {
   // Add events to be called when room is open.
+  toast.success('Successfully connected to room!')
+  yield
 }
 
 function* startKeepAlive() {
@@ -93,8 +106,11 @@ function* getQuestionData(questionId: string) {
   yield put(setQuestionData(question))
 }
 
-export function* watchLoadMatchRoom() {
-  yield takeLatest(RoomSagaActions.START_POLL_MATCH_ROOM, startPollMatchRoom)
+export function* watchStartPollMatchRoom() {
+  yield takeLatest(
+    [CommonSagaActions.LOGGED_IN_INIT, RoomSagaActions.START_POLL_MATCH_ROOM],
+    startPollMatchRoom,
+  )
 }
 
 export function* watchOpenRoom() {
@@ -107,7 +123,7 @@ export function* watchStartKeepAlive() {
 
 export const roomSaga = function* () {
   yield all([
-    fork(watchLoadMatchRoom),
+    fork(watchStartPollMatchRoom),
     fork(watchOpenRoom),
     fork(watchStartKeepAlive),
   ])

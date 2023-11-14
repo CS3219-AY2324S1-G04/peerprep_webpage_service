@@ -27,7 +27,8 @@ export async function keepAlive(): Promise<Date> {
     undefined,
     {
       withCredentials: isDevEnv,
-  })
+    },
+  )
 
   return new Date(res.data[expireKey])
 }
