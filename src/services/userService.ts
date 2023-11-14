@@ -1,6 +1,7 @@
 import axios, { AxiosError } from 'axios'
 
 import { isDevEnv, userServiceBaseUrl } from '../utils/config'
+import { SimpleMap } from '../utils/types'
 
 const usernameKey: string = 'username'
 const emailAddressKey: string = 'email-address'
@@ -9,6 +10,7 @@ const userRoleKey: string = 'user-role'
 const passwordKey: string = 'password'
 const newPasswordKey: string = 'new-password'
 const accessTokenExpiryKey: string = 'access-token-expiry'
+const userIdsKey: string = 'user-ids'
 
 const fetchAccessTokenEndpoint: string = `${userServiceBaseUrl}/session/access-token`
 
@@ -153,6 +155,16 @@ export async function deleteUser(
   })
 }
 
+async function getUsernames(userIds: number[]): Promise<SimpleMap<string>> {
+  const res = await axios.get(`${userServiceBaseUrl}/users/all/username`, {
+    params: {
+      [userIdsKey]: JSON.stringify(userIds),
+    },
+    withCredentials: isDevEnv,
+  })
+  return res.data ?? {}
+}
+
 export enum UserRole {
   user = 'user',
   maintainer = 'maintainer',
@@ -210,4 +222,5 @@ export default {
   updateUserProfile,
   updatePassword,
   deleteUser,
+  getUsernames,
 }
