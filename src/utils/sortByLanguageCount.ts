@@ -8,11 +8,7 @@ const sortByLanguageCount = (
   _sortKey: string,
   sortDir: SortDirection,
 ) => {
-  return orderBy(
-    items,
-    [(item: Question) => item.template.length],
-    [sortDir],
-  )
+  return orderBy(items, [(item: Question) => item.template.length], [sortDir])
 }
 
 export default sortByLanguageCount

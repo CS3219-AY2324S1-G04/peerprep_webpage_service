@@ -25,22 +25,20 @@ function* checkUserQueueStatus() {
     if (error instanceof AxiosError) {
       if (error.response?.status === 303) {
         yield put(addLoadingTask(LoadingKeys.REDIRECT_TO_ROOM))
-        yield put(removeLoadingTask(LoadingKeys.CHECKING_QUEUE_STATUS))
-        yield put({ type: MatchingSagaActions.STOP_CHECK_QUEUE_STATUS })
       }
       if (error.response?.status === 401) {
         toast.error(`Queue status error: ${error.response.data.data.message}`)
       }
       if (error.response?.status === 404) {
         toast.error(
-          'Queue error: Unable to find a room at this time. PLease try again later.',
+          'Queue error: Unable to find a room at this time. Please try again later.',
         )
       }
       if (error.response?.status === 500) {
         toast.error('Queue status error: Server issues')
       }
-      // yield put(removeLoadingTask(LoadingKeys.CHECKING_QUEUE_STATUS))
-      // yield put({ type: MatchingSagaActions.STOP_CHECK_QUEUE_STATUS })
+      yield put(removeLoadingTask(LoadingKeys.CHECKING_QUEUE_STATUS))
+      yield put({ type: MatchingSagaActions.STOP_CHECK_QUEUE_STATUS })
     }
   }
 }

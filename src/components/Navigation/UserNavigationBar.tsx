@@ -1,7 +1,6 @@
 import { Logout, Settings } from '@mui/icons-material'
 import MenuIcon from '@mui/icons-material/Menu'
 import {
-  Button,
   Divider,
   Dropdown,
   IconButton,
@@ -27,6 +26,7 @@ import { AvatarShape } from '../../utils/types'
 import Avatar from '../Avatar'
 import ColorSchemeToggle from '../ColorSchemeToggle'
 import Logo from '../Logo'
+import QuickPrepButton from '../QuickPrepButton'
 import MobileNavigationDrawer from './MobileNavigationDrawer'
 import NavigationBar from './NavigationBar'
 import NavigationList from './NavigationList'
@@ -78,9 +78,7 @@ const UserNavigationBar: React.FC = () => {
           {!isTabletOrMobile && <Logo />}
         </NavigationBar.Middle>
         <NavigationBar.Right wrapperClass={styles.rightColumnOverride}>
-          <Button size="md" sx={styles.button}>
-            QuickPrep 🚀
-          </Button>
+          <QuickPrepButton />
           <ColorSchemeToggle />
           <Dropdown>
             <MenuButton variant="plain" sx={{ padding: 0 }}>

@@ -32,7 +32,8 @@ export const CommonSagaActions = {
 export const LoadingKeys = {
   FETCHING_SELECTED_QUESTION: '@loading/FETCHING_SELECTED_QUESTION',
   CHECKING_QUEUE_STATUS: '@loading/CHECKING_QUEUE_STATUS',
-  REDIRECT_TO_ROOM: '@loading/redirect/REDIRECT_TO_ROOM',
+  REDIRECT_TO_ROOM: '@loading/REDIRECT_TO_ROOM',
+  QUICK_PREP: '@loading/QUICK_PREP',
 }
 
 export enum AvatarShape {

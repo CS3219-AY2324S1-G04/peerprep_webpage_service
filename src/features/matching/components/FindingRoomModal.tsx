@@ -16,6 +16,7 @@ const FindingRoomModal: React.FC = () => {
     LoadingKeys.CHECKING_QUEUE_STATUS,
   )
   const [isRedirectToRoom] = useTaskSubscriber(LoadingKeys.REDIRECT_TO_ROOM)
+  const [isQuickPrep] = useTaskSubscriber(LoadingKeys.QUICK_PREP)
 
   useEffect(() => {
     if (isRedirectToRoom) {
@@ -25,6 +26,13 @@ const FindingRoomModal: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRedirectToRoom])
 
+  useEffect(() => {
+    if (!isCheckingStatus) {
+      dispatch(removeLoadingTask(LoadingKeys.QUICK_PREP))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCheckingStatus])
+
   return (
     <Modal open={isCheckingStatus}>
       <ModalDialog sx={styles.modalDialog}>
@@ -33,9 +41,14 @@ const FindingRoomModal: React.FC = () => {
             Finding a room...
           </Typography>
           <Typography className="bounce" display="block" level="h1">
-            🔎
+            {!isQuickPrep ? '🔎' : '🚀'}
           </Typography>
           <LinearProgress size="lg" />
+          {isQuickPrep && (
+            <Typography mt={2} level="body-md">
+              QuickPrep🔥
+            </Typography>
+          )}
           <Typography mt={2} level="body-md">
             Please wait while we look for a suitable room for you
           </Typography>

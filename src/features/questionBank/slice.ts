@@ -50,7 +50,7 @@ const questionBankSlice = createSlice({
     },
     resetCachedFullQuestions: (state) => {
       state.fullQuestionMap = {}
-    }
+    },
   },
 })
 

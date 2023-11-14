@@ -5,6 +5,7 @@ import { Route, Routes } from 'react-router-dom'
 import { Layout } from './components/Layout'
 import AdminNavigationBar from './components/Navigation/AdminNavigationBar'
 import GuestNavigationBar from './components/Navigation/GuestNavigationBar'
+import RoomNavigationBar from './components/Navigation/RoomNavigationBar'
 import UserNavigationBar from './components/Navigation/UserNavigationBar'
 import { Toaster } from './components/Toaster/Toaster'
 import FindingRoomModal from './features/matching/components/FindingRoomModal'
@@ -12,6 +13,7 @@ import { applyAxiosInterceptorForUpdatingAccessToken } from './features/user/acc
 import { getIsLoggedIn, getUserRole } from './features/user/selector'
 import { useAppDispatch } from './hooks/useAppDispatch'
 import { useAppSelector } from './hooks/useAppSelector'
+import { useRouteMatch } from './hooks/useRouteMatch'
 import Dashboard from './pages/Dashboard'
 import GuestRedirect from './pages/GuestRedirect'
 import Login from './pages/Login'
@@ -34,6 +36,8 @@ const App: React.FC = () => {
   const dispatch = useAppDispatch()
   const isLoggedIn = useAppSelector(getIsLoggedIn)
   const userRole = useAppSelector(getUserRole)
+  const routeMatch = useRouteMatch()
+  const isRoomPage = routeMatch.getRouteMatch(Paths.MatchRoom)
 
   useEffect(() => {
     dispatch({ type: CommonSagaActions.APP_INIT })
@@ -52,6 +56,7 @@ const App: React.FC = () => {
             {isLoggedIn && isAdminOrMaintainer && <AdminNavigationBar />}
             {isLoggedIn && isNormalUser && <UserNavigationBar />}
             {!isLoggedIn && <GuestNavigationBar />}
+            {isRoomPage && <RoomNavigationBar />}
           </Layout.Header>
           <Layout.Main>
             <Toaster />

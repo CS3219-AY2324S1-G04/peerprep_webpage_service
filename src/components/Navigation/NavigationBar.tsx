@@ -60,10 +60,6 @@ const styles = {
   } as SxProps,
   leftColumn: {
     gridColumn: '1 / 2',
-    // display: {
-    //   xs: 'none',
-    //   sm: 'flex',
-    // },
   } as SxProps,
   middleColumn: {
     gridColumn: '2 / 3',
@@ -76,10 +72,6 @@ const styles = {
     paddingBottom: 2,
     alignItems: 'center',
     justifyContent: 'flex-end',
-    // display: {
-    //   xs: 'none',
-    //   sm: 'flex',
-    // },
   } as SxProps,
   rightColumnWrapper: {
     width: '100%',

@@ -25,6 +25,7 @@ import { CommonTable as Table } from '../../../components/Table/Table'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { SubPaths } from '../../../utils/constants/navigation'
+import sortByLanguageCount from '../../../utils/sortByLanguageCount'
 import sortByComplexity from '../../../utils/sortComplexity'
 import { SortDirection } from '../../../utils/types'
 import { getComplexityColor } from '../../../utils/uiHelpers'
@@ -32,7 +33,6 @@ import { getCategories, getQuestionsList } from '../selectors'
 import { setSelectedQuestionId } from '../slice'
 import { MinimalQuestion, QuestionComplexity } from '../types'
 import ConfirmDeleteModal from './ConfirmDeleteModal'
-import sortByLanguageCount from '../../../utils/sortByLanguageCount'
 
 interface ProblemsTableProps {
   adminMode?: boolean
@@ -251,9 +251,15 @@ export default function ProblemsTable(props: ProblemsTableProps) {
           >
             Categories
           </Table.ColumnHead>
-          <Table.ColumnHead id={COMPLEXITY_COLUMN_KEY}>Complexity</Table.ColumnHead>
-          <Table.ColumnHead id={LANGUAGES_COLUMN_KEY}>Languages</Table.ColumnHead>
-          {adminMode && <Table.ColumnHead sortable={false} id="manageActions" />}
+          <Table.ColumnHead id={COMPLEXITY_COLUMN_KEY}>
+            Complexity
+          </Table.ColumnHead>
+          <Table.ColumnHead id={LANGUAGES_COLUMN_KEY}>
+            Languages
+          </Table.ColumnHead>
+          {adminMode && (
+            <Table.ColumnHead sortable={false} id="manageActions" />
+          )}
         </Table.Header>
         <Table.Body>
           {items.length > 0 &&
