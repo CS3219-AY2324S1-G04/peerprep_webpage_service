@@ -17,6 +17,7 @@ export enum Paths {
   ManageQuestions = '/manage-questions',
   ManageUsers = '/manage-users',
   MatchRoom = '/room',
+  Attempts = '/attempts',
 }
 
 export enum SubPaths {

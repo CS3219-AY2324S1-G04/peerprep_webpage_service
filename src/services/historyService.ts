@@ -10,11 +10,12 @@ async function getAllUserAttempts(): Promise<Attempt[]> {
 }
 
 async function getUserAttemptCode(attemptId: string): Promise<string> {
-  const res = await axios.get(`${historyServiceBaseUrl}/all/${attemptId}`, {
+  const res = await axios.get(`${historyServiceBaseUrl}/${attemptId}`, {
     withCredentials: isDevEnv,
   })
-  return res.data.data ?? ''
+  return res.data.data.code ?? ''
 }
+
 async function getEveryUsersAttempts(): Promise<AttemptCount[]> {
   const res = await axios.get(`${historyServiceBaseUrl}/all`, {
     withCredentials: isDevEnv,

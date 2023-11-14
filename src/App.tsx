@@ -13,6 +13,7 @@ import { applyAxiosInterceptorForUpdatingAccessToken } from './features/user/acc
 import { getIsLoggedIn, getUserRole } from './features/user/selector'
 import { useAppDispatch } from './hooks/useAppDispatch'
 import { useAppSelector } from './hooks/useAppSelector'
+import Attempts from './pages/Attempts'
 import Dashboard from './pages/Dashboard'
 import GuestRedirect from './pages/GuestRedirect'
 import Login from './pages/Login'
@@ -61,12 +62,13 @@ const App: React.FC = () => {
           <Layout.Main>
             <Toaster />
             <Routes>
+              <Route path={Paths.Problems} element={<Problems />} />
+              <Route path={Paths.Rankings} element={<Rankings />} />
               {isLoggedIn && isAdminOrMaintainer && (
                 <>
-                  <Route path={Paths.Problems} element={<Problems />} />
-                  <Route path={Paths.Rankings} element={<Rankings />} />
                   <Route path={Paths.Dashboard} element={<Dashboard />} />
                   <Route path={Paths.Room} element={<Room />} />
+                  <Route path={Paths.Attempts} element={<Attempts />} />
                   <Route
                     path={SubPaths.ManageQuestions}
                     element={<Questions />}
@@ -84,17 +86,14 @@ const App: React.FC = () => {
               )}
               {isLoggedIn && isNormalUser && (
                 <>
-                  <Route path={Paths.Problems} element={<Problems />} />
-                  <Route path={Paths.Rankings} element={<Rankings />} />
                   <Route path={Paths.Dashboard} element={<Dashboard />} />
+                  <Route path={Paths.Attempts} element={<Attempts />} />
                   <Route path={Paths.Room} element={<Room />} />
                   <Route path="*" element={<UserRedirect />} />
                 </>
               )}
               {!isLoggedIn && (
                 <>
-                  <Route path={Paths.Problems} element={<Problems />} />
-                  <Route path={Paths.Rankings} element={<Rankings />} />
                   <Route path={Paths.Login} element={<Login />} />
                   <Route path={Paths.SignUp} element={<SignUp />} />
                   <Route path="*" element={<GuestRedirect />} />

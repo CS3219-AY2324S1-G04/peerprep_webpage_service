@@ -12,3 +12,6 @@ export const getSelectedQuestionId = (state: RootState) =>
 
 export const getFullQuestionMap = (state: RootState) =>
   state.questionBank.fullQuestionMap
+
+export const getQuestionsMap = (state: RootState) =>
+  state.questionBank.questionsMap

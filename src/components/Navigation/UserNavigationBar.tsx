@@ -1,4 +1,4 @@
-import { Logout, Settings } from '@mui/icons-material'
+import { History, Logout, Settings } from '@mui/icons-material'
 import MenuIcon from '@mui/icons-material/Menu'
 import {
   Divider,
@@ -15,13 +15,14 @@ import {
 import { SxProps } from '@mui/joy/styles/types'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import AccountSettingsModal from '../../features/accountSettingsEditor/components/AccountSettingsModal'
 import { getEmailAddress, getUsername } from '../../features/user/selector'
 import { UserSagaActions } from '../../features/user/types'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
-import { userNavigationList } from '../../utils/constants/navigation'
+import Paths, { userNavigationList } from '../../utils/constants/navigation'
 import { AvatarShape } from '../../utils/types'
 import Avatar from '../Avatar'
 import ColorSchemeToggle from '../ColorSchemeToggle'
@@ -32,6 +33,7 @@ import NavigationBar from './NavigationBar'
 import NavigationList from './NavigationList'
 
 const UserNavigationBar: React.FC = () => {
+  const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const theme = useTheme()
   const isTabletOrMobile = useMediaQuery(theme.breakpoints.down('md'))
@@ -54,6 +56,10 @@ const UserNavigationBar: React.FC = () => {
 
   function toggleDrawer(inOpen: boolean) {
     setIsDrawerOpen(inOpen)
+  }
+
+  function goToAttempts() {
+    navigate(Paths.Attempts)
   }
 
   return (
@@ -104,11 +110,17 @@ const UserNavigationBar: React.FC = () => {
                 </ListItemDecorator>
                 Edit Account Settings
               </MenuItem>
+              <MenuItem onClick={goToAttempts}>
+                <ListItemDecorator>
+                  <History />
+                </ListItemDecorator>
+                My Attempts
+              </MenuItem>
               <MenuItem onClick={logout}>
                 <ListItemDecorator>
                   <Logout />
                 </ListItemDecorator>
-                Logout
+                Log Out
               </MenuItem>
             </Menu>
           </Dropdown>

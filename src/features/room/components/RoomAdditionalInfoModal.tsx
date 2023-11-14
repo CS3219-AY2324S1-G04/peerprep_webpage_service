@@ -45,6 +45,11 @@ const RoomAdditionalInfoModal: React.FC<Props> = (props: Props) => {
             of the screen.
             <br />
             <br />
+            <b>
+              6. ⚠️ Once you have left the room and submitted an attempt, you
+              will be unable to access the room again even if your peer is still
+              in the room.
+            </b>
           </Typography>
         </Stack>
       </ModalDialog>
