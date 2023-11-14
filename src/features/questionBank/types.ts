@@ -23,6 +23,7 @@ export interface DraftQuestion extends Omit<Question, '_id'> {
 
 export interface QuestionBankState {
   questionsList: MinimalQuestion[]
+  questionsMap: SimpleMap<Question> // should be reflection of questionsList
   categories: string[]
   languages: Language[]
   selectedQuestionId: string

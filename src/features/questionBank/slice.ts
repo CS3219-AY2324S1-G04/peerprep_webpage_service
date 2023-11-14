@@ -1,10 +1,12 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 import { Language } from '../../services/questionService'
+import { SimpleMap } from '../../utils/types'
 import { MinimalQuestion, Question, QuestionBankState } from './types'
 
 const initialState: QuestionBankState = {
   questionsList: [],
+  questionsMap: {},
   categories: [],
   languages: [],
   selectedQuestionId: '',
@@ -20,6 +22,12 @@ const questionBankSlice = createSlice({
       { payload: questionsList }: PayloadAction<MinimalQuestion[]>,
     ) => {
       state.questionsList = questionsList
+    },
+    setQuestionsMap: (
+      state: QuestionBankState,
+      { payload: questionsMap }: PayloadAction<SimpleMap<Question>>,
+    ) => {
+      state.questionsMap = questionsMap
     },
     setCategories: (
       state: QuestionBankState,
@@ -61,6 +69,7 @@ export const {
   setSelectedQuestionId,
   addCachedFullQuestion,
   resetCachedFullQuestions,
+  setQuestionsMap,
 } = questionBankSlice.actions
 
 export default questionBankSlice.reducer
