@@ -82,7 +82,7 @@ const RankingsTable: React.FC = () => {
         currentPage={paging.currentPage}
         lastPage={paging.totalPages}
         onPageChange={paging.goTo}
-        maxLength={7}
+        maxLength={4}
       />
     </div>
   )

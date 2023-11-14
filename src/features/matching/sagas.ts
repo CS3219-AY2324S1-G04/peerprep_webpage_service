@@ -12,7 +12,7 @@ import {
 
 import { toast } from '../../components/Toaster/toast'
 import matchingService from '../../services/matchingService'
-import { LoadingKeys } from '../../utils/types'
+import { CommonSagaActions, LoadingKeys } from '../../utils/types'
 import { addLoadingTask, removeLoadingTask } from '../common/slice'
 import { MatchingSagaActions } from './types'
 
@@ -43,6 +43,17 @@ function* checkUserQueueStatus() {
   }
 }
 
+function* checkUserQueueStatusQuietly() {
+  try {
+    yield matchingService.checkUserQueueStatus()
+    yield put({ type: MatchingSagaActions.START_CHECK_QUEUE_STATUS })
+    yield put(addLoadingTask(LoadingKeys.CHECKING_QUEUE_STATUS))
+  } catch (error) {
+    // background task just to check, no toast needed
+    console.error(error)
+  }
+}
+
 function* periodicallyCheckQueueStatus() {
   while (true) {
     yield call(checkUserQueueStatus)
@@ -59,6 +70,19 @@ function* watchPeriodicallyCheckQueueStatus() {
   })
 }
 
+function* watchCheckUserQueueStatusQuietly() {
+  yield takeLatest(
+    [
+      CommonSagaActions.LOGGED_IN_INIT,
+      MatchingSagaActions.CHECKING_QUEUE_STATUS_QUIETLY,
+    ],
+    checkUserQueueStatusQuietly,
+  )
+}
+
 export function* matchingSaga() {
-  yield all([fork(watchPeriodicallyCheckQueueStatus)])
+  yield all([
+    fork(watchPeriodicallyCheckQueueStatus),
+    fork(watchCheckUserQueueStatusQuietly),
+  ])
 }

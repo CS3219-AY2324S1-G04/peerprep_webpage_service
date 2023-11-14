@@ -1,13 +1,24 @@
-import { Box, LinearProgress, Modal, ModalDialog, Typography } from '@mui/joy'
+import {
+  Box,
+  Button,
+  LinearProgress,
+  Modal,
+  ModalDialog,
+  Typography,
+} from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { toast } from '../../../components/Toaster/toast'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
+import useAsyncTask from '../../../hooks/useAsyncTask'
 import useTaskSubscriber from '../../../hooks/useTaskSubscriber'
+import matchingService from '../../../services/matchingService'
 import Paths from '../../../utils/constants/navigation'
 import { LoadingKeys } from '../../../utils/types'
 import { removeLoadingTask } from '../../common/slice'
+import { MatchingSagaActions } from '../types'
 
 const FindingRoomModal: React.FC = () => {
   const navigate = useNavigate()
@@ -17,6 +28,25 @@ const FindingRoomModal: React.FC = () => {
   )
   const [isRedirectToRoom] = useTaskSubscriber(LoadingKeys.REDIRECT_TO_ROOM)
   const [isQuickPrep] = useTaskSubscriber(LoadingKeys.QUICK_PREP)
+
+  const [runLeaveQueue, loadingLeaveQueue] = useAsyncTask(
+    'leaveQueue',
+    (error) => {
+      toast.error(
+        error?.message ??
+          'Oops! We encountered an error, sorry about that. Please try again later',
+      )
+    },
+  )
+
+  const onConfirmLeave = () => {
+    runLeaveQueue(async () => {
+      await matchingService.leaveQueue()
+      dispatch(removeLoadingTask(LoadingKeys.CHECKING_QUEUE_STATUS))
+      dispatch({ type: MatchingSagaActions.STOP_CHECK_QUEUE_STATUS })
+      toast.success('Successfully left the queue.')
+    })
+  }
 
   useEffect(() => {
     if (isRedirectToRoom) {
@@ -52,7 +82,18 @@ const FindingRoomModal: React.FC = () => {
           <Typography mt={2} level="body-md">
             Please wait while we look for a suitable room for you
           </Typography>
-          <Typography level="body-sm">Do not close this tab</Typography>
+          <Typography level="body-sm">
+            Do not close or refresh this tab
+          </Typography>
+          <Button
+            sx={{ marginTop: 2 }}
+            color="danger"
+            onClick={() => onConfirmLeave()}
+            loading={loadingLeaveQueue}
+            size="sm"
+          >
+            Leave Queue 🏃🏻‍♂️
+          </Button>
         </Box>
       </ModalDialog>
     </Modal>

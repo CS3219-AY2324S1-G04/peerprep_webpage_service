@@ -7,20 +7,26 @@ export const complexityKey = 'complexity'
 export const categoriesKey = 'categories'
 export const languageKey = 'language'
 
-export async function checkUserQueueStatus(): Promise<AxiosResponse> {
+async function checkUserQueueStatus(): Promise<AxiosResponse> {
   const res = await axios.get(`${matchingServiceBaseUrl}/queue`, {
     withCredentials: isDevEnv,
   })
   return res
 }
 
-export async function joinQueue(settings: QueueSettings) {
+async function joinQueue(settings: QueueSettings) {
   await axios.post(`${matchingServiceBaseUrl}/queue/join`, undefined, {
     params: {
       [complexityKey]: settings.complexity,
       [categoriesKey]: settings.categories,
       [languageKey]: settings.language,
     },
+    withCredentials: isDevEnv,
+  })
+}
+
+async function leaveQueue(): Promise<void> {
+  await axios.delete(`${matchingServiceBaseUrl}/queue`, {
     withCredentials: isDevEnv,
   })
 }
@@ -34,4 +40,5 @@ export interface QueueSettings {
 export default {
   checkUserQueueStatus,
   joinQueue,
+  leaveQueue,
 }

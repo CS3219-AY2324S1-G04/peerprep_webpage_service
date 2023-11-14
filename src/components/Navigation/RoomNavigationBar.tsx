@@ -8,44 +8,26 @@ import { useNavigate } from 'react-router-dom'
 
 import ChatButton from '../../features/chat/components/ChatButton'
 import { ChatSagaActions } from '../../features/chat/types'
+import ConfirmLeaveModal from '../../features/room/components/ConfirmLeaveModal'
 import RoomAdditionalInfoModal from '../../features/room/components/RoomAdditionalInfoModal'
 import { getUsername } from '../../features/user/selector'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
-import useAsyncTask from '../../hooks/useAsyncTask'
-import roomService from '../../services/roomService'
 import Paths from '../../utils/constants/navigation'
 import ColorSchemeToggle from '../ColorSchemeToggle'
 import Logo from '../Logo'
-import { toast } from '../Toaster/toast'
 import NavigationBar from './NavigationBar'
 
 const RoomNavigationBar: React.FC = () => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const theme = useTheme()
-  const [runLeaveRoom, loadingLeaveRoom] = useAsyncTask(
-    'leaveRoom',
-    (error) => {
-      toast.error(
-        error?.message ??
-          'Oops! We encountered an error, sorry about that. Please try again later',
-      )
-    },
-  )
   const isTabletOrMobile = useMediaQuery(theme.breakpoints.down('md'))
   const username = useAppSelector(getUsername)
 
   const [isAdditionalInfoOpen, setIsAdditionalInfoOpen] =
     useState<boolean>(false)
-
-  const onLeaveRoom = () => {
-    runLeaveRoom(async () => {
-      await roomService.leaveRoom()
-      toast.success('Successfully submitted your attempt! Great work! 🎉')
-      navigate(Paths.Problems)
-    })
-  }
+  const [isConfirmLeaveOpen, setIsConfirmLeaveOpen] = useState<boolean>(false)
 
   const onBack = () => {
     navigate(Paths.Problems)
@@ -88,11 +70,7 @@ const RoomNavigationBar: React.FC = () => {
               introLabel="Chat with your peer here! 😬"
             />
           )}
-          <Button
-            color="danger"
-            onClick={() => onLeaveRoom()}
-            loading={loadingLeaveRoom}
-          >
+          <Button color="danger" onClick={() => setIsConfirmLeaveOpen(true)}>
             Leave & Submit
           </Button>
         </NavigationBar.Right>
@@ -101,6 +79,12 @@ const RoomNavigationBar: React.FC = () => {
         isOpen={isAdditionalInfoOpen}
         onClose={() => {
           setIsAdditionalInfoOpen(false)
+        }}
+      />
+      <ConfirmLeaveModal
+        isOpen={isConfirmLeaveOpen}
+        onClose={() => {
+          setIsConfirmLeaveOpen(false)
         }}
       />
     </>
