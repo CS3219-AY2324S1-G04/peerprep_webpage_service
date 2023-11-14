@@ -19,7 +19,7 @@ function* getAllUserAttempts() {
 
 export function* watchGetAllUserAttempts() {
   yield takeLatest(
-    [CommonSagaActions.APP_INIT, QuestionBankSagaActions.GET_ALL_QUESTIONS],
+    [CommonSagaActions.LOGGED_IN_INIT, QuestionBankSagaActions.GET_ALL_QUESTIONS],
     getAllUserAttempts,
   )
 }
