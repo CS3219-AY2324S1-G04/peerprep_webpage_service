@@ -14,25 +14,24 @@ import { toast } from '../../components/Toaster/toast'
 import {
   RoomModel,
   getMatchedRoom,
-  keepRoomAlive,
+  keepAlive,
 } from '../../services/roomService'
 import config from '../../utils/config'
 import { ServiceResponse } from '../../utils/types'
 import { Question } from '../questionBank/types'
-import { closeRoom, openRoom, setQuestionData } from './slice'
+import { closeRoom, openRoom, setQuestionData, setRoomExpiry } from './slice'
 import { RoomSagaActions } from './types'
 
-const keepAliveIntervalInMs = 5000
 const retryFindMatchRoomDelayInMs = 3000
 
-function* startLoadMatchRoom() {
+function* startPollMatchRoom() {
   yield race({
-    task: call(loadMatchRoomTask),
-    cancel: take(RoomSagaActions.STOP_LOAD_ROOM),
+    task: call(pollMatchRoom),
+    cancel: take(RoomSagaActions.STOP_POLL_MATCH_ROOM),
   })
 }
 
-function* loadMatchRoomTask() {
+function* pollMatchRoom() {
   while (true) {
     try {
       const room: RoomModel = yield getMatchedRoom()
@@ -54,25 +53,33 @@ function* loadMatchRoomTask() {
 }
 
 function* onOpenRoom() {
-  yield startMaintainRoomLifetime()
+  // Add events to be called when room is open.
 }
 
-function* startMaintainRoomLifetime() {
+function* startKeepAlive() {
   yield race({
-    task: call(maintainLifetimeTask),
-    cancel: take(closeRoom),
+    task: call(maintainKeepAlive),
+    cancel: take([closeRoom, RoomSagaActions.STOP_KEEP_ALIVE]),
   })
 }
 
-function* maintainLifetimeTask() {
+function* maintainKeepAlive() {
   try {
     while (true) {
-      yield call(keepRoomAlive)
-      yield delay(keepAliveIntervalInMs)
+      const expiry: Date = yield call(keepAlive)
+      yield put(setRoomExpiry(expiry.toTimeString()))
+
+      // Send next keep alive after half the time to expiry.
+      const keepAliveDelay = (expiry.getTime() - Date.now()) / 2
+
+      if (keepAliveDelay < 0) {
+        throw new Error('Room expired')
+      }
+
+      yield delay(keepAliveDelay)
     }
   } catch (error) {
     toast.error('Room was closed.')
-    yield delay(keepAliveIntervalInMs)
     yield put(closeRoom())
   }
 }
@@ -87,13 +94,21 @@ function* getQuestionData(questionId: string) {
 }
 
 export function* watchLoadMatchRoom() {
-  yield takeLatest(RoomSagaActions.LOAD_MATCH_ROOM_DATA, startLoadMatchRoom)
+  yield takeLatest(RoomSagaActions.START_POLL_MATCH_ROOM, startPollMatchRoom)
 }
 
 export function* watchOpenRoom() {
   yield takeLatest(openRoom, onOpenRoom)
 }
 
+export function* watchStartKeepAlive() {
+  yield takeLatest(RoomSagaActions.START_KEEP_ALIVE, startKeepAlive)
+}
+
 export const roomSaga = function* () {
-  yield all([fork(watchLoadMatchRoom), fork(watchOpenRoom)])
+  yield all([
+    fork(watchLoadMatchRoom),
+    fork(watchOpenRoom),
+    fork(watchStartKeepAlive),
+  ])
 }

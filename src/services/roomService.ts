@@ -5,6 +5,7 @@ import { isDevEnv, roomServiceBaseUrl } from '../utils/config'
 const roomIdKey = 'room-id'
 const questionIdKey = 'question-id'
 const langSlugKey = 'question-lang-slug'
+const expireKey = 'expire-at'
 
 export async function getMatchedRoom(): Promise<RoomModel> {
   const res = await axios.get(`${roomServiceBaseUrl}/room`, {
@@ -20,10 +21,15 @@ export async function getMatchedRoom(): Promise<RoomModel> {
   }
 }
 
-export async function keepRoomAlive() {
-  await axios.patch(`${roomServiceBaseUrl}/room/keep-alive`, undefined, {
-    withCredentials: isDevEnv,
+export async function keepAlive(): Promise<Date> {
+  const res = await axios.patch(
+    `${roomServiceBaseUrl}/room/keep-alive`,
+    undefined,
+    {
+      withCredentials: isDevEnv,
   })
+
+  return new Date(res.data[expireKey])
 }
 
 export interface RoomModel {

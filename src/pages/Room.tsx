@@ -23,14 +23,16 @@ const Room: React.FC = () => {
 
   useEffect(() => {
     if (roomStatus == RoomStatus.Pending) {
-      dispatch({ type: RoomSagaActions.LOAD_MATCH_ROOM_DATA })
+      dispatch({ type: RoomSagaActions.START_POLL_MATCH_ROOM })
       return () => {
-        dispatch({ type: RoomSagaActions.STOP_LOAD_ROOM })
+        dispatch({ type: RoomSagaActions.STOP_POLL_MATCH_ROOM })
       }
     } else if (roomStatus == RoomStatus.Open) {
+      dispatch({ type: RoomSagaActions.START_KEEP_ALIVE })
       return () => {
         dispatch(closeRoom())
         dispatch({ type: ChatSagaActions.STOP_ROOM_CHAT_WS })
+        dispatch({ type: RoomSagaActions.STOP_KEEP_ALIVE })
       }
     }
   }, [dispatch, roomStatus])

@@ -32,9 +32,16 @@ const roomSlice = createSlice({
     ) => {
       state.questionData = question
     },
+    setRoomExpiry: (
+      state: RoomState,
+      { payload: expiry }: PayloadAction<string>,
+    ) => {
+      state.roomExpiry = expiry
+    },
   },
 })
 
-export const { openRoom, closeRoom, setQuestionData } = roomSlice.actions
+export const { openRoom, closeRoom, setQuestionData, setRoomExpiry } =
+  roomSlice.actions
 
 export default roomSlice.reducer
