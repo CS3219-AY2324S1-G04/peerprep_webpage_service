@@ -12,7 +12,6 @@ export interface RouteMatches {
 }
 
 export function useRouteMatch() {
-  const isDashboardPage = useMatch(Paths.Dashboard)
   const isProblemsPage = useMatch(Paths.Problems)
   const isRankingsPage = useMatch(Paths.Rankings)
   const isLoginPage = useMatch(Paths.Login)
@@ -23,8 +22,6 @@ export function useRouteMatch() {
 
   const getRouteMatch = (path: Paths | SubPaths) => {
     switch (path) {
-      case Paths.Dashboard:
-        return isDashboardPage
       case Paths.Problems:
         return isProblemsPage
       case Paths.Rankings:

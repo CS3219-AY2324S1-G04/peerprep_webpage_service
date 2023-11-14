@@ -14,7 +14,6 @@ import { getIsLoggedIn, getUserRole } from './features/user/selector'
 import { useAppDispatch } from './hooks/useAppDispatch'
 import { useAppSelector } from './hooks/useAppSelector'
 import Attempts from './pages/Attempts'
-import Dashboard from './pages/Dashboard'
 import GuestRedirect from './pages/GuestRedirect'
 import Login from './pages/Login'
 import Problems from './pages/Problems'
@@ -66,7 +65,6 @@ const App: React.FC = () => {
               <Route path={Paths.Rankings} element={<Rankings />} />
               {isLoggedIn && isAdminOrMaintainer && (
                 <>
-                  <Route path={Paths.Dashboard} element={<Dashboard />} />
                   <Route path={Paths.Room} element={<Room />} />
                   <Route path={Paths.Attempts} element={<Attempts />} />
                   <Route
@@ -86,7 +84,6 @@ const App: React.FC = () => {
               )}
               {isLoggedIn && isNormalUser && (
                 <>
-                  <Route path={Paths.Dashboard} element={<Dashboard />} />
                   <Route path={Paths.Attempts} element={<Attempts />} />
                   <Route path={Paths.Room} element={<Room />} />
                   <Route path="*" element={<UserRedirect />} />

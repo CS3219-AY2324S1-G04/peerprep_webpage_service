@@ -7,7 +7,6 @@ export interface PageNavigation {
 
 export enum Paths {
   Root = '/',
-  Dashboard = '/dashboard',
   Problems = '/problems',
   Rankings = '/rankings',
   Login = '/login',
@@ -26,10 +25,6 @@ export enum SubPaths {
   EditQuestion = `${SubPaths.ManageQuestions}/edit/:id`,
 }
 
-const DashboardPage: PageNavigation = {
-  url: Paths.Dashboard,
-  title: 'Dashboard',
-}
 const ProblemsPage: PageNavigation = {
   url: Paths.Problems,
   title: 'Problems',
@@ -64,17 +59,15 @@ export const guestNavigationList: PageNavigation[] = [
 ]
 
 export const userNavigationList: PageNavigation[] = [
-  DashboardPage,
   ProblemsPage,
   RankingsPage,
   RoomPage,
 ]
 
 export const adminNavigationList: PageNavigation[] = [
-  DashboardPage,
-  ManagePages,
   ProblemsPage,
   RankingsPage,
+  ManagePages,
 ]
 
 export default Paths
