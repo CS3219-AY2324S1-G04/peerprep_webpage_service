@@ -41,6 +41,10 @@ const RoomAdditionalInfoModal: React.FC<Props> = (props: Props) => {
             as you are in an active room.
             <br />
             <br />
+            5. On a mobile screen, chat button can be seen on the bottom right
+            of the screen.
+            <br />
+            <br />
           </Typography>
         </Stack>
       </ModalDialog>

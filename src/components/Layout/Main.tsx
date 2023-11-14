@@ -12,10 +12,6 @@ const Main: React.FC<BoxProps> = (props: BoxProps) => {
       {...props}
       sx={[
         {
-          height: '100%',
-          [theme.breakpoints.down('md')]: {
-            height: 'unset',
-          },
           p: 2,
           bgcolor:
             mode === 'light'

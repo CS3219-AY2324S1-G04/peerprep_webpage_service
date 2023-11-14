@@ -1,4 +1,5 @@
-import { Box, useColorScheme } from '@mui/joy'
+import { Box, useColorScheme, useTheme } from '@mui/joy'
+import useMediaQuery from '@mui/material/useMediaQuery'
 import { noctisLilac } from '@uiw/codemirror-theme-noctis-lilac'
 import { tokyoNight } from '@uiw/codemirror-theme-tokyo-night'
 import CodeMirror, { Extension } from '@uiw/react-codemirror'
@@ -14,8 +15,10 @@ function CodeArea({
   text: Y.Text
   editorExtensions: Extension[]
 }) {
+  const theme = useTheme()
   const boxRef = useRef<HTMLDivElement>(null)
   const { mode } = useColorScheme()
+  const isTabletOrMobile = useMediaQuery(theme.breakpoints.down('md'))
   const [value, setValue] = useState(text.toString())
   const [parentHeight, setParentHeight] = useState(800)
 
@@ -34,7 +37,11 @@ function CodeArea({
   )
 
   return (
-    <Box ref={boxRef} height="100%">
+    <Box
+      ref={boxRef}
+      height="100%"
+      minHeight={isTabletOrMobile ? '800px' : 'unset'}
+    >
       <CodeMirror
         value={value}
         minHeight={`${parentHeight}px`}

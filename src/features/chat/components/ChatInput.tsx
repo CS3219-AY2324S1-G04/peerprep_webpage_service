@@ -1,7 +1,7 @@
 import SendRoundedIcon from '@mui/icons-material/SendRounded'
 import { Box, Button, IconButton, Textarea, TextareaProps } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
-import { useState } from 'react'
+import { KeyboardEvent, useState } from 'react'
 
 interface ChatInputProps extends TextareaProps {
   onSendMessage: (value: string) => void
@@ -13,11 +13,25 @@ const ChatInput = (props: ChatInputProps) => {
 
   const addEmoji = (emoji: string) => () => setValue(`${value}${emoji}`)
 
+  const send = () => {
+    const toSend = value
+    onSendMessage(toSend)
+    setValue('')
+  }
+
+  const onKeyPress = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key == 'Enter') {
+      e.preventDefault()
+      send()
+    }
+  }
+
   return (
     <Textarea
       minRows={2}
       maxRows={2}
       value={value}
+      onKeyDown={(e) => onKeyPress(e)}
       onChange={(e) => {
         setValue(e.target.value)
       }}
@@ -49,7 +63,9 @@ const ChatInput = (props: ChatInputProps) => {
           </Box>
           <Button
             endDecorator={<SendRoundedIcon />}
-            onClick={() => onSendMessage(value)}
+            onClick={() => {
+              send()
+            }}
           >
             Send
           </Button>

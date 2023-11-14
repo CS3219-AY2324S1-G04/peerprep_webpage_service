@@ -1,7 +1,6 @@
 import { Popper } from '@mui/base'
 import ChatIcon from '@mui/icons-material/Chat'
-import { Badge, IconButton } from '@mui/joy'
-import { SxProps } from '@mui/joy/styles/types'
+import { Badge, Box, Button } from '@mui/joy'
 import { useEffect, useState } from 'react'
 
 import { useAppSelector } from '../../../hooks/useAppSelector'
@@ -14,7 +13,7 @@ interface ChatProps {
   introLabel?: string
 }
 
-const Chat: React.FC<ChatProps> = (props: ChatProps) => {
+const ChatButton: React.FC<ChatProps> = (props: ChatProps) => {
   const { onSendMessage, introLabel } = props
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const messages = useAppSelector(getMessages)
@@ -44,22 +43,31 @@ const Chat: React.FC<ChatProps> = (props: ChatProps) => {
 
   return (
     <>
-      <IconButton
-        sx={styles.chatButton}
-        size="lg"
-        variant="solid"
+      <Button
         color="primary"
         onClick={handleClick}
+        endDecorator={
+          <>
+            {unreadMessages ? (
+              <Box className="bounce">
+                <Badge size="sm" color="danger">
+                  <ChatIcon />
+                </Badge>
+              </Box>
+            ) : (
+              <ChatIcon />
+            )}
+          </>
+        }
       >
-        {unreadMessages ? (
-          <Badge size="sm" color="danger">
-            <ChatIcon />
-          </Badge>
-        ) : (
-          <ChatIcon />
-        )}
-      </IconButton>
-      <Popper open={open} anchorEl={anchorEl} placement="top-end">
+        Chat
+      </Button>
+      <Popper
+        open={open}
+        anchorEl={anchorEl}
+        placement="bottom-end"
+        disablePortal
+      >
         <ChatPane title="Room Chat" onClose={() => setAnchorEl(null)}>
           <ChatPane.Messages messages={messages} introLabel={introLabel} />
           <ChatPane.Input onSendMessage={onSendMessage} />
@@ -69,29 +77,4 @@ const Chat: React.FC<ChatProps> = (props: ChatProps) => {
   )
 }
 
-const styles = {
-  sheet: {
-    borderRadius: '10px',
-    width: '350px',
-    marginBottom: '1rem',
-  } as SxProps,
-  messagesStack: {
-    overflow: 'auto',
-    height: '350px',
-    maxHeight: '450px',
-  } as SxProps,
-  chatButton: {
-    position: 'fixed',
-    right: '20px',
-    bottom: '20px',
-    height: '50px',
-    width: '50px',
-    borderRadius: '100%',
-  } as SxProps,
-  messageContent: {
-    fontSize: '0.875rem',
-    fontWeight: 400,
-  } as SxProps,
-} as const
-
-export default Chat
+export default ChatButton
