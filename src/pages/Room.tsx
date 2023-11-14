@@ -23,9 +23,16 @@ const Room: React.FC = () => {
   useEffect(() => {
     if (roomStatus == RoomStatus.Open) {
       dispatch({ type: RoomSagaActions.START_KEEP_ALIVE })
+      dispatch({ type: RoomSagaActions.START_POLL_MATCH_ROOM })
+
       return () => {
         dispatch({ type: ChatSagaActions.STOP_ROOM_CHAT_WS })
         dispatch({ type: RoomSagaActions.STOP_KEEP_ALIVE })
+      }
+    } else {
+      dispatch({ type: RoomSagaActions.START_FIND_MATCH_ROOM })
+      return () => {
+        dispatch({ type: RoomSagaActions.STOP_FIND_MATCH_ROOM })
       }
     }
   }, [dispatch, roomStatus])

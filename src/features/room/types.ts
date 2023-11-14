@@ -16,6 +16,8 @@ export enum RoomStatus {
 }
 
 export const RoomSagaActions = {
+  START_FIND_MATCH_ROOM: `@${sliceKey}/START_FIND_MATCH_ROOM`,
+  STOP_FIND_MATCH_ROOM: `@${sliceKey}/STOP_FIND_MATCH_ROOM`,
   START_POLL_MATCH_ROOM: `@${sliceKey}/START_POLL_MATCH_ROOM`,
   STOP_POLL_MATCH_ROOM: `@${sliceKey}/STOP_POLL_MATCH_ROOM`,
   START_KEEP_ALIVE: `@${sliceKey}/START_KEEP_ALIVE`,

@@ -26,6 +26,26 @@ import { RoomSagaActions, RoomStatus } from './types'
 
 const pollRoomIntervalInMs = 3000
 
+function* startFindMatchRoom() {
+  yield race({
+    task: call(findMatchRoom),
+    cancel: take([
+      RoomSagaActions.STOP_POLL_MATCH_ROOM,
+      RoomSagaActions.STOP_FIND_MATCH_ROOM,
+    ]),
+  })
+}
+
+function* findMatchRoom() {
+  while (true) {
+    const roomStatus: RoomStatus = yield select(getRoomStatus)
+    if (roomStatus == RoomStatus.Pending) {
+      yield startPollMatchRoom()
+      yield delay(pollRoomIntervalInMs)
+    }
+  }
+}
+
 function* startPollMatchRoom() {
   yield race({
     task: call(pollMatchRoom),
@@ -33,6 +53,7 @@ function* startPollMatchRoom() {
   })
 }
 
+// Stops polling on room not found.
 function* pollMatchRoom() {
   while (true) {
     try {
@@ -54,11 +75,11 @@ function* pollMatchRoom() {
       const roomStatus: RoomStatus = yield select(getRoomStatus)
 
       if (roomStatus == RoomStatus.Open) {
-        console.error(`Room closed.`)
+        toast.error('Room closed')
         yield put(closeRoom())
       }
 
-      yield delay(pollRoomIntervalInMs)
+      break
     }
   }
 }
@@ -113,6 +134,10 @@ export function* watchStartPollMatchRoom() {
   )
 }
 
+export function* watchFindMatchRoom() {
+  yield takeLatest(RoomSagaActions.START_FIND_MATCH_ROOM, startFindMatchRoom)
+}
+
 export function* watchOpenRoom() {
   yield takeLatest(openRoom, onOpenRoom)
 }
@@ -124,6 +149,7 @@ export function* watchStartKeepAlive() {
 export const roomSaga = function* () {
   yield all([
     fork(watchStartPollMatchRoom),
+    fork(watchFindMatchRoom),
     fork(watchOpenRoom),
     fork(watchStartKeepAlive),
   ])
