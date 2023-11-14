@@ -158,6 +158,7 @@ fi
 ### Build Webpage ###
 echo "Building Webpage ..."
 
+npm install
 npm run build
 npm run build:docker
 
