@@ -1,6 +1,6 @@
 import { CssBaseline, CssVarsProvider } from '@mui/joy'
 import { useEffect } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useMatch } from 'react-router-dom'
 
 import { Layout } from './components/Layout'
 import AdminNavigationBar from './components/Navigation/AdminNavigationBar'
@@ -13,7 +13,6 @@ import { applyAxiosInterceptorForUpdatingAccessToken } from './features/user/acc
 import { getIsLoggedIn, getUserRole } from './features/user/selector'
 import { useAppDispatch } from './hooks/useAppDispatch'
 import { useAppSelector } from './hooks/useAppSelector'
-import { useRouteMatch } from './hooks/useRouteMatch'
 import Dashboard from './pages/Dashboard'
 import GuestRedirect from './pages/GuestRedirect'
 import Login from './pages/Login'
@@ -36,8 +35,7 @@ const App: React.FC = () => {
   const dispatch = useAppDispatch()
   const isLoggedIn = useAppSelector(getIsLoggedIn)
   const userRole = useAppSelector(getUserRole)
-  const routeMatch = useRouteMatch()
-  const isRoomPage = routeMatch.getRouteMatch(Paths.MatchRoom)
+  const isRoomPage = useMatch(Paths.MatchRoom)
 
   useEffect(() => {
     dispatch({ type: CommonSagaActions.APP_INIT })
@@ -53,9 +51,11 @@ const App: React.FC = () => {
         <CssBaseline />
         <Layout.Root>
           <Layout.Header>
-            {isLoggedIn && isAdminOrMaintainer && <AdminNavigationBar />}
-            {isLoggedIn && isNormalUser && <UserNavigationBar />}
-            {!isLoggedIn && <GuestNavigationBar />}
+            {!isRoomPage && isLoggedIn && isAdminOrMaintainer && (
+              <AdminNavigationBar />
+            )}
+            {!isRoomPage && isLoggedIn && isNormalUser && <UserNavigationBar />}
+            {!isRoomPage && !isLoggedIn && <GuestNavigationBar />}
             {isRoomPage && <RoomNavigationBar />}
           </Layout.Header>
           <Layout.Main>

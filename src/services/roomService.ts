@@ -26,8 +26,18 @@ export async function keepRoomAlive() {
   })
 }
 
+export async function leaveRoom(): Promise<void> {
+  await axios.delete(`${roomServiceBaseUrl}/room/user`, {
+    withCredentials: isDevEnv,
+  })
+}
+
 export interface RoomModel {
   readonly roomId: string
   readonly questionId: string
   readonly langSlug: string
+}
+
+export default {
+  leaveRoom,
 }
