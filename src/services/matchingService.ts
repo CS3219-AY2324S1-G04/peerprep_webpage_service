@@ -8,14 +8,13 @@ export const categoriesKey = 'categories'
 export const languageKey = 'language'
 
 async function checkUserQueueStatus(): Promise<AxiosResponse> {
-  const res = await axios.get(`${matchingServiceBaseUrl}/queue`, {
+  return await axios.get(`${matchingServiceBaseUrl}/queue`, {
     withCredentials: isDevEnv,
   })
-  return res
 }
 
-async function joinQueue(settings: QueueSettings) {
-  await axios.post(`${matchingServiceBaseUrl}/queue/join`, undefined, {
+async function joinQueue(settings: QueueSettings): Promise<AxiosResponse> {
+  return await axios.post(`${matchingServiceBaseUrl}/queue/join`, undefined, {
     params: {
       [complexityKey]: settings.complexity,
       [categoriesKey]: settings.categories,

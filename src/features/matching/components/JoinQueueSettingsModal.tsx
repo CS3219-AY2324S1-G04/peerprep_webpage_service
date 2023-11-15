@@ -9,6 +9,7 @@ import {
   Typography,
 } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
+import { AxiosResponse } from 'axios'
 import { useState } from 'react'
 
 import GenericField from '../../../components/Form/GenericField'
@@ -22,6 +23,7 @@ import { addLoadingTask } from '../../common/slice'
 import SelectComplexity from '../../questionBank/components/SelectComplexity'
 import { getCategories, getLanguages } from '../../questionBank/selectors'
 import { QuestionComplexity } from '../../questionBank/types'
+import { updateMatchingEpoch } from '../slice'
 import { MatchingSagaActions } from '../types'
 
 interface Props {
@@ -42,11 +44,18 @@ const JoinQueueSettingsModal: React.FC<Props> = (props: Props) => {
 
   async function submit() {
     try {
-      await matchingService.joinQueue({
+      const response: AxiosResponse = await matchingService.joinQueue({
         complexity: complexity,
         categories: categories,
         language: language?.langSlug ?? 'java',
       })
+
+      dispatch(
+        updateMatchingEpoch({
+          startEpoch: Date.now(),
+          timeoutEpoch: new Date(response.data.data.expireAt).getTime(),
+        }),
+      )
       dispatch({ type: MatchingSagaActions.START_CHECK_QUEUE_STATUS })
       dispatch(addLoadingTask(LoadingKeys.CHECKING_QUEUE_STATUS))
       onClose()

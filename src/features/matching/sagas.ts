@@ -1,4 +1,4 @@
-import { AxiosError } from 'axios'
+import { AxiosError, AxiosResponse } from 'axios'
 import {
   all,
   call,
@@ -14,9 +14,10 @@ import { toast } from '../../components/Toaster/toast'
 import matchingService from '../../services/matchingService'
 import { CommonSagaActions, LoadingKeys } from '../../utils/types'
 import { addLoadingTask, removeLoadingTask } from '../common/slice'
+import { updateMatchingEpoch } from './slice'
 import { MatchingSagaActions } from './types'
 
-const queueStatusCheckDelayMillis: number = 5000
+const queueStatusCheckDelayMillis: number = 3000
 
 function* checkUserQueueStatus() {
   try {
@@ -45,7 +46,14 @@ function* checkUserQueueStatus() {
 
 function* checkUserQueueStatusQuietly() {
   try {
-    yield matchingService.checkUserQueueStatus()
+    const response: AxiosResponse = yield matchingService.checkUserQueueStatus()
+
+    yield put(
+      updateMatchingEpoch({
+        startEpoch: Date.now(),
+        timeoutEpoch: new Date(response.data.data.expireAt).getTime(),
+      }),
+    )
     yield put({ type: MatchingSagaActions.START_CHECK_QUEUE_STATUS })
     yield put(addLoadingTask(LoadingKeys.CHECKING_QUEUE_STATUS))
   } catch (error) {

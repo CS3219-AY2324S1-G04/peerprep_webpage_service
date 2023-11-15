@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  LinearProgress,
-  Modal,
-  ModalDialog,
-  Typography,
-} from '@mui/joy'
+import { Box, Button, Modal, ModalDialog, Typography } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -19,6 +12,7 @@ import Paths from '../../../utils/constants/navigation'
 import { LoadingKeys } from '../../../utils/types'
 import { removeLoadingTask } from '../../common/slice'
 import { MatchingSagaActions } from '../types'
+import CountdownSlider from './CountdownSlider'
 
 const FindingRoomModal: React.FC = () => {
   const navigate = useNavigate()
@@ -73,7 +67,7 @@ const FindingRoomModal: React.FC = () => {
           <Typography className="bounce" display="block" level="h1">
             {!isQuickPrep ? '🔎' : '🚀'}
           </Typography>
-          <LinearProgress size="lg" />
+          <CountdownSlider />
           {isQuickPrep && (
             <Typography mt={2} level="body-md">
               QuickPrep🔥

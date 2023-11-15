@@ -1,7 +1,8 @@
 import { Button, ButtonProps } from '@mui/joy'
-import { AxiosError } from 'axios'
+import { AxiosError, AxiosResponse } from 'axios'
 
 import { addLoadingTask, removeLoadingTask } from '../features/common/slice'
+import { updateMatchingEpoch } from '../features/matching/slice'
 import { MatchingSagaActions } from '../features/matching/types'
 import { getCategories, getLanguages } from '../features/questionBank/selectors'
 import { QuestionComplexity } from '../features/questionBank/types'
@@ -43,11 +44,19 @@ const QuickPrepButton: React.FC<ButtonProps> = (props: ButtonProps) => {
     runQuickPrep(async () => {
       try {
         dispatch(addLoadingTask(LoadingKeys.QUICK_PREP))
-        await matchingService.joinQueue({
+
+        const response: AxiosResponse = await matchingService.joinQueue({
           complexity: randomComplexity as QuestionComplexity,
           categories: [randomCategory],
           language: randomLanguage.langSlug ?? 'java',
         })
+
+        dispatch(
+          updateMatchingEpoch({
+            startEpoch: Date.now(),
+            timeoutEpoch: new Date(response.data.data.expireAt).getTime(),
+          }),
+        )
         dispatch({ type: MatchingSagaActions.START_CHECK_QUEUE_STATUS })
         dispatch(addLoadingTask(LoadingKeys.CHECKING_QUEUE_STATUS))
       } catch (error) {
