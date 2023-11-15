@@ -20,7 +20,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = (props: ChatBubbleProps) => {
       <Box sx={styles.root}>
         {prevMessage?.type !== message.type && (
           <Typography fontWeight="bold" level="body-xs">
-            {message.type === MessageType.Sent ? 'You' : 'Peer'}
+            {message.type === MessageType.Sent ? 'You' : message.username}
           </Typography>
         )}
         <Sheet

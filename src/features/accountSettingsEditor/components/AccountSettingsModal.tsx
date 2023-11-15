@@ -23,8 +23,9 @@ import userService, {
   UpdateUserProfileParamError,
   UserDeletionCredential,
   UserProfile,
+  UserRole,
 } from '../../../services/userService'
-import { getUserProfile } from '../../user/selector'
+import { getUserProfile, getUserRole } from '../../user/selector'
 import { UserSagaActions } from '../../user/types'
 
 const AccountSettingsModal: React.FC<{
@@ -234,6 +235,7 @@ const MiscSection: React.FC = () => {
 const DeleteAccountModal: React.FC = () => {
   const dispatch = useAppDispatch()
   const [isSubmitting] = useTaskSubscriber(UserSagaActions.DELETE_USER)
+  const userRole = useAppSelector(getUserRole)
 
   const [isOpen, setIsOpen] = useState(false)
 
@@ -261,7 +263,11 @@ const DeleteAccountModal: React.FC = () => {
 
   return (
     <>
-      <Button color="danger" onClick={() => setIsOpen(true)}>
+      <Button
+        color="danger"
+        onClick={() => setIsOpen(true)}
+        disabled={userRole === UserRole.admin}
+      >
         Delete Account
       </Button>
       <Modal open={isOpen} onClose={() => setIsOpen(false)}>
