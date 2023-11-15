@@ -28,15 +28,15 @@ function* checkUserQueueStatus() {
         yield put(addLoadingTask(LoadingKeys.REDIRECT_TO_ROOM))
       }
       if (error.response?.status === 401) {
-        toast.error(`Queue status error: ${error.response.data.data.message}`)
+        toast.error(`Queue error: ${error.response.data.data.message}`)
       }
       if (error.response?.status === 404) {
         toast.error(
-          'Queue error: Unable to find a room at this time. Please try again later.',
+          'Queue error: Unable to find a match. Please try again later.',
         )
       }
       if (error.response?.status === 500) {
-        toast.error('Queue status error: Server issues')
+        toast.error('Queue error: Please try again later.')
       }
       yield put(removeLoadingTask(LoadingKeys.CHECKING_QUEUE_STATUS))
       yield put({ type: MatchingSagaActions.STOP_CHECK_QUEUE_STATUS })
