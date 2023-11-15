@@ -5,6 +5,7 @@ import createSagaMiddleware from 'redux-saga'
 import chatReducer from '../features/chat/slice'
 import commonReducer from '../features/common/slice'
 import historyReducer from '../features/history/slice'
+import matchingReducer from '../features/matching/slice'
 import questionBankReducer from '../features/questionBank/slice'
 import roomReducer from '../features/room/slice'
 import rootSaga from '../features/rootSaga'
@@ -23,6 +24,7 @@ export const store = configureStore({
     common: commonReducer,
     questionBank: questionBankReducer,
     user: userReducer,
+    matching: matchingReducer,
     room: roomReducer,
     chat: chatReducer,
     history: historyReducer,
