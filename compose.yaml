@@ -6,8 +6,6 @@ services:
       dockerfile: ./dockerfiles/api_docker.dockerfile
     networks:
       - peerprep_network
-    ports:
-      - '9010:9010'
 
 networks:
   peerprep_network:
