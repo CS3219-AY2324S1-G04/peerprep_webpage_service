@@ -1,6 +1,7 @@
 import { History, Logout, Settings } from '@mui/icons-material'
 import MenuIcon from '@mui/icons-material/Menu'
 import {
+  Button,
   Divider,
   Dropdown,
   IconButton,
@@ -18,6 +19,8 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import AccountSettingsModal from '../../features/accountSettingsEditor/components/AccountSettingsModal'
+import { getRoomStatus } from '../../features/room/selectors'
+import { RoomStatus } from '../../features/room/types'
 import { getEmailAddress, getUsername } from '../../features/user/selector'
 import { UserSagaActions } from '../../features/user/types'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
@@ -40,6 +43,7 @@ const AdminNavigationBar: React.FC = () => {
 
   const username = useAppSelector(getUsername)
   const emailAddress = useAppSelector(getEmailAddress)
+  const roomStatus = useAppSelector(getRoomStatus)
 
   const [isAccountSettingsModalOpen, setIsAccountSettingsModalOpen] =
     useState<boolean>(false)
@@ -83,6 +87,16 @@ const AdminNavigationBar: React.FC = () => {
           {!isTabletOrMobile && <Logo />}
         </NavigationBar.Middle>
         <NavigationBar.Right wrapperClass={styles.rightColumnOverride}>
+          {roomStatus === RoomStatus.Open && (
+            <Button
+              color="warning"
+              onClick={() => {
+                navigate(Paths.MatchRoom)
+              }}
+            >
+              Back to room
+            </Button>
+          )}
           <QuickPrepButton />
           <ColorSchemeToggle />
           <Dropdown>
