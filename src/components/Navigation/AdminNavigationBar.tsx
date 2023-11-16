@@ -1,7 +1,6 @@
-import { History, Logout, Settings } from '@mui/icons-material'
+import { Logout, Settings } from '@mui/icons-material'
 import MenuIcon from '@mui/icons-material/Menu'
 import {
-  Button,
   Divider,
   Dropdown,
   IconButton,
@@ -16,34 +15,28 @@ import {
 import { SxProps } from '@mui/joy/styles/types'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 import AccountSettingsModal from '../../features/accountSettingsEditor/components/AccountSettingsModal'
-import { getRoomStatus } from '../../features/room/selectors'
-import { RoomStatus } from '../../features/room/types'
 import { getEmailAddress, getUsername } from '../../features/user/selector'
 import { UserSagaActions } from '../../features/user/types'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
-import Paths, { adminNavigationList } from '../../utils/constants/navigation'
+import { adminNavigationList } from '../../utils/constants/navigation'
 import { AvatarShape } from '../../utils/types'
 import Avatar from '../Avatar'
 import ColorSchemeToggle from '../ColorSchemeToggle'
 import Logo from '../Logo'
-import QuickPrepButton from '../QuickPrepButton'
 import MobileNavigationDrawer from './MobileNavigationDrawer'
 import NavigationBar from './NavigationBar'
 import NavigationList from './NavigationList'
 
 const AdminNavigationBar: React.FC = () => {
-  const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const theme = useTheme()
   const isTabletOrMobile = useMediaQuery(theme.breakpoints.down('md'))
 
   const username = useAppSelector(getUsername)
   const emailAddress = useAppSelector(getEmailAddress)
-  const roomStatus = useAppSelector(getRoomStatus)
 
   const [isAccountSettingsModalOpen, setIsAccountSettingsModalOpen] =
     useState<boolean>(false)
@@ -59,10 +52,6 @@ const AdminNavigationBar: React.FC = () => {
 
   function toggleDrawer(inOpen: boolean) {
     setIsDrawerOpen(inOpen)
-  }
-
-  function goToAttempts() {
-    navigate(Paths.Attempts)
   }
 
   return (
@@ -87,17 +76,6 @@ const AdminNavigationBar: React.FC = () => {
           {!isTabletOrMobile && <Logo />}
         </NavigationBar.Middle>
         <NavigationBar.Right wrapperClass={styles.rightColumnOverride}>
-          {roomStatus === RoomStatus.Open && (
-            <Button
-              color="warning"
-              onClick={() => {
-                navigate(Paths.MatchRoom)
-              }}
-            >
-              Back to room
-            </Button>
-          )}
-          <QuickPrepButton />
           <ColorSchemeToggle />
           <Dropdown>
             <MenuButton variant="plain" sx={{ padding: 0 }}>
@@ -122,12 +100,6 @@ const AdminNavigationBar: React.FC = () => {
                   <Settings />
                 </ListItemDecorator>
                 Edit Account Settings
-              </MenuItem>
-              <MenuItem onClick={goToAttempts}>
-                <ListItemDecorator>
-                  <History />
-                </ListItemDecorator>
-                My Attempts
               </MenuItem>
               <MenuItem onClick={logout}>
                 <ListItemDecorator>
