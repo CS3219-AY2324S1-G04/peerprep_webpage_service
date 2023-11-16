@@ -39,7 +39,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = (
           return <ChatBubble message={message} prevMessage={prevMessage} />
         })}
       </Box>
-      <AlwaysScrollToBottom />
+      <AlwaysScrollToBottom dependencies={messages} />
     </Stack>
   )
 }
@@ -57,13 +57,19 @@ const styles = {
 } as const
 
 // Util component that scrolls to the bottom of a component
-const AlwaysScrollToBottom = () => {
+
+interface AlwaysScrollToBottomProps {
+  dependencies: any // eslint-disable-line @typescript-eslint/no-explicit-any
+}
+
+const AlwaysScrollToBottom = (props: AlwaysScrollToBottomProps) => {
+  const { dependencies } = props
   const elementRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (elementRef && elementRef.current) {
       elementRef.current.scrollIntoView()
     }
-  }, [elementRef])
+  }, [elementRef, dependencies])
   return <Box ref={elementRef} />
 }
 

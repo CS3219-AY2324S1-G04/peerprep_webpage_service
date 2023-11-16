@@ -3,8 +3,10 @@ import { AxiosError } from 'axios'
 
 import { addLoadingTask, removeLoadingTask } from '../features/common/slice'
 import { MatchingSagaActions } from '../features/matching/types'
-import { getCategories, getLanguages } from '../features/questionBank/selectors'
+import { getCategories } from '../features/questionBank/selectors'
 import { QuestionComplexity } from '../features/questionBank/types'
+import { getRoomStatus } from '../features/room/selectors'
+import { RoomStatus } from '../features/room/types'
 import { useAppDispatch } from '../hooks/useAppDispatch'
 import { useAppSelector } from '../hooks/useAppSelector'
 import useAsyncTask from '../hooks/useAsyncTask'
@@ -12,11 +14,13 @@ import matchingService from '../services/matchingService'
 import { LoadingKeys } from '../utils/types'
 import { toast } from './Toaster/toast'
 
+const JAVASCRIPT_LANG_SLUG = 'javascript'
+
 const QuickPrepButton: React.FC<ButtonProps> = (props: ButtonProps) => {
   const { ...rest } = props
   const dispatch = useAppDispatch()
   const allCategories = useAppSelector(getCategories)
-  const allLanguages = useAppSelector(getLanguages)
+  const roomStatus = useAppSelector(getRoomStatus)
   const [runQuickPrep, loadingQuickPrep] = useAsyncTask(
     'quickPrep',
     (error) => {
@@ -37,16 +41,13 @@ const QuickPrepButton: React.FC<ButtonProps> = (props: ButtonProps) => {
     const randomCategoryIndex = Math.floor(Math.random() * allCategories.length)
     const randomCategory = allCategories[randomCategoryIndex]
 
-    const randomLanguageIndex = Math.floor(Math.random() * allLanguages.length)
-    const randomLanguage = allLanguages[randomLanguageIndex]
-
     runQuickPrep(async () => {
       try {
         dispatch(addLoadingTask(LoadingKeys.QUICK_PREP))
         await matchingService.joinQueue({
           complexity: randomComplexity as QuestionComplexity,
           categories: [randomCategory],
-          language: randomLanguage.langSlug ?? 'java',
+          language: JAVASCRIPT_LANG_SLUG,
         })
         dispatch({ type: MatchingSagaActions.START_CHECK_QUEUE_STATUS })
         dispatch(addLoadingTask(LoadingKeys.CHECKING_QUEUE_STATUS))
@@ -69,6 +70,7 @@ const QuickPrepButton: React.FC<ButtonProps> = (props: ButtonProps) => {
       {...rest}
       onClick={() => onQuickPrep()}
       loading={loadingQuickPrep}
+      disabled={roomStatus === RoomStatus.Open}
     >
       QuickPrep 🚀
     </Button>

@@ -15,6 +15,7 @@ const ChatInput = (props: ChatInputProps) => {
 
   const send = () => {
     const toSend = value
+    if (value.trim() === '') return
     onSendMessage(toSend)
     setValue('')
   }
