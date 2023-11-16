@@ -245,9 +245,17 @@ const QuestionForm: React.FC<QuestionFormProps> = (
         onClose={() => setIsTemplateModalOpen(false)}
         template={templateToEdit}
         onSave={(updatedTemplate) => {
-          const updated = templates
-          updated.push(updatedTemplate)
-          setTemplates(updated)
+          const existingIndex = templates.findIndex(
+            (t) => t.langSlug === updatedTemplate.langSlug,
+          )
+          if (existingIndex === -1) {
+            setTemplates([...templates, updatedTemplate])
+          } else {
+            const updated = [...templates]
+            updated[existingIndex] = updatedTemplate
+            setTemplates(updated)
+          }
+
           setLanguageInput(null)
           setTemplateToEdit(EMPTY_TEMPLATE)
         }}
