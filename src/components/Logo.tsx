@@ -1,9 +1,6 @@
 import { Box, Typography } from '@mui/joy'
 
 import logo from '../assets/logo.png'
-import { getUserRole } from '../features/user/selector'
-import { useAppSelector } from '../hooks/useAppSelector'
-import { UserRole } from '../services/userService'
 
 interface LogoProps {
   variant?: 'row' | 'full' | 'logo'
@@ -11,7 +8,6 @@ interface LogoProps {
 
 const Logo: React.FC<LogoProps> = (props: LogoProps) => {
   const { variant = 'full' } = props
-  const userRole = useAppSelector(getUserRole)
   const isRowVersion = variant === 'row'
 
   return (
@@ -27,16 +23,9 @@ const Logo: React.FC<LogoProps> = (props: LogoProps) => {
               Prep
             </Typography>
           </Box>
-          {userRole === UserRole.admin && (
-            <Typography
-              level="body-xs"
-              fontWeight="bold"
-              color="danger"
-              mt="-5px"
-            >
-              Admin
-            </Typography>
-          )}
+          <Typography level="body-xs" fontWeight="bold">
+            Assignment 2
+          </Typography>
         </>
       )}
 
@@ -53,16 +42,9 @@ const Logo: React.FC<LogoProps> = (props: LogoProps) => {
                   Prep
                 </Typography>
               </Box>
-              {userRole === UserRole.admin && (
-                <Typography
-                  level="body-xs"
-                  fontWeight="bold"
-                  color="danger"
-                  mt="-5px"
-                >
-                  Admin
-                </Typography>
-              )}
+              <Typography level="body-xs" fontWeight="bold">
+                Assignment 2
+              </Typography>
             </Box>
           </Box>
         </>
@@ -72,16 +54,9 @@ const Logo: React.FC<LogoProps> = (props: LogoProps) => {
         <>
           <Box display="block" alignItems="center">
             <img src={logo} alt="mainLogo" style={styles.logoImg} />
-            {userRole === UserRole.admin && (
-              <Typography
-                level="body-xs"
-                fontWeight="bold"
-                color="danger"
-                mt="-5px"
-              >
-                Admin
-              </Typography>
-            )}
+            <Typography level="body-xs" fontWeight="bold">
+              Assignment 2
+            </Typography>
           </Box>
         </>
       )}

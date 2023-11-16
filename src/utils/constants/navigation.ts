@@ -17,17 +17,22 @@ export enum Paths {
   ManageUsers = '/manage-users',
   MatchRoom = '/room',
   Attempts = '/attempts',
+  Questions = '/questions',
 }
 
 export enum SubPaths {
   ManageQuestions = `${Paths.Manage}/questions`,
-  CreateQuestion = `${SubPaths.ManageQuestions}/create`,
-  EditQuestion = `${SubPaths.ManageQuestions}/edit/:id`,
+  CreateQuestion = `${Paths.Questions}/create`,
+  EditQuestion = `${Paths.Questions}/edit/:id`,
 }
 
 const ProblemsPage: PageNavigation = {
   url: Paths.Problems,
   title: 'Problems',
+}
+const QuestionsPage: PageNavigation = {
+  url: Paths.Questions,
+  title: 'Questions',
 }
 const RankingsPage: PageNavigation = {
   url: Paths.Rankings,
@@ -49,12 +54,9 @@ const ManagePages: PageNavigation = {
   ],
 }
 
-export const guestNavigationList: PageNavigation[] = [
-  ProblemsPage,
-  RankingsPage,
-]
+export const guestNavigationList: PageNavigation[] = [QuestionsPage]
 
-export const userNavigationList: PageNavigation[] = [ProblemsPage, RankingsPage]
+export const userNavigationList: PageNavigation[] = [QuestionsPage]
 
 export const adminNavigationList: PageNavigation[] = [
   ProblemsPage,
