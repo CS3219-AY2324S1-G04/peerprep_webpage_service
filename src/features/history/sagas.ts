@@ -1,6 +1,5 @@
 import { all, call, fork, put, takeLatest } from 'redux-saga/effects'
 
-import { toast } from '../../components/Toaster/toast'
 import historyService, {
   Attempt,
   AttemptCount,
@@ -37,9 +36,7 @@ function* getRankings() {
 
     yield put(setRankingsList(rankings))
   } catch (error) {
-    toast.error(
-      'Error trying to retrieve the rankings. Please try again later.',
-    )
+    console.warn('Retrieving rankings was stripped out for this assignment.')
   }
 }
 
@@ -48,8 +45,8 @@ function* getAllUserAttempts() {
     const attempts: Attempt[] = yield call(historyService.getAllUserAttempts)
     yield put(setAttemptsList(attempts))
   } catch (error) {
-    toast.error(
-      'Error trying to retrieve your attempts. Please try again later.',
+    console.warn(
+      'Retrieving user attempts was stripped out for this assignment.',
     )
   }
 }
