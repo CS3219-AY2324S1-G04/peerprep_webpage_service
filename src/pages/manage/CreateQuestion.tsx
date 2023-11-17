@@ -1,6 +1,7 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { Box, Button, Chip, Sheet, Stack, Typography, useTheme } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
+import { AxiosError } from 'axios'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -25,10 +26,18 @@ const CreateQuestion: React.FC = () => {
   const [runCreateQns, loadingCreateQns] = useAsyncTask(
     'createQuestion',
     (error) => {
-      toast.error(
+      let message: string | undefined = undefined
+
+      if (error instanceof AxiosError) {
+        message = error.response?.data?.message
+      }
+
+      message =
+        message ??
         error?.message ??
-          'Oops! We encountered an error creating the question, sorry about that. Please try again later',
-      )
+        'Oops! We encountered an error creating the question, sorry about that. Please try again later'
+
+      toast.error(message)
     },
   )
   const [isSubmitSuccess, setIsSubmitSuccess] = useState<boolean>(false)
