@@ -18,7 +18,7 @@ export const CommonTable = (props: TableProps) => {
       {...rest}
       aria-labelledby="tableTitle"
       stickyHeader
-      sx={{...styles.tableRoot, minWidth: minWidth ? minWidth : 'none' }}
+      sx={{ ...styles.tableRoot, minWidth: minWidth ? minWidth : 'none' }}
     >
       {children}
     </Table>
@@ -43,6 +43,5 @@ const styles = {
     '--TableRow-hoverBackground': 'var(--joy-palette-background-level1)',
     '--TableCell-paddingY': '4px',
     '--TableCell-paddingX': '8px',
-    minWidth: '930px'
   },
 } as const

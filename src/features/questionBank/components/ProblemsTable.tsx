@@ -240,127 +240,127 @@ export default function ProblemsTable(props: ProblemsTableProps) {
         </Button>
       </Box>
       <Box overflow="auto">
-      <Table minWidth='910px'>
-        <Table.Header {...sorting}>
-          <Table.ColumnHead
-            id={TITLE_COLUMN_KEY}
-            cellProps={{ style: styles.widerColumnHead }}
-          >
-            Title
-          </Table.ColumnHead>
-          <Table.ColumnHead
-            sortable={false}
-            id={CATEGORIES_COLUMN_KEY}
-            cellProps={{ style: styles.widerColumnHead }}
-          >
-            Categories
-          </Table.ColumnHead>
-          <Table.ColumnHead id={COMPLEXITY_COLUMN_KEY}>
-            Complexity
-          </Table.ColumnHead>
-          <Table.ColumnHead id={LANGUAGES_COLUMN_KEY}>
-            Languages
-          </Table.ColumnHead>
-          {adminMode && (
-            <Table.ColumnHead sortable={false} id="manageActions" />
-          )}
-        </Table.Header>
-        <Table.Body>
-          {!isFetching &&
-            items.length > 0 &&
-            items.map((item: MinimalQuestion) => (
-              <Table.Row key={item._id}>
-                <Table.Cell>
-                  <Typography
-                    component="span"
-                    sx={{
-                      ...styles.titleText,
-                      '&:hover': {
-                        color: theme.vars.palette.primary[600],
-                        cursor: 'pointer',
-                      },
-                    }}
-                    onClick={() => {
-                      dispatch(setSelectedQuestionId(item._id))
-                      onQuestionClick()
-                    }}
-                  >
-                    {item.title}
-                  </Typography>
-                </Table.Cell>
-                <Table.Cell>
-                  <Box sx={styles.problemCategoriesBox}>
-                    {getCategoriesToDisplay(item.categories).map(
-                      (category: string, index: number) => {
-                        const isExtraCategoriesCount = index === 2
-                        if (isExtraCategoriesCount) {
-                          return (
-                            <Tooltip
-                              key={`${category}-${index}`}
-                              sx={styles.tooltip}
-                              title={
-                                <Box sx={styles.nestedCategoriesBox}>
-                                  {getExtraCategories(item.categories).map(
-                                    (nestedCategory, nestedIndex) => (
-                                      <Chip
-                                        key={`${nestedCategory}-${nestedIndex}`}
-                                      >
-                                        {nestedCategory}
-                                      </Chip>
-                                    ),
-                                  )}
-                                </Box>
-                              }
-                              variant="outlined"
-                              placement="top"
-                            >
-                              <JoyChip key={category}>{category}</JoyChip>
-                            </Tooltip>
-                          )
-                        }
-
-                        return <Chip key={category}>{category}</Chip>
-                      },
-                    )}
-                  </Box>
-                </Table.Cell>
-                <Table.Cell>
-                  <Typography
-                    fontWeight="bold"
-                    color={getComplexityColor(item.complexity)}
-                  >
-                    {item.complexity}
-                  </Typography>
-                </Table.Cell>
-                <Table.Cell>{item.template.length ?? 0}</Table.Cell>
-                {adminMode && (
+        <Table minWidth="910px">
+          <Table.Header {...sorting}>
+            <Table.ColumnHead
+              id={TITLE_COLUMN_KEY}
+              cellProps={{ style: styles.widerColumnHead }}
+            >
+              Title
+            </Table.ColumnHead>
+            <Table.ColumnHead
+              sortable={false}
+              id={CATEGORIES_COLUMN_KEY}
+              cellProps={{ style: styles.widerColumnHead }}
+            >
+              Categories
+            </Table.ColumnHead>
+            <Table.ColumnHead id={COMPLEXITY_COLUMN_KEY}>
+              Complexity
+            </Table.ColumnHead>
+            <Table.ColumnHead id={LANGUAGES_COLUMN_KEY}>
+              Languages
+            </Table.ColumnHead>
+            {adminMode && (
+              <Table.ColumnHead sortable={false} id="manageActions" />
+            )}
+          </Table.Header>
+          <Table.Body>
+            {!isFetching &&
+              items.length > 0 &&
+              items.map((item: MinimalQuestion) => (
+                <Table.Row key={item._id}>
                   <Table.Cell>
-                    <Box sx={styles.actionsBox}>
-                      <IconButton variant="plain">
-                        <DeleteIcon
-                          onClick={() => {
-                            dispatch(setSelectedQuestionId(item._id))
-                            setIsDeleteModalOpen(true)
-                          }}
-                        />
-                      </IconButton>
-                      <IconButton variant="plain">
-                        <EditIcon
-                          onClick={() => {
-                            dispatch(setSelectedQuestionId(item._id))
-                            navigate(
-                              SubPaths.EditQuestion.replace(':id', item._id),
+                    <Typography
+                      component="span"
+                      sx={{
+                        ...styles.titleText,
+                        '&:hover': {
+                          color: theme.vars.palette.primary[600],
+                          cursor: 'pointer',
+                        },
+                      }}
+                      onClick={() => {
+                        dispatch(setSelectedQuestionId(item._id))
+                        onQuestionClick()
+                      }}
+                    >
+                      {item.title}
+                    </Typography>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Box sx={styles.problemCategoriesBox}>
+                      {getCategoriesToDisplay(item.categories).map(
+                        (category: string, index: number) => {
+                          const isExtraCategoriesCount = index === 2
+                          if (isExtraCategoriesCount) {
+                            return (
+                              <Tooltip
+                                key={`${category}-${index}`}
+                                sx={styles.tooltip}
+                                title={
+                                  <Box sx={styles.nestedCategoriesBox}>
+                                    {getExtraCategories(item.categories).map(
+                                      (nestedCategory, nestedIndex) => (
+                                        <Chip
+                                          key={`${nestedCategory}-${nestedIndex}`}
+                                        >
+                                          {nestedCategory}
+                                        </Chip>
+                                      ),
+                                    )}
+                                  </Box>
+                                }
+                                variant="outlined"
+                                placement="top"
+                              >
+                                <JoyChip key={category}>{category}</JoyChip>
+                              </Tooltip>
                             )
-                          }}
-                        />
-                      </IconButton>
+                          }
+
+                          return <Chip key={category}>{category}</Chip>
+                        },
+                      )}
                     </Box>
                   </Table.Cell>
-                )}
-              </Table.Row>
-            ))}
-        </Table.Body>
-      </Table>
+                  <Table.Cell>
+                    <Typography
+                      fontWeight="bold"
+                      color={getComplexityColor(item.complexity)}
+                    >
+                      {item.complexity}
+                    </Typography>
+                  </Table.Cell>
+                  <Table.Cell>{item.template.length ?? 0}</Table.Cell>
+                  {adminMode && (
+                    <Table.Cell>
+                      <Box sx={styles.actionsBox}>
+                        <IconButton variant="plain">
+                          <DeleteIcon
+                            onClick={() => {
+                              dispatch(setSelectedQuestionId(item._id))
+                              setIsDeleteModalOpen(true)
+                            }}
+                          />
+                        </IconButton>
+                        <IconButton variant="plain">
+                          <EditIcon
+                            onClick={() => {
+                              dispatch(setSelectedQuestionId(item._id))
+                              navigate(
+                                SubPaths.EditQuestion.replace(':id', item._id),
+                              )
+                            }}
+                          />
+                        </IconButton>
+                      </Box>
+                    </Table.Cell>
+                  )}
+                </Table.Row>
+              ))}
+          </Table.Body>
+        </Table>
       </Box>
       {isFetching && (
         <Box display="flex" justifyContent="center" margin="24px">

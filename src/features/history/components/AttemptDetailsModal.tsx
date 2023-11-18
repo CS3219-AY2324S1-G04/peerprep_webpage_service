@@ -96,7 +96,8 @@ const AttemptDetailsModal: React.FC<Props> = (props: Props) => {
             <AccordionSummary>View Question Details</AccordionSummary>
             <AccordionDetails>
               <Stack spacing={2}>
-                {!attemptQuestion && ('Question cannot be found or it has been deleted.')}
+                {!attemptQuestion &&
+                  'Question cannot be found or it has been deleted.'}
                 {attemptQuestion && (
                   <>
                     <Typography level="h2">
