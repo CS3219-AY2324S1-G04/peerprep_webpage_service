@@ -81,46 +81,50 @@ const AttemptsTable: React.FC = () => {
           onChange={filtering.setFilterText}
         />
       </Box>
-      <Table>
-        <Table.Header {...sorting}>
-          <Table.ColumnHead
-            id={DATE_COLUMN_KEY}
-            cellProps={{ style: styles.widerColumnHead }}
-          >
-            Date
-          </Table.ColumnHead>
-          <Table.ColumnHead id={ATTEMPT_ID_COLUMN_KEY}>
-            Attempt ID
-          </Table.ColumnHead>
-          <Table.ColumnHead id={QUESTION_TITLE_COLUMN_KEY}>
-            Question Title
-          </Table.ColumnHead>
-          <Table.ColumnHead id={LANGUAGE_COLUMN_KEY}>Language</Table.ColumnHead>
-          <Table.ColumnHead sortable={false} id="viewDetails" />
-        </Table.Header>
-        <Table.Body>
-          {items.length > 0 &&
-            items.map((row: AttemptRow) => (
-              <Table.Row key={row.attemptId}>
-                <Table.Cell>{row.date}</Table.Cell>
-                <Table.Cell>{row.attemptId}</Table.Cell>
-                <Table.Cell>{row.questionTitle}</Table.Cell>
-                <Table.Cell>{row.language}</Table.Cell>
-                <Table.Cell>
-                  <Button
-                    variant="outlined"
-                    onClick={() => {
-                      setAttemptToView(row)
-                      setIsDetailsModalOpen(true)
-                    }}
-                  >
-                    View Details
-                  </Button>
-                </Table.Cell>
-              </Table.Row>
-            ))}
-        </Table.Body>
-      </Table>
+      <Box overflow="auto">
+        <Table minWidth="615px">
+          <Table.Header {...sorting}>
+            <Table.ColumnHead
+              id={DATE_COLUMN_KEY}
+              cellProps={{ style: styles.widerColumnHead }}
+            >
+              Date
+            </Table.ColumnHead>
+            <Table.ColumnHead id={ATTEMPT_ID_COLUMN_KEY}>
+              Attempt ID
+            </Table.ColumnHead>
+            <Table.ColumnHead id={QUESTION_TITLE_COLUMN_KEY}>
+              Question Title
+            </Table.ColumnHead>
+            <Table.ColumnHead id={LANGUAGE_COLUMN_KEY}>
+              Language
+            </Table.ColumnHead>
+            <Table.ColumnHead sortable={false} id="viewDetails" />
+          </Table.Header>
+          <Table.Body>
+            {items.length > 0 &&
+              items.map((row: AttemptRow) => (
+                <Table.Row key={row.attemptId}>
+                  <Table.Cell>{row.date}</Table.Cell>
+                  <Table.Cell>{row.attemptId}</Table.Cell>
+                  <Table.Cell>{row.questionTitle}</Table.Cell>
+                  <Table.Cell>{row.language}</Table.Cell>
+                  <Table.Cell>
+                    <Button
+                      variant="outlined"
+                      onClick={() => {
+                        setAttemptToView(row)
+                        setIsDetailsModalOpen(true)
+                      }}
+                    >
+                      View Details
+                    </Button>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+          </Table.Body>
+        </Table>
+      </Box>
       <Table.Pagination
         currentPage={paging.currentPage}
         lastPage={paging.totalPages}

@@ -53,15 +53,18 @@ const CreateQuestion: React.FC = () => {
   }
 
   return (
-    <Stack sx={{
-      ...styles.wrapper,
-      [theme.breakpoints.down('md')]: {
-        width: '70%',
-      },
-      [theme.breakpoints.down('sm')]: {
-        width: '100%',
-      },
-    }} gap={1}>
+    <Stack
+      sx={{
+        ...styles.wrapper,
+        [theme.breakpoints.down('md')]: {
+          width: '70%',
+        },
+        [theme.breakpoints.down('sm')]: {
+          width: '100%',
+        },
+      }}
+      gap={1}
+    >
       {!isSubmitSuccess && (
         <Button
           sx={styles.backButton}
@@ -72,9 +75,7 @@ const CreateQuestion: React.FC = () => {
           Back
         </Button>
       )}
-      <Sheet
-        sx={styles.sheet}
-      >
+      <Sheet sx={styles.sheet}>
         <Typography sx={styles.formTitle} level="h3">
           Create Question {isSubmitSuccess && 'Success'}
         </Typography>
