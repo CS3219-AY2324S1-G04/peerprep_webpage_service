@@ -78,6 +78,10 @@ function* getSelectedQuestion(action: Action<string>) {
       return
     }
 
+    if (action.payload === '') {
+      return
+    }
+
     const response: AxiosResponse<ServiceResponse> = yield axios.get(
       `${questionServiceBaseUrl}/questions/${action.payload}`,
     )
