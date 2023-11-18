@@ -53,7 +53,15 @@ const CreateQuestion: React.FC = () => {
   }
 
   return (
-    <Stack sx={styles.wrapper} gap={1}>
+    <Stack sx={{
+      ...styles.wrapper,
+      [theme.breakpoints.down('md')]: {
+        width: '70%',
+      },
+      [theme.breakpoints.down('sm')]: {
+        width: '100%',
+      },
+    }} gap={1}>
       {!isSubmitSuccess && (
         <Button
           sx={styles.backButton}
@@ -65,15 +73,7 @@ const CreateQuestion: React.FC = () => {
         </Button>
       )}
       <Sheet
-        sx={{
-          ...styles.sheet,
-          [theme.breakpoints.down('md')]: {
-            width: '70%',
-          },
-          [theme.breakpoints.down('sm')]: {
-            width: '100%',
-          },
-        }}
+        sx={styles.sheet}
       >
         <Typography sx={styles.formTitle} level="h3">
           Create Question {isSubmitSuccess && 'Success'}
@@ -152,6 +152,7 @@ const styles = {
   sheet: {
     borderRadius: '10px',
     padding: 3,
+    width: '100%',
   } as SxProps,
   backButton: {
     maxWidth: '100px',

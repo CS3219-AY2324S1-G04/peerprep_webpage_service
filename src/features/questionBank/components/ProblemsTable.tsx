@@ -239,7 +239,8 @@ export default function ProblemsTable(props: ProblemsTableProps) {
           Reset
         </Button>
       </Box>
-      <Table>
+      <Box overflow="auto">
+      <Table minWidth='910px'>
         <Table.Header {...sorting}>
           <Table.ColumnHead
             id={TITLE_COLUMN_KEY}
@@ -360,6 +361,7 @@ export default function ProblemsTable(props: ProblemsTableProps) {
             ))}
         </Table.Body>
       </Table>
+      </Box>
       {isFetching && (
         <Box display="flex" justifyContent="center" margin="24px">
           <CircularProgress />

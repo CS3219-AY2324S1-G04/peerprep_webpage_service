@@ -8,16 +8,17 @@ import { useTable } from './hooks/useTable'
 
 interface TableProps {
   children: React.ReactNode
+  minWidth?: string
 }
 
 export const CommonTable = (props: TableProps) => {
-  const { children, ...rest } = props
+  const { children, minWidth, ...rest } = props
   return (
     <Table
       {...rest}
       aria-labelledby="tableTitle"
       stickyHeader
-      sx={styles.tableRoot}
+      sx={{...styles.tableRoot, minWidth: minWidth ? minWidth : 'none' }}
     >
       {children}
     </Table>
@@ -42,5 +43,6 @@ const styles = {
     '--TableRow-hoverBackground': 'var(--joy-palette-background-level1)',
     '--TableCell-paddingY': '4px',
     '--TableCell-paddingX': '8px',
+    minWidth: '930px'
   },
 } as const
