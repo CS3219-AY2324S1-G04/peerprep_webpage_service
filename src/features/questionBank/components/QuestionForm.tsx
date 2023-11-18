@@ -74,9 +74,9 @@ const QuestionForm: React.FC<QuestionFormProps> = (
   }, [question])
 
   const canSubmit = useMemo(() => {
-    const titleValid = titleFieldInfo.value.length > 0
+    const titleValid = titleFieldInfo.value.trim().length > 0
     const categoriesValid = categoriesFieldInfo.value.length > 0
-    const descriptionValid = descriptionFieldInfo.value.length > 0
+    const descriptionValid = descriptionFieldInfo.value.trim().length > 0
     return titleValid && categoriesValid && descriptionValid
   }, [titleFieldInfo, categoriesFieldInfo, descriptionFieldInfo])
 
@@ -227,7 +227,7 @@ const QuestionForm: React.FC<QuestionFormProps> = (
           onClick={() => {
             const questionToSubmit: Question = {
               _id: question?._id ?? '',
-              title: titleFieldInfo.value,
+              title: titleFieldInfo.value.trim(),
               description: descriptionFieldInfo.value,
               complexity: complexity,
               categories: categoriesFieldInfo.value,
