@@ -61,6 +61,8 @@ const AttemptDetailsModal: React.FC<Props> = (props: Props) => {
 
     if (attemptRow.question) {
       dispatch(setSelectedQuestionId(attemptRow.question._id))
+    } else {
+      dispatch(setSelectedQuestionId(""))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [attemptRow])
