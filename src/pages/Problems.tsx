@@ -27,11 +27,15 @@ const Problems: React.FC = () => {
       <TableContainer>
         <TableContainer.Header
           title="Problems"
-          chipLabel={isFetching ? (
-            <Box display="flex" alignItems="center">
-              <CircularProgress size="sm" />
-            </Box>
-          ) : `${questionsList.length} questions`}
+          chipLabel={
+            isFetching ? (
+              <Box display="flex" alignItems="center">
+                <CircularProgress size="sm" />
+              </Box>
+            ) : (
+              `${questionsList.length} questions`
+            )
+          }
           headerStyles={styles.header}
         >
           {isLoggedIn && (

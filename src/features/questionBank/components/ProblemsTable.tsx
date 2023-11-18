@@ -25,6 +25,7 @@ import ChipDelete from '../../../components/ChipDelete'
 import { CommonTable as Table } from '../../../components/Table/Table'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
+import useTaskSubscriber from '../../../hooks/useTaskSubscriber'
 import { SubPaths } from '../../../utils/constants/navigation'
 import sortByLanguageCount from '../../../utils/sortByLanguageCount'
 import sortByComplexity from '../../../utils/sortComplexity'
@@ -34,7 +35,6 @@ import { getCategories, getQuestionsList } from '../selectors'
 import { setSelectedQuestionId } from '../slice'
 import { MinimalQuestion, QuestionComplexity } from '../types'
 import ConfirmDeleteModal from './ConfirmDeleteModal'
-import useTaskSubscriber from '../../../hooks/useTaskSubscriber'
 
 interface ProblemsTableProps {
   adminMode?: boolean
@@ -265,7 +265,8 @@ export default function ProblemsTable(props: ProblemsTableProps) {
           )}
         </Table.Header>
         <Table.Body>
-          {!isFetching && items.length > 0 &&
+          {!isFetching &&
+            items.length > 0 &&
             items.map((item: MinimalQuestion) => (
               <Table.Row key={item._id}>
                 <Table.Cell>
