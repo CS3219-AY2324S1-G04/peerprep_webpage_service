@@ -1,4 +1,4 @@
-import { Button } from '@mui/joy'
+import { Box, Button, CircularProgress } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
 import { useState } from 'react'
 
@@ -11,10 +11,13 @@ import { getRoomStatus } from '../features/room/selectors'
 import { RoomStatus } from '../features/room/types'
 import { getIsLoggedIn } from '../features/user/selector'
 import { useAppSelector } from '../hooks/useAppSelector'
+import useTaskSubscriber from '../hooks/useTaskSubscriber'
+import { LoadingKeys } from '../utils/types'
 
 const Problems: React.FC = () => {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState<boolean>(false)
   const [isPrepModalOpen, setIsPrepModalOpen] = useState<boolean>(false)
+  const [isFetching] = useTaskSubscriber(LoadingKeys.FETCHING_ALL_QUESTIONS)
   const questionsList = useAppSelector(getQuestionsList)
   const isLoggedIn = useAppSelector(getIsLoggedIn)
   const roomStatus = useAppSelector(getRoomStatus)
@@ -24,7 +27,15 @@ const Problems: React.FC = () => {
       <TableContainer>
         <TableContainer.Header
           title="Problems"
-          chipLabel={`${questionsList.length} questions`}
+          chipLabel={
+            isFetching ? (
+              <Box display="flex" alignItems="center">
+                <CircularProgress size="sm" />
+              </Box>
+            ) : (
+              `${questionsList.length} questions`
+            )
+          }
           headerStyles={styles.header}
         >
           {isLoggedIn && (

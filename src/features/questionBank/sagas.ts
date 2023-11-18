@@ -24,6 +24,7 @@ import {
 import { Question, QuestionBankSagaActions } from './types'
 
 function* getAllQuestions() {
+  yield put(addLoadingTask(LoadingKeys.FETCHING_ALL_QUESTIONS))
   try {
     const response: AxiosResponse<ServiceResponse> = yield axios.get(
       `${questionServiceBaseUrl}/questions`,
@@ -41,6 +42,8 @@ function* getAllQuestions() {
   } catch (error) {
     // TODO: Handle errors properly (e.g. via toast)
     console.error(error)
+  } finally {
+    yield put(removeLoadingTask(LoadingKeys.FETCHING_ALL_QUESTIONS))
   }
 }
 

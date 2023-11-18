@@ -30,6 +30,7 @@ export const CommonSagaActions = {
 }
 
 export const LoadingKeys = {
+  FETCHING_ALL_QUESTIONS: '@loading/FETCHING_ALL_QUESTIONS',
   FETCHING_SELECTED_QUESTION: '@loading/FETCHING_SELECTED_QUESTION',
   CHECKING_QUEUE_STATUS: '@loading/CHECKING_QUEUE_STATUS',
   REDIRECT_TO_ROOM: '@loading/REDIRECT_TO_ROOM',

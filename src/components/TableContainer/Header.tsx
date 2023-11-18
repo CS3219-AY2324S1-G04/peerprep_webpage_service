@@ -6,7 +6,7 @@ import Chip from '../Chip'
 export interface HeaderProps {
   title: string
   children?: React.ReactNode
-  chipLabel?: string
+  chipLabel?: string | React.ReactNode
   headerStyles?: SxProps
 }
 

@@ -5,6 +5,7 @@ import ReplayIcon from '@mui/icons-material/Replay'
 import {
   Box,
   Button,
+  CircularProgress,
   Dropdown,
   IconButton,
   Chip as JoyChip,
@@ -24,10 +25,11 @@ import ChipDelete from '../../../components/ChipDelete'
 import { CommonTable as Table } from '../../../components/Table/Table'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
+import useTaskSubscriber from '../../../hooks/useTaskSubscriber'
 import { SubPaths } from '../../../utils/constants/navigation'
 import sortByLanguageCount from '../../../utils/sortByLanguageCount'
 import sortByComplexity from '../../../utils/sortComplexity'
-import { SortDirection } from '../../../utils/types'
+import { LoadingKeys, SortDirection } from '../../../utils/types'
 import { getComplexityColor } from '../../../utils/uiHelpers'
 import { getCategories, getQuestionsList } from '../selectors'
 import { setSelectedQuestionId } from '../slice'
@@ -58,6 +60,7 @@ export default function ProblemsTable(props: ProblemsTableProps) {
   const navigate = useNavigate()
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false)
   const [filters, setFilters] = useState<Filter[]>([])
+  const [isFetching] = useTaskSubscriber(LoadingKeys.FETCHING_ALL_QUESTIONS)
 
   const questionsList = useAppSelector(getQuestionsList)
   const allCategories = useAppSelector(getCategories)
@@ -262,7 +265,8 @@ export default function ProblemsTable(props: ProblemsTableProps) {
           )}
         </Table.Header>
         <Table.Body>
-          {items.length > 0 &&
+          {!isFetching &&
+            items.length > 0 &&
             items.map((item: MinimalQuestion) => (
               <Table.Row key={item._id}>
                 <Table.Cell>
@@ -356,6 +360,11 @@ export default function ProblemsTable(props: ProblemsTableProps) {
             ))}
         </Table.Body>
       </Table>
+      {isFetching && (
+        <Box display="flex" justifyContent="center" margin="24px">
+          <CircularProgress />
+        </Box>
+      )}
       <Table.Pagination
         currentPage={paging.currentPage}
         lastPage={paging.totalPages}
