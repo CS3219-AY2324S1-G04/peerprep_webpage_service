@@ -3,7 +3,7 @@ import { all, fork, put, select, takeLatest } from 'redux-saga/effects'
 
 import { toast } from '../../components/Toaster/toast'
 import questionService, { Language } from '../../services/questionService'
-import { questionServiceBaseUrl } from '../../utils/config'
+import { isDevEnv, questionServiceBaseUrl } from '../../utils/config'
 import {
   Action,
   CommonSagaActions,
@@ -27,6 +27,7 @@ function* getAllQuestions() {
   try {
     const response: AxiosResponse<ServiceResponse> = yield axios.get(
       `${questionServiceBaseUrl}/questions`,
+      { withCredentials: isDevEnv },
     )
     const questions: Question[] = response.data.data as Question[]
     yield put(setQuestionsList(questions))
@@ -48,6 +49,7 @@ function* getAllCategories() {
   try {
     const response: AxiosResponse<ServiceResponse> = yield axios.get(
       `${questionServiceBaseUrl}/categories`,
+      { withCredentials: isDevEnv },
     )
     yield put(setCategories(response.data.data))
   } catch (error) {
@@ -77,6 +79,7 @@ function* getSelectedQuestion(action: Action<string>) {
 
     const response: AxiosResponse<ServiceResponse> = yield axios.get(
       `${questionServiceBaseUrl}/questions/${action.payload}`,
+      { withCredentials: isDevEnv },
     )
     const responseQns: Question | null = response.data.data
     if (responseQns) {
@@ -92,21 +95,30 @@ function* getSelectedQuestion(action: Action<string>) {
 
 export function* watchGetAllQuestions() {
   yield takeLatest(
-    [CommonSagaActions.LOGGED_IN_INIT, QuestionBankSagaActions.GET_ALL_QUESTIONS],
+    [
+      CommonSagaActions.LOGGED_IN_INIT,
+      QuestionBankSagaActions.GET_ALL_QUESTIONS,
+    ],
     getAllQuestions,
   )
 }
 
 export function* watchGetAllCategories() {
   yield takeLatest(
-    [CommonSagaActions.LOGGED_IN_INIT, QuestionBankSagaActions.GET_ALL_CATEGORIES],
+    [
+      CommonSagaActions.LOGGED_IN_INIT,
+      QuestionBankSagaActions.GET_ALL_CATEGORIES,
+    ],
     getAllCategories,
   )
 }
 
 export function* watchGetAllLanguages() {
   yield takeLatest(
-    [CommonSagaActions.LOGGED_IN_INIT, QuestionBankSagaActions.GET_ALL_LANGUAGES],
+    [
+      CommonSagaActions.LOGGED_IN_INIT,
+      QuestionBankSagaActions.GET_ALL_LANGUAGES,
+    ],
     getAllLanguages,
   )
 }

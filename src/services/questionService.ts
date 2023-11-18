@@ -10,8 +10,11 @@ export const categoriesKey = 'categories'
 export const templateKey = 'template'
 
 export async function fetchLanguages(): Promise<Language[]> {
-  const data = (await axios.get(`${questionServiceBaseUrl}/languages`)).data
-    .data
+  const data = (
+    await axios.get(`${questionServiceBaseUrl}/languages`, {
+      withCredentials: isDevEnv,
+    })
+  ).data.data
   return data ?? []
 }
 
