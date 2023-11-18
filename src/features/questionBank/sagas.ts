@@ -92,21 +92,21 @@ function* getSelectedQuestion(action: Action<string>) {
 
 export function* watchGetAllQuestions() {
   yield takeLatest(
-    [CommonSagaActions.APP_INIT, QuestionBankSagaActions.GET_ALL_QUESTIONS],
+    [CommonSagaActions.LOGGED_IN_INIT, QuestionBankSagaActions.GET_ALL_QUESTIONS],
     getAllQuestions,
   )
 }
 
 export function* watchGetAllCategories() {
   yield takeLatest(
-    [CommonSagaActions.APP_INIT, QuestionBankSagaActions.GET_ALL_CATEGORIES],
+    [CommonSagaActions.LOGGED_IN_INIT, QuestionBankSagaActions.GET_ALL_CATEGORIES],
     getAllCategories,
   )
 }
 
 export function* watchGetAllLanguages() {
   yield takeLatest(
-    [CommonSagaActions.APP_INIT, QuestionBankSagaActions.GET_ALL_LANGUAGES],
+    [CommonSagaActions.LOGGED_IN_INIT, QuestionBankSagaActions.GET_ALL_LANGUAGES],
     getAllLanguages,
   )
 }
