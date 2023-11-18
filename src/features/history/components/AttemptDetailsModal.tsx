@@ -59,7 +59,9 @@ const AttemptDetailsModal: React.FC<Props> = (props: Props) => {
       setCode(data)
     })
 
-    dispatch(setSelectedQuestionId(attemptRow.question._id))
+    if (attemptRow.question) {
+      dispatch(setSelectedQuestionId(attemptRow.question._id))
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [attemptRow])
 
@@ -94,6 +96,7 @@ const AttemptDetailsModal: React.FC<Props> = (props: Props) => {
             <AccordionSummary>View Question Details</AccordionSummary>
             <AccordionDetails>
               <Stack spacing={2}>
+                {!attemptQuestion && ('Question cannot be found or it has been deleted.')}
                 {attemptQuestion && (
                   <>
                     <Typography level="h2">
